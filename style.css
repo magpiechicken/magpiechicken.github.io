@@ -77,6 +77,45 @@ body {
          2px  2px 0 #000000;
 }
 
+
+/* =========================================
+   관리자 버튼
+========================================= */
+
+.admin-button {
+    margin-left: auto;
+    margin-right: 30px;
+
+    padding: 11px 18px;
+
+    background: #ffffff;
+
+    border: 3px solid #000000;
+
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
+
+    font-size: 16px;
+    font-weight: 700;
+
+    color: #111111;
+
+    cursor: pointer;
+}
+
+.admin-button:hover {
+    background: #eeeeee;
+}
+
+.admin-button.logged-in {
+    background: #000000;
+    color: #ffffff;
+}
+
+
+/* =========================================
+   헤더 선
+========================================= */
+
 .header-line {
     width: 100%;
     height: 3px;
@@ -188,7 +227,7 @@ body {
 
 
 /* =========================================
-   화면 전환
+   화면
 ========================================= */
 
 .screen {
@@ -219,20 +258,18 @@ body {
     margin: 12px 0 0;
 
     font-size: 20px;
-
     color: #666666;
 }
 
 
 /* =========================================
-   소개 박스
+   소개
 ========================================= */
 
 .intro-box {
     width: 100%;
 
     margin-top: 35px;
-
     padding: 45px;
 
     background: #ffffff;
@@ -258,7 +295,7 @@ body {
 
 
 /* =========================================
-   주황색 버튼
+   버튼
 ========================================= */
 
 .orange-button {
@@ -281,28 +318,6 @@ body {
 .orange-button:hover {
     background: #e98900;
 }
-
-
-/* =========================================
-   목록 상단
-========================================= */
-
-.list-header {
-    width: 100%;
-
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-
-    gap: 30px;
-
-    margin-bottom: 35px;
-}
-
-
-/* =========================================
-   작은 주황색 버튼
-========================================= */
 
 .orange-small-button {
     flex-shrink: 0;
@@ -327,10 +342,45 @@ body {
     background: #e98900;
 }
 
+.white-button {
+    margin-bottom: 30px;
+
+    padding: 12px 20px;
+
+    background: #ffffff;
+
+    border: 3px solid #000000;
+
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    color: #111111;
+
+    cursor: pointer;
+}
+
+.white-button:hover {
+    background: #eeeeee;
+}
+
 
 /* =========================================
-   소식 없음
+   목록
 ========================================= */
+
+.list-header {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin-bottom: 35px;
+}
 
 .empty-box {
     width: 100%;
@@ -364,11 +414,6 @@ body {
 
     color: #999999;
 }
-
-
-/* =========================================
-   소식 목록
-========================================= */
 
 .news-list {
     width: 100%;
@@ -453,35 +498,7 @@ body {
 
 
 /* =========================================
-   흰색 버튼
-========================================= */
-
-.white-button {
-    margin-bottom: 30px;
-
-    padding: 12px 20px;
-
-    background: #ffffff;
-
-    border: 3px solid #000000;
-
-    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
-
-    font-size: 18px;
-    font-weight: 700;
-
-    color: #111111;
-
-    cursor: pointer;
-}
-
-.white-button:hover {
-    background: #eeeeee;
-}
-
-
-/* =========================================
-   상세 페이지
+   상세
 ========================================= */
 
 .detail-box {
@@ -542,7 +559,7 @@ body {
 
 
 /* =========================================
-   삭제 버튼
+   삭제
 ========================================= */
 
 .delete-button {
@@ -570,7 +587,7 @@ body {
 
 
 /* =========================================
-   작성 화면
+   작성
 ========================================= */
 
 .write-box {
@@ -589,7 +606,8 @@ body {
     font-size: 42px;
 }
 
-.write-box label {
+.write-box label,
+.login-box label {
     display: block;
 
     margin-bottom: 10px;
@@ -599,7 +617,8 @@ body {
 }
 
 .write-box input,
-.write-box textarea {
+.write-box textarea,
+.login-box input {
     width: 100%;
 
     margin-bottom: 25px;
@@ -631,6 +650,80 @@ body {
     justify-content: flex-end;
 
     gap: 12px;
+}
+
+
+/* =========================================
+   로그인
+========================================= */
+
+.login-box {
+    width: min(520px, 100%);
+
+    margin: 50px auto;
+
+    padding: 45px;
+
+    background: #ffffff;
+
+    border: 4px solid #000000;
+}
+
+.login-box h1 {
+    margin: 0 0 12px;
+
+    font-size: 38px;
+}
+
+.login-description {
+    margin: 0 0 35px;
+
+    font-size: 18px;
+
+    color: #666666;
+}
+
+.login-button {
+    width: 100%;
+
+    padding: 15px;
+
+    background: #FF9400;
+
+    border: 3px solid #000000;
+
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
+
+    font-size: 20px;
+    font-weight: 700;
+
+    color: #ffffff;
+
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background: #e98900;
+}
+
+.login-error {
+    min-height: 24px;
+
+    margin: 15px 0 0;
+
+    color: #cc0000;
+
+    font-size: 16px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   숨김
+========================================= */
+
+.hidden {
+    display: none !important;
 }
 
 
@@ -681,6 +774,10 @@ body {
     .news-title {
         font-size: 22px;
     }
+
+    .admin-button {
+        margin-right: 15px;
+    }
 }
 
 @media (max-width: 800px) {
@@ -703,10 +800,6 @@ body {
         padding: 20px;
     }
 
-    .list-header {
-        flex-direction: column;
-    }
-
     .news-author {
         width: 110px;
         padding: 0 10px;
@@ -724,9 +817,12 @@ body {
         font-size: 14px;
     }
 
-    .detail-title-line {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
+    .admin-button {
+        margin-left: 10px;
+        margin-right: 10px;
+
+        padding: 8px 10px;
+
+        font-size: 13px;
     }
 }
