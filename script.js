@@ -10,14 +10,13 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_KrmPM2G4nuS1JXOAvnp-cA_Ik1nuYqS";
 
-
-/*
- * 지금은 테스트 단계라 실제 Auth 이메일을 사용한다.
- * 나중에 로그인 UI를 username으로 바꿀 수 있다.
- */
 const ADMIN_AUTH_EMAIL =
     "qwertjbhbuhbbjt@gmail.com";
 
+
+/* ==================================================
+   Supabase 연결
+================================================== */
 
 const supabaseClient =
     window.supabase.createClient(
@@ -57,20 +56,12 @@ const donationScreen =
     document.getElementById("screen-donation");
 
 
-/* ==================================================
-   메뉴 요소
-================================================== */
-
 const newsMenu =
     document.getElementById("menu-news");
 
 const donationMenu =
     document.getElementById("menu-donation");
 
-
-/* ==================================================
-   관리자 UI
-================================================== */
 
 const adminButton =
     document.getElementById("adminButton");
@@ -83,105 +74,71 @@ const deleteNewsButton =
 
 
 /* ==================================================
-   모든 화면 숨기기
+   화면 숨기기
 ================================================== */
 
 function hideAllScreens() {
-
     introScreen.classList.remove("visible");
     listScreen.classList.remove("visible");
     detailScreen.classList.remove("visible");
     writeScreen.classList.remove("visible");
     loginScreen.classList.remove("visible");
     donationScreen.classList.remove("visible");
-
 }
 
 
 /* ==================================================
-   소식 메뉴 활성화
+   메뉴 상태
 ================================================== */
 
 function activateNewsMenu() {
-
     newsMenu.classList.add("active");
     donationMenu.classList.remove("active");
-
 }
-
-
-/* ==================================================
-   기부 메뉴 활성화
-================================================== */
 
 function activateDonationMenu() {
-
     donationMenu.classList.add("active");
     newsMenu.classList.remove("active");
-
 }
 
 
 /* ==================================================
-   관리자 UI 업데이트
+   관리자 UI
 ================================================== */
 
 function updateAdminUI() {
 
     if (isAdmin) {
 
-        adminButton.textContent =
-            "관리자 로그아웃";
+        adminButton.textContent = "관리자 로그아웃";
+        adminButton.classList.add("logged-in");
 
-        adminButton.classList.add(
-            "logged-in"
-        );
-
-        showWriteButton.classList.remove(
-            "hidden"
-        );
+        showWriteButton.classList.remove("hidden");
 
         if (currentNewsId !== null) {
-
-            deleteNewsButton.classList.remove(
-                "hidden"
-            );
-
+            deleteNewsButton.classList.remove("hidden");
         }
 
     } else {
 
-        adminButton.textContent =
-            "관리자";
+        adminButton.textContent = "관리자";
+        adminButton.classList.remove("logged-in");
 
-        adminButton.classList.remove(
-            "logged-in"
-        );
-
-        showWriteButton.classList.add(
-            "hidden"
-        );
-
-        deleteNewsButton.classList.add(
-            "hidden"
-        );
-
+        showWriteButton.classList.add("hidden");
+        deleteNewsButton.classList.add("hidden");
     }
-
 }
 
 
 /* ==================================================
-   소식 소개 화면
+   소식 소개
 ================================================== */
 
 function openNewsIntro() {
 
     hideAllScreens();
 
-    introScreen.classList.add(
-        "visible"
-    );
+    introScreen.classList.add("visible");
 
     activateNewsMenu();
 
@@ -190,7 +147,6 @@ function openNewsIntro() {
     updateAdminUI();
 
     scrollTop();
-
 }
 
 
@@ -202,9 +158,7 @@ async function openNewsList() {
 
     hideAllScreens();
 
-    listScreen.classList.add(
-        "visible"
-    );
+    listScreen.classList.add("visible");
 
     activateNewsMenu();
 
@@ -215,7 +169,6 @@ async function openNewsList() {
     scrollTop();
 
     await renderNews();
-
 }
 
 
@@ -226,80 +179,45 @@ async function openNewsList() {
 function openAdminLogin() {
 
     if (isAdmin) {
-
         logoutAdmin();
-
         return;
-
     }
-
 
     hideAllScreens();
 
-    loginScreen.classList.add(
-        "visible"
-    );
+    loginScreen.classList.add("visible");
 
     activateNewsMenu();
 
+    document.getElementById("admin-username").value = "";
+    document.getElementById("admin-password").value = "";
 
-    const usernameInput =
-        document.getElementById(
-            "admin-username"
-        );
-
-    const passwordInput =
-        document.getElementById(
-            "admin-password"
-        );
-
-    const errorBox =
-        document.getElementById(
-            "login-error"
-        );
-
-
-    usernameInput.value = "";
-    passwordInput.value = "";
-    errorBox.textContent = "";
-
+    document.getElementById("login-error").textContent = "";
 
     scrollTop();
-
 }
 
 
 /* ==================================================
    관리자 로그인
+   여기서 실제 Supabase 에러를 그대로 표시
 ================================================== */
 
 async function loginAdmin() {
 
     const usernameInput =
-        document.getElementById(
-            "admin-username"
-        );
+        document.getElementById("admin-username");
 
     const passwordInput =
-        document.getElementById(
-            "admin-password"
-        );
+        document.getElementById("admin-password");
 
     const errorBox =
-        document.getElementById(
-            "login-error"
-        );
+        document.getElementById("login-error");
 
     const loginButton =
-        document.getElementById(
-            "admin-login-submit"
-        );
+        document.getElementById("admin-login-submit");
 
 
-    /*
-     * 현재는 Supabase Auth 테스트를 위해
-     * 아이디 칸에도 이메일을 입력하도록 한다.
-     */
     const email =
         usernameInput.value.trim();
 
@@ -311,97 +229,100 @@ async function loginAdmin() {
 
 
     if (!email) {
-
-        errorBox.textContent =
-            "이메일을 입력해주세요.";
-
-        usernameInput.focus();
-
+        errorBox.textContent = "이메일을 입력해주세요.";
         return;
-
     }
 
 
     if (!password) {
-
-        errorBox.textContent =
-            "비밀번호를 입력해주세요.";
-
-        passwordInput.focus();
-
+        errorBox.textContent = "비밀번호를 입력해주세요.";
         return;
-
     }
 
 
-    /*
-     * 로그인 중 버튼 잠금
-     */
-
     loginButton.disabled = true;
-
-    loginButton.textContent =
-        "로그인 중...";
+    loginButton.textContent = "로그인 중...";
 
 
     try {
 
-        /*
-         * Supabase Auth 로그인
-         */
+        console.log("로그인 시도:", email);
+
 
         const {
             data,
             error
-        } = await supabaseClient.auth
-            .signInWithPassword({
-
-                email: email,
-
-                password: password
-
-            });
+        } = await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
 
 
-        /*
-         * 로그인 실패
-         */
+        /* ------------------------------------------
+           Supabase Auth 실패
+        ------------------------------------------ */
 
         if (error) {
 
+            console.error("Supabase Auth 오류:", error);
+
+            errorBox.textContent =
+                "Supabase 오류: "
+                + error.message;
+
+            return;
+        }
+
+
+        console.log("Auth 로그인 성공:", data);
+
+
+        /* ------------------------------------------
+           로그인 사용자 확인
+        ------------------------------------------ */
+
+        const {
+            data: userData,
+            error: userError
+        } = await supabaseClient.auth.getUser();
+
+
+        if (userError) {
+
             console.error(
-                "Supabase 로그인 오류:",
-                error
+                "사용자 정보 오류:",
+                userError
             );
 
             errorBox.textContent =
-                error.message;
+                "사용자 확인 오류: "
+                + userError.message;
 
             return;
-
         }
 
 
-        /*
-         * 로그인 결과 확인
-         */
-
         if (
-            !data
-            || !data.user
+            !userData
+            || !userData.user
         ) {
 
             errorBox.textContent =
-                "로그인은 되었지만 사용자 정보를 확인할 수 없습니다.";
+                "로그인은 되었지만 사용자 정보가 없습니다.";
 
             return;
-
         }
 
 
-        /*
-         * 현재 로그인 사용자의 profile 확인
-         */
+        console.log(
+            "로그인 사용자 UID:",
+            userData.user.id
+        );
+
+
+        /* ------------------------------------------
+           profiles 확인
+        ------------------------------------------ */
 
         const {
             data: profile,
@@ -413,54 +334,60 @@ async function loginAdmin() {
             )
             .eq(
                 "id",
-                data.user.id
+                userData.user.id
             )
             .maybeSingle();
 
 
-        /*
-         * profile 조회 오류
-         */
-
         if (profileError) {
 
             console.error(
-                "Profile 조회 오류:",
+                "Profiles 오류:",
                 profileError
             );
 
             await supabaseClient.auth.signOut();
 
             errorBox.textContent =
-                "로그인은 되었지만 관리자 정보를 확인하지 못했습니다.";
+                "Profiles 오류: "
+                + profileError.message;
 
             return;
-
         }
 
 
-        /*
-         * 관리자 권한 확인
-         */
+        console.log(
+            "Profile 결과:",
+            profile
+        );
 
-        if (
-            !profile
-            || !profile.can_manage_news
-        ) {
+
+        if (!profile) {
 
             await supabaseClient.auth.signOut();
 
             errorBox.textContent =
-                "이 계정에는 관리자 권한이 없습니다.";
+                "로그인은 성공했지만 profiles에 해당 사용자가 없습니다.";
 
             return;
-
         }
 
 
-        /*
-         * 최종 관리자 로그인 성공
-         */
+        if (!profile.can_manage_news) {
+
+            await supabaseClient.auth.signOut();
+
+            errorBox.textContent =
+                "로그인은 성공했지만 관리자 권한이 없습니다. "
+                + "can_manage_news 값을 true로 설정해주세요.";
+
+            return;
+        }
+
+
+        /* ------------------------------------------
+           최종 성공
+        ------------------------------------------ */
 
         isAdmin = true;
 
@@ -472,23 +399,20 @@ async function loginAdmin() {
     } catch (error) {
 
         console.error(
-            "로그인 처리 중 예외:",
+            "예외 발생:",
             error
         );
 
         errorBox.textContent =
-            error.message
-            || "로그인 중 오류가 발생했습니다.";
+            "JavaScript 오류: "
+            + error.message;
 
     } finally {
 
         loginButton.disabled = false;
-
-        loginButton.textContent =
-            "관리자 로그인";
+        loginButton.textContent = "관리자 로그인";
 
     }
-
 }
 
 
@@ -498,11 +422,12 @@ async function loginAdmin() {
 
 async function logoutAdmin() {
 
-    try {
+    const {
+        error
+    } = await supabaseClient.auth.signOut();
 
-        await supabaseClient.auth.signOut();
 
-    } catch (error) {
+    if (error) {
 
         console.error(
             "로그아웃 오류:",
@@ -513,13 +438,11 @@ async function logoutAdmin() {
 
 
     isAdmin = false;
-
     currentNewsId = null;
 
     updateAdminUI();
 
     openNewsIntro();
-
 }
 
 
@@ -533,8 +456,7 @@ async function checkAdminSession() {
 
         const {
             data
-        } = await supabaseClient.auth
-            .getSession();
+        } = await supabaseClient.auth.getSession();
 
 
         if (
@@ -543,19 +465,16 @@ async function checkAdminSession() {
         ) {
 
             isAdmin = false;
-
             updateAdminUI();
 
             return;
-
         }
 
 
         const {
             data: userData,
             error: userError
-        } = await supabaseClient.auth
-            .getUser();
+        } = await supabaseClient.auth.getUser();
 
 
         if (
@@ -565,11 +484,9 @@ async function checkAdminSession() {
         ) {
 
             isAdmin = false;
-
             updateAdminUI();
 
             return;
-
         }
 
 
@@ -597,18 +514,15 @@ async function checkAdminSession() {
             await supabaseClient.auth.signOut();
 
             isAdmin = false;
-
             updateAdminUI();
 
             return;
-
         }
 
 
         isAdmin = true;
 
         updateAdminUI();
-
 
     } catch (error) {
 
@@ -620,9 +534,7 @@ async function checkAdminSession() {
         isAdmin = false;
 
         updateAdminUI();
-
     }
-
 }
 
 
@@ -637,20 +549,16 @@ function openWriteScreen() {
         openAdminLogin();
 
         return;
-
     }
 
 
     hideAllScreens();
 
-    writeScreen.classList.add(
-        "visible"
-    );
+    writeScreen.classList.add("visible");
 
     activateNewsMenu();
 
     scrollTop();
-
 }
 
 
@@ -662,14 +570,11 @@ function openDonation() {
 
     hideAllScreens();
 
-    donationScreen.classList.add(
-        "visible"
-    );
+    donationScreen.classList.add("visible");
 
     activateDonationMenu();
 
     scrollTop();
-
 }
 
 
@@ -703,22 +608,20 @@ async function getNews() {
         );
 
         alert(
-            "소식을 불러오지 못했습니다.\n\n"
+            "소식 불러오기 오류: "
             + error.message
         );
 
         return [];
-
     }
 
 
     return data || [];
-
 }
 
 
 /* ==================================================
-   날짜 포맷
+   날짜
 ================================================== */
 
 function formatDate(value) {
@@ -734,7 +637,6 @@ function formatDate(value) {
     ) {
 
         return "";
-
     }
 
 
@@ -749,12 +651,11 @@ function formatDate(value) {
             date.getDate()
         ).padStart(2, "0")
     );
-
 }
 
 
 /* ==================================================
-   소식 목록 표시
+   소식 목록
 ================================================== */
 
 async function renderNews() {
@@ -778,13 +679,7 @@ async function renderNews() {
         await getNews();
 
 
-    /*
-     * 소식 없음
-     */
-
-    if (
-        newsList.length === 0
-    ) {
+    if (newsList.length === 0) {
 
         container.innerHTML = `
             <div class="empty-box">
@@ -801,44 +696,29 @@ async function renderNews() {
         `;
 
         return;
-
     }
 
-
-    /*
-     * 소식 있음
-     */
 
     container.innerHTML = "";
 
 
     const list =
-        document.createElement(
-            "div"
-        );
+        document.createElement("div");
 
-
-    list.className =
-        "news-list";
+    list.className = "news-list";
 
 
     newsList.forEach(function(news) {
 
         const row =
-            document.createElement(
-                "button"
-            );
+            document.createElement("button");
 
+        row.type = "button";
 
-        row.type =
-            "button";
-
-        row.className =
-            "news-row";
+        row.className = "news-row";
 
 
         row.innerHTML = `
-
             <span class="news-author">
                 (${escapeHTML(news.author)})
             </span>
@@ -848,37 +728,25 @@ async function renderNews() {
             </span>
 
             <span class="news-date">
-                ${formatDate(
-                    news.created_at
-                )}
+                ${formatDate(news.created_at)}
             </span>
-
         `;
 
 
         row.addEventListener(
             "click",
             function() {
-
-                openNewsDetail(
-                    news.id
-                );
-
+                openNewsDetail(news.id);
             }
         );
 
 
-        list.appendChild(
-            row
-        );
+        list.appendChild(row);
 
     });
 
 
-    container.appendChild(
-        list
-    );
-
+    container.appendChild(list);
 }
 
 
@@ -905,18 +773,12 @@ async function openNewsDetail(newsId) {
 
     if (error) {
 
-        console.error(
-            "상세 소식 오류:",
-            error
-        );
-
         alert(
-            "소식을 불러오지 못했습니다.\n\n"
+            "상세 소식 오류: "
             + error.message
         );
 
         return;
-
     }
 
 
@@ -926,21 +788,14 @@ async function openNewsDetail(newsId) {
 
     hideAllScreens();
 
-    detailScreen.classList.add(
-        "visible"
-    );
+    detailScreen.classList.add("visible");
 
     activateNewsMenu();
 
 
-    const detailContainer =
-        document.getElementById(
-            "news-detail-container"
-        );
-
-
-    detailContainer.innerHTML = `
-
+    document.getElementById(
+        "news-detail-container"
+    ).innerHTML = `
         <div class="detail-author">
             (${escapeHTML(news.author)})
         </div>
@@ -952,9 +807,7 @@ async function openNewsDetail(newsId) {
             </h1>
 
             <span class="detail-date">
-                ${formatDate(
-                    news.created_at
-                )}
+                ${formatDate(news.created_at)}
             </span>
 
         </div>
@@ -967,14 +820,12 @@ async function openNewsDetail(newsId) {
                 "<br>"
             )}
         </div>
-
     `;
 
 
     updateAdminUI();
 
     scrollTop();
-
 }
 
 
@@ -991,24 +842,19 @@ async function saveNews() {
         );
 
         return;
-
     }
 
 
     const title =
         document
-            .getElementById(
-                "input-title"
-            )
+            .getElementById("input-title")
             .value
             .trim();
 
 
     const content =
         document
-            .getElementById(
-                "input-content"
-            )
+            .getElementById("input-content")
             .value
             .trim();
 
@@ -1020,7 +866,6 @@ async function saveNews() {
         );
 
         return;
-
     }
 
 
@@ -1031,15 +876,13 @@ async function saveNews() {
         );
 
         return;
-
     }
 
 
     const {
         data: userData,
         error: userError
-    } = await supabaseClient.auth
-        .getUser();
+    } = await supabaseClient.auth.getUser();
 
 
     if (
@@ -1048,16 +891,15 @@ async function saveNews() {
         || !userData.user
     ) {
 
+        alert(
+            "관리자 로그인 세션이 없습니다."
+        );
+
         isAdmin = false;
 
         updateAdminUI();
 
-        alert(
-            "관리자 로그인이 필요합니다."
-        );
-
         return;
-
     }
 
 
@@ -1076,9 +918,19 @@ async function saveNews() {
         .maybeSingle();
 
 
+    if (profileError) {
+
+        alert(
+            "Profiles 오류: "
+            + profileError.message
+        );
+
+        return;
+    }
+
+
     if (
-        profileError
-        || !profile
+        !profile
         || !profile.can_manage_news
     ) {
 
@@ -1087,7 +939,6 @@ async function saveNews() {
         );
 
         return;
-
     }
 
 
@@ -1096,6 +947,7 @@ async function saveNews() {
     } = await supabaseClient
         .from("news")
         .insert({
+
             author:
                 profile.username,
 
@@ -1104,23 +956,18 @@ async function saveNews() {
 
             content:
                 content
+
         });
 
 
     if (error) {
 
-        console.error(
-            "소식 등록 오류:",
-            error
-        );
-
         alert(
-            "소식을 등록하지 못했습니다.\n\n"
+            "소식 등록 오류: "
             + error.message
         );
 
         return;
-
     }
 
 
@@ -1134,7 +981,6 @@ async function saveNews() {
 
 
     await openNewsList();
-
 }
 
 
@@ -1151,14 +997,12 @@ async function deleteCurrentNews() {
         );
 
         return;
-
     }
 
 
     if (!currentNewsId) {
 
         return;
-
     }
 
 
@@ -1171,7 +1015,6 @@ async function deleteCurrentNews() {
     if (!confirmed) {
 
         return;
-
     }
 
 
@@ -1188,27 +1031,18 @@ async function deleteCurrentNews() {
 
     if (error) {
 
-        console.error(
-            "소식 삭제 오류:",
-            error
-        );
-
         alert(
-            "소식을 삭제하지 못했습니다.\n\n"
+            "소식 삭제 오류: "
             + error.message
         );
 
         return;
-
     }
 
 
-    currentNewsId =
-        null;
-
+    currentNewsId = null;
 
     await openNewsList();
-
 }
 
 
@@ -1219,37 +1053,16 @@ async function deleteCurrentNews() {
 function escapeHTML(value) {
 
     return String(value)
-
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-
-        .replace(
-            /</g,
-            "&lt;"
-        )
-
-        .replace(
-            />/g,
-            "&gt;"
-        )
-
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-
-        .replace(
-            /'/g,
-            "&#039;"
-        );
-
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
 
 /* ==================================================
-   메인 영역 스크롤 위로
+   스크롤
 ================================================== */
 
 function scrollTop() {
@@ -1263,20 +1076,16 @@ function scrollTop() {
     if (main) {
 
         main.scrollTop = 0;
-
     }
-
 }
 
 
 /* ==================================================
-   이벤트 연결
+   버튼 연결
 ================================================== */
 
 document
-    .getElementById(
-        "show-news-list"
-    )
+    .getElementById("show-news-list")
     .addEventListener(
         "click",
         openNewsList
@@ -1284,9 +1093,7 @@ document
 
 
 document
-    .getElementById(
-        "show-write"
-    )
+    .getElementById("show-write")
     .addEventListener(
         "click",
         openWriteScreen
@@ -1294,9 +1101,7 @@ document
 
 
 document
-    .getElementById(
-        "back-to-list"
-    )
+    .getElementById("back-to-list")
     .addEventListener(
         "click",
         openNewsList
@@ -1304,9 +1109,7 @@ document
 
 
 document
-    .getElementById(
-        "back-from-write"
-    )
+    .getElementById("back-from-write")
     .addEventListener(
         "click",
         openNewsList
@@ -1314,9 +1117,7 @@ document
 
 
 document
-    .getElementById(
-        "cancel-write"
-    )
+    .getElementById("cancel-write")
     .addEventListener(
         "click",
         openNewsList
@@ -1324,9 +1125,7 @@ document
 
 
 document
-    .getElementById(
-        "save-write"
-    )
+    .getElementById("save-write")
     .addEventListener(
         "click",
         saveNews
@@ -1334,9 +1133,7 @@ document
 
 
 document
-    .getElementById(
-        "delete-news"
-    )
+    .getElementById("delete-news")
     .addEventListener(
         "click",
         deleteCurrentNews
@@ -1344,9 +1141,7 @@ document
 
 
 document
-    .getElementById(
-        "menu-news"
-    )
+    .getElementById("menu-news")
     .addEventListener(
         "click",
         openNewsIntro
@@ -1354,9 +1149,7 @@ document
 
 
 document
-    .getElementById(
-        "menu-donation"
-    )
+    .getElementById("menu-donation")
     .addEventListener(
         "click",
         openDonation
@@ -1364,9 +1157,7 @@ document
 
 
 document
-    .getElementById(
-        "adminButton"
-    )
+    .getElementById("adminButton")
     .addEventListener(
         "click",
         openAdminLogin
@@ -1374,9 +1165,7 @@ document
 
 
 document
-    .getElementById(
-        "admin-login-submit"
-    )
+    .getElementById("admin-login-submit")
     .addEventListener(
         "click",
         loginAdmin
@@ -1384,9 +1173,7 @@ document
 
 
 document
-    .getElementById(
-        "cancel-login"
-    )
+    .getElementById("cancel-login")
     .addEventListener(
         "click",
         openNewsIntro
@@ -1394,19 +1181,13 @@ document
 
 
 document
-    .getElementById(
-        "admin-password"
-    )
+    .getElementById("admin-password")
     .addEventListener(
         "keydown",
         function(event) {
 
-            if (
-                event.key === "Enter"
-            ) {
-
+            if (event.key === "Enter") {
                 loginAdmin();
-
             }
 
         }
