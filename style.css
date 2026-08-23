@@ -19,7 +19,7 @@ body {
 
 
 /* =========================================
-   상단
+   상단 헤더
 ========================================= */
 
 .top-bar {
@@ -251,7 +251,6 @@ body {
     margin: 0 0 35px;
 
     font-size: 22px;
-
     line-height: 1.6;
 
     color: #333333;
@@ -543,6 +542,34 @@ body {
 
 
 /* =========================================
+   삭제 버튼
+========================================= */
+
+.delete-button {
+    margin-top: 20px;
+
+    padding: 12px 22px;
+
+    background: #ffffff;
+
+    border: 3px solid #cc0000;
+
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    color: #cc0000;
+
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background: #fff0f0;
+}
+
+
+/* =========================================
    작성 화면
 ========================================= */
 
@@ -695,5 +722,11 @@ body {
         width: 100px;
         padding: 0 10px;
         font-size: 14px;
+    }
+
+    .detail-title-line {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
     }
 }
