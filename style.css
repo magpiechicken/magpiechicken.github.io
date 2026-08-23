@@ -55,6 +55,9 @@ body {
     width: min(120px, calc(11.111111vh - 20px));
     height: min(120px, calc(11.111111vh - 20px));
 
+    min-width: 50px;
+    min-height: 50px;
+
     flex: 0 0 min(120px, calc(11.111111vh - 20px));
 
     margin: 0;
@@ -92,12 +95,16 @@ body {
     margin-left: 30px;
 
     font-size: 64px;
+
     font-weight: 700;
 
     line-height: 1;
 
     color: #ffffff;
 
+    /*
+       검은색 2px 글씨 테두리
+    */
     -webkit-text-stroke: 2px #000000;
 
     text-shadow:
@@ -128,11 +135,12 @@ body {
 
 
 /* ==================================================
-   사이드바 + 메인 영역
+   전체 사이트 레이아웃
 ================================================== */
 
 .site-layout {
     width: 100%;
+
     height: calc(100vh - 11.111111vh - 3px);
 
     display: flex;
@@ -163,7 +171,7 @@ body {
 
 
 /* ==================================================
-   사이드바 버튼
+   메뉴 기본
 ================================================== */
 
 .menu-item {
@@ -194,6 +202,7 @@ body {
         sans-serif;
 
     font-size: 30px;
+
     font-weight: 700;
 
     color: #000000;
@@ -201,6 +210,10 @@ body {
     text-align: left;
 
     cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
 }
 
 
@@ -238,7 +251,7 @@ body {
 
 
 /* ==================================================
-   일반 메뉴
+   일반 메뉴 마우스 오버
 ================================================== */
 
 .menu-item:not(.active):not(.locked):not(.upcoming):hover {
@@ -259,7 +272,7 @@ body {
 }
 
 .menu-item.locked:hover {
-    background-color: #e9e9e9;
+    background-color: #f5f5f5;
 }
 
 
@@ -272,7 +285,7 @@ body {
 
     color: #999999;
 
-    cursor: default;
+    cursor: not-allowed;
 }
 
 .menu-item.upcoming:hover {
@@ -290,20 +303,153 @@ body {
     width: 100%;
     height: 100%;
 
+    min-width: 0;
+
+    padding: 45px;
+
     background-color: #ffffff;
 
-    overflow: auto;
+    overflow-y: auto;
 }
 
 
 /* ==================================================
-   큰 화면
+   페이지
+================================================== */
+
+.page-section {
+    display: none;
+
+    width: 100%;
+    min-height: 100%;
+}
+
+
+/* 현재 페이지 */
+.page-section.active-page {
+    display: block;
+}
+
+
+/* ==================================================
+   페이지 제목
+================================================== */
+
+.page-title {
+    margin: 0 0 35px 0;
+
+    font-size: 46px;
+
+    font-weight: 700;
+
+    color: #000000;
+}
+
+
+/* ==================================================
+   소식 카드
+================================================== */
+
+.news-card {
+    width: 100%;
+
+    min-height: 280px;
+
+    padding: 40px;
+
+    background-color: #ffffff;
+
+    border: 4px solid #000000;
+}
+
+
+/* ==================================================
+   기부 카드
+================================================== */
+
+.donation-card {
+    width: 100%;
+
+    min-height: 320px;
+
+    padding: 40px;
+
+    background-color: #ffffff;
+
+    border: 4px solid #000000;
+}
+
+
+/* ==================================================
+   카드 제목
+================================================== */
+
+.card-title {
+    margin-bottom: 25px;
+
+    font-size: 36px;
+
+    font-weight: 700;
+
+    color: #000000;
+}
+
+
+/* ==================================================
+   카드 내용
+================================================== */
+
+.card-text {
+    font-size: 24px;
+
+    line-height: 1.7;
+
+    color: #333333;
+}
+
+
+/* ==================================================
+   기부하기 버튼
+================================================== */
+
+.donation-button {
+    margin-top: 35px;
+
+    padding: 15px 35px;
+
+    background-color: #FF9400;
+
+    border: 3px solid #000000;
+
+    font-family:
+        Arial,
+        "Malgun Gothic",
+        "맑은 고딕",
+        sans-serif;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    color: #ffffff;
+
+    cursor: pointer;
+}
+
+.donation-button:hover {
+    background-color: #e88400;
+}
+
+
+/* ==================================================
+   큰 PC 화면
 ================================================== */
 
 @media (min-width: 1600px) {
 
     .sidebar {
         width: 270px;
+
         flex-basis: 270px;
     }
 
@@ -314,6 +460,7 @@ body {
 
         font-size: 32px;
     }
+
 }
 
 
@@ -329,12 +476,14 @@ body {
 
     .sidebar {
         width: 230px;
+
         flex-basis: 230px;
     }
 
     .menu-item {
         font-size: 27px;
     }
+
 }
 
 
@@ -346,6 +495,7 @@ body {
 
     .title {
         margin-left: 22px;
+
         font-size: 44px;
 
         -webkit-text-stroke: 1.5px #000000;
@@ -353,6 +503,7 @@ body {
 
     .sidebar {
         width: 200px;
+
         flex-basis: 200px;
     }
 
@@ -369,11 +520,28 @@ body {
     .lock {
         font-size: 18px;
     }
+
+    .main-content {
+        padding: 30px;
+    }
+
+    .page-title {
+        font-size: 38px;
+    }
+
+    .card-title {
+        font-size: 30px;
+    }
+
+    .card-text {
+        font-size: 20px;
+    }
+
 }
 
 
 /* ==================================================
-   아주 작은 화면
+   작은 화면
 ================================================== */
 
 @media (max-width: 800px) {
@@ -384,11 +552,13 @@ body {
 
     .title {
         margin-left: 15px;
+
         font-size: 30px;
     }
 
     .sidebar {
         width: 160px;
+
         flex-basis: 160px;
     }
 
@@ -405,4 +575,26 @@ body {
     .lock {
         font-size: 15px;
     }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .page-title {
+        font-size: 30px;
+    }
+
+    .news-card,
+    .donation-card {
+        padding: 25px;
+    }
+
+    .card-title {
+        font-size: 24px;
+    }
+
+    .card-text {
+        font-size: 17px;
+    }
+
 }
