@@ -6,23 +6,20 @@
 
     <title>까치치킨사장님 공식 홈페이지</title>
 
-    <link rel="stylesheet" href="./style.css?v=4">
+    <link rel="stylesheet" href="./style.css">
 </head>
 
 <body>
 
-    <!-- =========================================
+    <!-- =========================
          상단 헤더
-    ========================================== -->
-
+    ========================== -->
     <header class="top-bar">
 
-        <!-- 프로필 사진 -->
         <div class="profile">
             <img src="profile.png" alt="까치치킨사장님">
         </div>
 
-        <!-- 홈페이지 제목 -->
         <div class="title">
             까치치킨사장님 공식 홈페이지
         </div>
@@ -30,150 +27,79 @@
     </header>
 
 
-    <!-- 상단 검은색 경계선 -->
+    <!-- 상단 검은색 선 -->
     <div class="header-line"></div>
 
 
-    <!-- =========================================
-         전체 사이트
-    ========================================== -->
-
+    <!-- =========================
+         전체 레이아웃
+    ========================== -->
     <div class="site-layout">
 
-
-        <!-- =====================================
+        <!-- =====================
              왼쪽 사이드바
-        ====================================== -->
-
+        ====================== -->
         <aside class="sidebar">
 
-            <!-- 소식 -->
-            <button
-                class="menu-item active"
-                id="newsButton"
-                type="button"
-            >
-                <span class="menu-text">소식</span>
+            <button class="menu-item active" id="newsMenu" type="button">
+                <span>소식</span>
             </button>
 
-
-            <!-- 기부 -->
-            <button
-                class="menu-item"
-                id="donationButton"
-                type="button"
-            >
-                <span class="menu-text">기부</span>
+            <button class="menu-item" id="donationMenu" type="button">
+                <span>기부</span>
             </button>
 
-
-            <!-- 고급소식 -->
-            <button
-                class="menu-item locked"
-                type="button"
-                disabled
-            >
-                <span class="menu-text">고급소식</span>
-                <span class="lock">🔒</span>
+            <button class="menu-item locked" type="button" disabled>
+                <span>고급소식</span>
+                <span>🔒</span>
             </button>
 
-
-            <!-- 영상미리보기 -->
-            <button
-                class="menu-item locked"
-                type="button"
-                disabled
-            >
-                <span class="menu-text">영상미리보기</span>
-                <span class="lock">🔒</span>
+            <button class="menu-item locked" type="button" disabled>
+                <span>영상미리보기</span>
+                <span>🔒</span>
             </button>
 
-
-            <!-- 추가 예정 -->
-            <button
-                class="menu-item upcoming"
-                type="button"
-                disabled
-            >
-                <span class="menu-text">(추가예정)</span>
+            <button class="menu-item upcoming" type="button" disabled>
+                <span>(추가예정)</span>
             </button>
 
-
-            <!-- 추가 예정 -->
-            <button
-                class="menu-item upcoming"
-                type="button"
-                disabled
-            >
-                <span class="menu-text">(추가예정)</span>
+            <button class="menu-item upcoming" type="button" disabled>
+                <span>(추가예정)</span>
             </button>
 
         </aside>
 
 
-        <!-- =====================================
-             오른쪽 메인 콘텐츠
-        ====================================== -->
-
+        <!-- =====================
+             오른쪽 메인 영역
+        ====================== -->
         <main class="main-content">
 
+            <!-- =================
+                 기본 소식 화면
+            ================== -->
+            <section id="newsHome" class="page active-page">
 
-            <!-- ================================
-                 소식 화면
-            ================================= -->
-
-            <section
-                class="page-section active-page"
-                id="newsPage"
-            >
-
-                <div class="page-title">
+                <h1 class="page-heading">
                     소식
-                </div>
+                </h1>
 
-                <div class="news-card">
+                <div class="news-box">
 
-                    <div class="card-title">
+                    <h2>
                         까치치킨사장님 공식 소식
-                    </div>
+                    </h2>
 
-                    <div class="card-text">
+                    <p>
                         새로운 소식과 공지사항이 이곳에 표시됩니다.
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- ================================
-                 기부 화면
-            ================================= -->
-
-            <section
-                class="page-section"
-                id="donationPage"
-            >
-
-                <div class="page-title">
-                    기부
-                </div>
-
-                <div class="donation-card">
-
-                    <div class="card-title">
-                        기부 안내
-                    </div>
-
-                    <div class="card-text">
-                        기부와 관련된 내용을 이곳에서 확인할 수 있습니다.
-                    </div>
+                    </p>
 
                     <button
-                        class="donation-button"
+                        id="newsDetailButton"
+                        class="detail-button"
                         type="button"
                     >
-                        기부하기
+                        소식 자세히 보러가기
                     </button>
 
                 </div>
@@ -181,62 +107,51 @@
             </section>
 
 
+            <!-- =================
+                 소식 전용 화면
+            ================== -->
+            <section id="newsDetail" class="page">
+
+                <button
+                    id="backToNewsButton"
+                    class="back-button"
+                    type="button"
+                >
+                    ← 소식으로 돌아가기
+                </button>
+
+                <div class="detail-page">
+
+                    <h1>
+                        소식 전용 화면
+                    </h1>
+
+                    <p>
+                        이곳에 앞으로 실제 소식들이 표시됩니다.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================
+                 기부 화면
+            ================== -->
+            <section id="donationPage" class="page">
+
+                <h1 class="page-heading">
+                    기부
+                </h1>
+
+            </section>
+
         </main>
 
     </div>
 
 
-    <!-- =========================================
-         JavaScript
-    ========================================== -->
-
-    <script>
-
-        /* -----------------------------------------
-           버튼 가져오기
-        ----------------------------------------- */
-
-        const newsButton = document.getElementById("newsButton");
-        const donationButton = document.getElementById("donationButton");
-
-        const newsPage = document.getElementById("newsPage");
-        const donationPage = document.getElementById("donationPage");
-
-
-        /* -----------------------------------------
-           소식 버튼
-        ----------------------------------------- */
-
-        newsButton.addEventListener("click", function () {
-
-            /* 버튼 상태 변경 */
-            newsButton.classList.add("active");
-            donationButton.classList.remove("active");
-
-            /* 화면 변경 */
-            newsPage.classList.add("active-page");
-            donationPage.classList.remove("active-page");
-
-        });
-
-
-        /* -----------------------------------------
-           기부 버튼
-        ----------------------------------------- */
-
-        donationButton.addEventListener("click", function () {
-
-            /* 버튼 상태 변경 */
-            donationButton.classList.add("active");
-            newsButton.classList.remove("active");
-
-            /* 화면 변경 */
-            donationPage.classList.add("active-page");
-            newsPage.classList.remove("active-page");
-
-        });
-
-    </script>
+    <script src="./script.js"></script>
 
 </body>
 </html>
