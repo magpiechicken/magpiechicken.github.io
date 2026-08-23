@@ -1,7 +1,3 @@
-/* ==================================================
-   전체 초기화
-================================================== */
-
 * {
     box-sizing: border-box;
 }
@@ -15,22 +11,16 @@ body {
 }
 
 body {
-    font-family:
-        Arial,
-        "Malgun Gothic",
-        "맑은 고딕",
-        sans-serif;
-
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
     background: #ffffff;
     color: #222222;
-
     overflow: hidden;
 }
 
 
-/* ==================================================
-   상단 주황색 헤더
-================================================== */
+/* =========================================
+   상단
+========================================= */
 
 .top-bar {
     width: 100%;
@@ -46,25 +36,15 @@ body {
     overflow: hidden;
 }
 
-
-/* ==================================================
-   사진
-================================================== */
-
 .profile {
     width: min(120px, calc(11.111111vh - 20px));
     height: min(120px, calc(11.111111vh - 20px));
 
     flex: 0 0 min(120px, calc(11.111111vh - 20px));
 
-    margin: 0;
-    padding: 0;
-
     overflow: hidden;
 
     background: transparent;
-
-    border: none;
 }
 
 .profile img {
@@ -74,24 +54,17 @@ body {
     display: block;
 
     object-fit: cover;
-
-    border: none;
 }
-
-
-/* ==================================================
-   상단 제목
-================================================== */
 
 .title {
     margin-left: 30px;
-
-    color: #ffffff;
 
     font-size: 64px;
     font-weight: 700;
 
     line-height: 1;
+
+    color: #ffffff;
 
     white-space: nowrap;
 
@@ -104,11 +77,6 @@ body {
          2px  2px 0 #000000;
 }
 
-
-/* ==================================================
-   헤더 아래 검은색 선
-================================================== */
-
 .header-line {
     width: 100%;
     height: 3px;
@@ -117,23 +85,21 @@ body {
 }
 
 
-/* ==================================================
-   전체 레이아웃
-================================================== */
+/* =========================================
+   전체 구조
+========================================= */
 
 .site-layout {
     width: 100%;
     height: calc(100vh - 11.111111vh - 3px);
 
     display: flex;
-
-    background: #ffffff;
 }
 
 
-/* ==================================================
+/* =========================================
    사이드바
-================================================== */
+========================================= */
 
 .sidebar {
     width: 265px;
@@ -147,14 +113,7 @@ body {
     background: #ffffff;
 
     border-right: 4px solid #000000;
-
-    overflow: hidden;
 }
-
-
-/* ==================================================
-   사이드바 버튼
-================================================== */
 
 .menu-item {
     width: 100%;
@@ -163,7 +122,6 @@ body {
 
     display: flex;
     align-items: center;
-    justify-content: flex-start;
 
     gap: 10px;
 
@@ -174,11 +132,7 @@ body {
     border: none;
     border-bottom: 3px solid #000000;
 
-    font-family:
-        Arial,
-        "Malgun Gothic",
-        "맑은 고딕",
-        sans-serif;
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
 
     font-size: 30px;
     font-weight: 700;
@@ -192,7 +146,6 @@ body {
 
 .menu-item.active {
     background: #FF9400;
-
     color: #ffffff;
 
     -webkit-text-stroke: 1px #000000;
@@ -200,7 +153,6 @@ body {
 
 .menu-item.locked {
     background: #f5f5f5;
-
     color: #555555;
 
     cursor: not-allowed;
@@ -208,51 +160,51 @@ body {
 
 .menu-item.upcoming {
     background: #eeeeee;
-
     color: #999999;
 
     cursor: not-allowed;
 }
 
 
-/* ==================================================
-   오른쪽 메인
-================================================== */
+/* =========================================
+   메인
+========================================= */
 
 .main-content {
     flex: 1;
 
+    width: 100%;
+    height: 100%;
+
     min-width: 0;
     min-height: 0;
 
-    height: 100%;
-
     padding: 45px;
 
-    background: #ffffff;
-
     overflow-y: auto;
+
+    background: #ffffff;
 }
 
 
-/* ==================================================
-   페이지
-================================================== */
+/* =========================================
+   화면 전환
+========================================= */
 
-.page {
+.screen {
     display: none;
 
     width: 100%;
 }
 
-.page.active-page {
+.screen.visible {
     display: block;
 }
 
 
-/* ==================================================
-   페이지 제목
-================================================== */
+/* =========================================
+   제목
+========================================= */
 
 .page-heading {
     margin: 0;
@@ -263,8 +215,8 @@ body {
     line-height: 1.2;
 }
 
-.page-description {
-    margin: 12px 0 0 0;
+.page-subtitle {
+    margin: 12px 0 0;
 
     font-size: 20px;
 
@@ -272,11 +224,11 @@ body {
 }
 
 
-/* ==================================================
-   소식 소개
-================================================== */
+/* =========================================
+   소개 박스
+========================================= */
 
-.news-intro-box {
+.intro-box {
     width: 100%;
 
     margin-top: 35px;
@@ -288,15 +240,15 @@ body {
     border: 4px solid #000000;
 }
 
-.news-intro-box h2 {
-    margin: 0 0 22px 0;
+.intro-box h2 {
+    margin: 0 0 22px;
 
     font-size: 36px;
     font-weight: 700;
 }
 
-.news-intro-box p {
-    margin: 0 0 35px 0;
+.intro-box p {
+    margin: 0 0 35px;
 
     font-size: 22px;
 
@@ -306,24 +258,18 @@ body {
 }
 
 
-/* ==================================================
-   소식 자세히 보기 버튼
-================================================== */
+/* =========================================
+   주황색 버튼
+========================================= */
 
-.detail-button {
-    min-width: 245px;
-
-    padding: 16px 28px;
+.orange-button {
+    padding: 16px 30px;
 
     background: #FF9400;
 
     border: 3px solid #000000;
 
-    font-family:
-        Arial,
-        "Malgun Gothic",
-        "맑은 고딕",
-        sans-serif;
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
 
     font-size: 21px;
     font-weight: 700;
@@ -331,20 +277,18 @@ body {
     color: #ffffff;
 
     cursor: pointer;
-
-    transition: background 0.15s ease;
 }
 
-.detail-button:hover {
+.orange-button:hover {
     background: #e98900;
 }
 
 
-/* ==================================================
-   소식 목록 상단
-================================================== */
+/* =========================================
+   목록 상단
+========================================= */
 
-.page-top {
+.list-header {
     width: 100%;
 
     display: flex;
@@ -357,26 +301,22 @@ body {
 }
 
 
-/* ==================================================
-   소식 작성 버튼
-================================================== */
+/* =========================================
+   작은 주황색 버튼
+========================================= */
 
-.write-button {
+.orange-small-button {
     flex-shrink: 0;
 
-    padding: 14px 22px;
+    padding: 13px 22px;
 
     background: #FF9400;
 
     border: 3px solid #000000;
 
-    font-family:
-        Arial,
-        "Malgun Gothic",
-        "맑은 고딕",
-        sans-serif;
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
 
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 700;
 
     color: #ffffff;
@@ -384,22 +324,23 @@ body {
     cursor: pointer;
 }
 
-.write-button:hover {
+.orange-small-button:hover {
     background: #e98900;
 }
 
 
-/* ==================================================
+/* =========================================
    소식 없음
-================================================== */
+========================================= */
 
-.empty-news-box {
+.empty-box {
     width: 100%;
 
     min-height: 330px;
 
     display: flex;
     flex-direction: column;
+
     align-items: center;
     justify-content: center;
 
@@ -410,23 +351,14 @@ body {
     text-align: center;
 }
 
-.empty-news-icon {
-    margin-bottom: 12px;
-
-    font-size: 38px;
-    font-weight: 700;
-
-    color: #bbbbbb;
-}
-
-.empty-news-title {
+.empty-title {
     font-size: 34px;
     font-weight: 700;
 
     color: #555555;
 }
 
-.empty-news-text {
+.empty-description {
     margin-top: 10px;
 
     font-size: 18px;
@@ -435,28 +367,27 @@ body {
 }
 
 
-/* ==================================================
+/* =========================================
    소식 목록
-================================================== */
+========================================= */
 
 .news-list {
+    width: 100%;
+
     display: flex;
     flex-direction: column;
 
-    gap: 16px;
+    gap: 14px;
 }
-
-
-/* ==================================================
-   소식 제목 한 줄
-================================================== */
 
 .news-row {
     width: 100%;
-    min-height: 92px;
+    min-height: 88px;
 
     display: flex;
     align-items: center;
+
+    padding: 0;
 
     background: #ffffff;
 
@@ -464,24 +395,15 @@ body {
 
     cursor: pointer;
 
-    transition:
-        background 0.15s ease,
-        transform 0.1s ease;
+    text-align: left;
 }
 
 .news-row:hover {
     background: #fff4df;
 }
 
-.news-row:active {
-    transform: translateY(1px);
-}
-
-
-/* 작성자 */
-
-.news-row-author {
-    width: 190px;
+.news-author {
+    width: 200px;
 
     flex-shrink: 0;
 
@@ -497,10 +419,7 @@ body {
     text-overflow: ellipsis;
 }
 
-
-/* 제목 */
-
-.news-row-title {
+.news-title {
     flex: 1;
 
     min-width: 0;
@@ -517,11 +436,8 @@ body {
     text-overflow: ellipsis;
 }
 
-
-/* 날짜 */
-
-.news-row-date {
-    width: 125px;
+.news-date {
+    width: 130px;
 
     flex-shrink: 0;
 
@@ -537,11 +453,11 @@ body {
 }
 
 
-/* ==================================================
-   뒤로가기
-================================================== */
+/* =========================================
+   흰색 버튼
+========================================= */
 
-.back-button {
+.white-button {
     margin-bottom: 30px;
 
     padding: 12px 20px;
@@ -550,11 +466,7 @@ body {
 
     border: 3px solid #000000;
 
-    font-family:
-        Arial,
-        "Malgun Gothic",
-        "맑은 고딕",
-        sans-serif;
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
 
     font-size: 18px;
     font-weight: 700;
@@ -564,16 +476,16 @@ body {
     cursor: pointer;
 }
 
-.back-button:hover {
+.white-button:hover {
     background: #eeeeee;
 }
 
 
-/* ==================================================
+/* =========================================
    상세 페이지
-================================================== */
+========================================= */
 
-.news-detail-box {
+.detail-box {
     width: 100%;
 
     padding: 50px;
@@ -582,9 +494,6 @@ body {
 
     border: 4px solid #000000;
 }
-
-
-/* 작성자 */
 
 .detail-author {
     margin-bottom: 12px;
@@ -595,10 +504,7 @@ body {
     color: #555555;
 }
 
-
-/* 제목 + 날짜 */
-
-.detail-heading-row {
+.detail-title-line {
     width: 100%;
 
     display: flex;
@@ -610,9 +516,6 @@ body {
     margin-bottom: 35px;
 }
 
-
-/* 제목 */
-
 .detail-title {
     margin: 0;
 
@@ -620,12 +523,7 @@ body {
     font-weight: 700;
 
     line-height: 1.25;
-
-    color: #000000;
 }
-
-
-/* 날짜 */
 
 .detail-date {
     flex-shrink: 0;
@@ -634,9 +532,6 @@ body {
 
     color: #777777;
 }
-
-
-/* 내용 */
 
 .detail-content {
     font-size: 24px;
@@ -647,9 +542,9 @@ body {
 }
 
 
-/* ==================================================
+/* =========================================
    작성 화면
-================================================== */
+========================================= */
 
 .write-box {
     width: 100%;
@@ -661,16 +556,13 @@ body {
     border: 4px solid #000000;
 }
 
-.write-title {
-    margin: 0 0 35px 0;
+.write-box h1 {
+    margin: 0 0 35px;
 
     font-size: 42px;
 }
 
-
-/* 폼 라벨 */
-
-.form-label {
+.write-box label {
     display: block;
 
     margin-bottom: 10px;
@@ -679,11 +571,8 @@ body {
     font-weight: 700;
 }
 
-
-/* 폼 입력 */
-
-.form-input,
-.form-textarea {
+.write-box input,
+.write-box textarea {
     width: 100%;
 
     margin-bottom: 25px;
@@ -694,23 +583,14 @@ body {
 
     border: 3px solid #000000;
 
-    font-family:
-        Arial,
-        "Malgun Gothic",
-        "맑은 고딕",
-        sans-serif;
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
 
     font-size: 19px;
 
     outline: none;
 }
 
-.form-input:focus,
-.form-textarea:focus {
-    border-color: #FF9400;
-}
-
-.form-textarea {
+.write-box textarea {
     min-height: 260px;
 
     resize: vertical;
@@ -718,10 +598,7 @@ body {
     line-height: 1.6;
 }
 
-
-/* 작성 버튼 영역 */
-
-.write-buttons {
+.write-actions {
     display: flex;
 
     justify-content: flex-end;
@@ -730,65 +607,9 @@ body {
 }
 
 
-/* 취소 */
-
-.cancel-button {
-    padding: 13px 24px;
-
-    background: #ffffff;
-
-    border: 3px solid #000000;
-
-    font-family:
-        Arial,
-        "Malgun Gothic",
-        "맑은 고딕",
-        sans-serif;
-
-    font-size: 18px;
-    font-weight: 700;
-
-    color: #000000;
-
-    cursor: pointer;
-}
-
-
-/* 등록 */
-
-.save-button {
-    padding: 13px 24px;
-
-    background: #FF9400;
-
-    border: 3px solid #000000;
-
-    font-family:
-        Arial,
-        "Malgun Gothic",
-        "맑은 고딕",
-        sans-serif;
-
-    font-size: 18px;
-    font-weight: 700;
-
-    color: #ffffff;
-
-    cursor: pointer;
-}
-
-.cancel-button:hover {
-    background: #eeeeee;
-}
-
-.save-button:hover {
-    background: #e98900;
-}
-
-
-/* ==================================================
+/* =========================================
    반응형
-================================================== */
+========================================= */
 
 @media (max-width: 1400px) {
 
@@ -804,19 +625,12 @@ body {
     .menu-item {
         font-size: 27px;
     }
-
-    .news-row-author {
-        width: 170px;
-    }
-
 }
-
 
 @media (max-width: 1100px) {
 
     .title {
         margin-left: 22px;
-
         font-size: 44px;
     }
 
@@ -833,22 +647,19 @@ body {
         padding: 30px;
     }
 
-    .news-row-author {
-        width: 145px;
+    .news-author {
+        width: 150px;
     }
 
-    .news-row-title {
+    .news-title {
         font-size: 22px;
     }
-
 }
-
 
 @media (max-width: 800px) {
 
     .title {
         margin-left: 15px;
-
         font-size: 30px;
     }
 
@@ -865,42 +676,24 @@ body {
         padding: 20px;
     }
 
-    .page-top {
+    .list-header {
         flex-direction: column;
     }
 
-    .news-row {
-        min-height: 78px;
-    }
-
-    .news-row-author {
-        width: 120px;
-
-        padding: 0 12px;
-
+    .news-author {
+        width: 110px;
+        padding: 0 10px;
         font-size: 14px;
     }
 
-    .news-row-title {
-        padding: 0 12px;
-
+    .news-title {
+        padding: 0 10px;
         font-size: 18px;
     }
 
-    .news-row-date {
-        width: 105px;
-
-        padding: 0 12px;
-
+    .news-date {
+        width: 100px;
+        padding: 0 10px;
         font-size: 14px;
     }
-
-    .detail-heading-row {
-        flex-direction: column;
-
-        align-items: flex-start;
-
-        gap: 8px;
-    }
-
 }
