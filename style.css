@@ -19,7 +19,7 @@ body {
 
 
 /* =========================================
-   상단 헤더
+   상단
 ========================================= */
 
 .top-bar {
@@ -232,7 +232,6 @@ body {
 
 .screen {
     display: none;
-
     width: 100%;
 }
 
@@ -654,7 +653,7 @@ body {
 
 
 /* =========================================
-   로그인
+   관리자 로그인
 ========================================= */
 
 .login-box {
@@ -706,6 +705,31 @@ body {
     background: #e98900;
 }
 
+.login-cancel-button {
+    width: 100%;
+
+    margin-top: 12px;
+
+    padding: 13px;
+
+    background: #ffffff;
+
+    border: 3px solid #000000;
+
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    color: #111111;
+
+    cursor: pointer;
+}
+
+.login-cancel-button:hover {
+    background: #eeeeee;
+}
+
 .login-error {
     min-height: 24px;
 
@@ -745,6 +769,7 @@ body {
     .menu-item {
         font-size: 27px;
     }
+
 }
 
 @media (max-width: 1100px) {
@@ -778,6 +803,7 @@ body {
     .admin-button {
         margin-right: 15px;
     }
+
 }
 
 @media (max-width: 800px) {
@@ -825,4 +851,5 @@ body {
 
         font-size: 13px;
     }
+
 }
