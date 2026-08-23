@@ -1,3 +1,7 @@
+/* ==================================================
+   전체 초기화
+================================================== */
+
 * {
     box-sizing: border-box;
 }
@@ -11,89 +15,190 @@ body {
 }
 
 body {
-    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
+    font-family:
+        Arial,
+        "Malgun Gothic",
+        "맑은 고딕",
+        sans-serif;
+
     background-color: #ffffff;
     color: #222222;
+
     overflow-x: hidden;
 }
+
+
+/* ==================================================
+   상단 주황색 헤더
+
+   화면 높이의 1/9
+================================================== */
 
 .top-bar {
     width: 100%;
     height: 11.111111vh;
+
     display: flex;
     align-items: center;
+
     background-color: #FF9400;
+
     padding-left: 20px;
+
     overflow: hidden;
 }
+
+
+/* ==================================================
+   사진 영역
+
+   화면이 충분히 크면 최대 120px
+   화면이 작으면 헤더에 맞춰 자동 축소
+================================================== */
 
 .profile {
     width: min(120px, calc(11.111111vh - 20px));
     height: min(120px, calc(11.111111vh - 20px));
+
     flex: 0 0 min(120px, calc(11.111111vh - 20px));
+
     margin: 0;
     padding: 0;
-    background: transparent;
+
+    background-color: transparent;
+
     border: none;
     outline: none;
+
     overflow: hidden;
+
     display: block;
 }
+
+
+/* ==================================================
+   실제 사진
+================================================== */
 
 .profile img {
     width: 100%;
     height: 100%;
+
     display: block;
+
     object-fit: cover;
+
     margin: 0;
     padding: 0;
+
     border: none;
     outline: none;
 }
 
+
+/* ==================================================
+   홈페이지 제목
+================================================== */
+
 .title {
     margin-left: 30px;
-    font-size: 64px;
-    font-weight: 700;
-    line-height: 1;
-    color: #ffffff;
-    white-space: nowrap;
-    flex-shrink: 0;
 
-    /* 검은색 2px 글씨 테두리 */
+    font-size: 64px;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+    color: #ffffff;
+
+    /*
+       글씨에 검은색 2px 테두리
+    */
     -webkit-text-stroke: 2px #000000;
 
-    /* 테두리가 확실히 보이도록 보강 */
+    /*
+       브라우저에서 테두리가 확실하게
+       보이도록 4방향 그림자 추가
+    */
     text-shadow:
         -2px -2px 0 #000000,
          2px -2px 0 #000000,
         -2px  2px 0 #000000,
          2px  2px 0 #000000;
+
+    /*
+       제목이 여러 줄로 내려가지 않게 함
+    */
+    white-space: nowrap;
+
+    /*
+       제목이 사진과 겹치지 않도록
+       flex 아이템으로 고정
+    */
+    flex-shrink: 0;
 }
+
+
+/* ==================================================
+   주황색 헤더 아래 검은색 경계선
+
+   별도의 요소로 만들어서
+   정확한 위치에 표시
+================================================== */
 
 .header-line {
     width: 100%;
     height: 3px;
+
     margin: 0;
     padding: 0;
+
     background-color: #000000;
+
+    flex-shrink: 0;
 }
+
+
+/* ==================================================
+   아래쪽 메인 영역
+================================================== */
 
 .main-content {
     width: 100%;
+
+    /*
+       헤더 1/9 + 검은 선 3px을 제외한 나머지
+    */
     height: calc(88.888889vh - 3px);
+
     margin: 0;
     padding: 0;
+
     background-color: #ffffff;
 }
 
+
+/* ==================================================
+   PC 화면에서 제목이 너무 길 경우 대비
+
+   일반적인 PC 해상도에서는 64px 유지
+================================================== */
+
 @media (max-width: 1200px) {
+
     .title {
         font-size: 48px;
     }
+
 }
 
+
+/* ==================================================
+   작은 PC / 노트북 화면 대응
+================================================== */
+
 @media (max-width: 900px) {
+
     .top-bar {
         padding-left: 12px;
     }
@@ -102,11 +207,19 @@ body {
         margin-left: 20px;
         font-size: 36px;
     }
+
 }
 
+
+/* ==================================================
+   아주 작은 화면 대응
+================================================== */
+
 @media (max-width: 600px) {
+
     .title {
         margin-left: 12px;
         font-size: 24px;
     }
+
 }
