@@ -1,0 +1,1 @@
+console.log("MagpieChicken 사이트 시작!");
