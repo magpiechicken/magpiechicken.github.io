@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>까치치킨사장님 공식 홈페이지</title>
 
-    <link rel="stylesheet" href="./style.css?v=10">
+    <link rel="stylesheet" href="./style.css?v=11">
 </head>
 
 <body>
@@ -63,7 +62,7 @@
             </button>
 
 
-            <!-- 잠금 -->
+            <!-- 고급소식 -->
             <button
                 class="menu-item locked"
                 type="button"
@@ -73,7 +72,7 @@
             </button>
 
 
-            <!-- 잠금 -->
+            <!-- 영상미리보기 -->
             <button
                 class="menu-item locked"
                 type="button"
@@ -83,7 +82,7 @@
             </button>
 
 
-            <!-- 추가 예정 -->
+            <!-- 추가예정 -->
             <button
                 class="menu-item upcoming"
                 type="button"
@@ -93,7 +92,7 @@
             </button>
 
 
-            <!-- 추가 예정 -->
+            <!-- 추가예정 -->
             <button
                 class="menu-item upcoming"
                 type="button"
@@ -137,7 +136,6 @@
                     </p>
 
 
-                    <!-- 이 버튼을 눌러야 소식 목록으로 이동 -->
                     <button
                         id="show-news-list"
                         class="orange-button"
@@ -187,7 +185,7 @@
                 </div>
 
 
-                <!-- 여기에 소식 목록이 들어감 -->
+                <!-- 소식 목록 -->
                 <div id="news-list-container"></div>
 
             </section>
@@ -216,6 +214,16 @@
                     class="detail-box"
                 >
                 </article>
+
+
+                <!-- 소식 삭제 -->
+                <button
+                    id="delete-news"
+                    class="delete-button"
+                    type="button"
+                >
+                    소식 삭제
+                </button>
 
             </section>
 
@@ -253,6 +261,7 @@
                         id="input-author"
                         type="text"
                         placeholder="예: 까치치킨사장님"
+                        autocomplete="off"
                     >
 
 
@@ -264,6 +273,7 @@
                         id="input-title"
                         type="text"
                         placeholder="소식 제목"
+                        autocomplete="off"
                     >
 
 
@@ -325,7 +335,7 @@
 
     <!-- ==================================================
          JavaScript
-         이 파일 안에 직접 포함
+         index.html 안에 직접 포함
     ================================================== -->
 
     <script>
@@ -334,7 +344,14 @@
            저장 키
         ------------------------------------------ */
 
-        const STORAGE_KEY = "kkachi_news_final_v10";
+        const STORAGE_KEY = "kkachi_news_final_v11";
+
+
+        /* ------------------------------------------
+           현재 보고 있는 소식 ID
+        ------------------------------------------ */
+
+        let currentNewsId = null;
 
 
         /* ------------------------------------------
@@ -483,7 +500,9 @@
 
         function openNewsDetail(newsId) {
 
-            const newsList = getNews();
+            const newsList =
+                getNews();
+
 
             const news =
                 newsList.find(function(item) {
@@ -498,6 +517,9 @@
                 return;
 
             }
+
+
+            currentNewsId = newsId;
 
 
             hideScreens();
@@ -544,7 +566,7 @@
 
 
         /* ------------------------------------------
-           목록 불러오기
+           소식 가져오기
         ------------------------------------------ */
 
         function getNews() {
@@ -577,6 +599,11 @@
 
             } catch (error) {
 
+                console.error(
+                    "소식 데이터를 불러오지 못했습니다.",
+                    error
+                );
+
                 return [];
 
             }
@@ -600,7 +627,7 @@
                 getNews();
 
 
-            /* 소식이 없으면 */
+            /* 소식 없음 */
 
             if (newsList.length === 0) {
 
@@ -625,7 +652,7 @@
             }
 
 
-            /* 소식이 있으면 */
+            /* 소식 있음 */
 
             container.innerHTML = "";
 
@@ -798,6 +825,77 @@
             ).value = "";
 
 
+            currentNewsId = null;
+
+
+            openNewsList();
+
+        }
+
+
+        /* ------------------------------------------
+           현재 소식 삭제
+        ------------------------------------------ */
+
+        function deleteCurrentNews() {
+
+            if (!currentNewsId) {
+
+                return;
+
+            }
+
+
+            const newsList =
+                getNews();
+
+
+            const currentNews =
+                newsList.find(function(item) {
+
+                    return item.id === currentNewsId;
+
+                });
+
+
+            if (!currentNews) {
+
+                return;
+
+            }
+
+
+            const confirmed =
+                window.confirm(
+                    "정말 이 소식을 삭제하시겠습니까?\n\n"
+                    + currentNews.title
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            const updatedNews =
+                newsList.filter(function(item) {
+
+                    return item.id !== currentNewsId;
+
+                });
+
+
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(updatedNews)
+            );
+
+
+            currentNewsId = null;
+
+
             openNewsList();
 
         }
@@ -825,9 +923,17 @@
 
         function scrollTop() {
 
-            document
-                .querySelector(".main-content")
-                .scrollTop = 0;
+            const main =
+                document.querySelector(
+                    ".main-content"
+                );
+
+
+            if (main) {
+
+                main.scrollTop = 0;
+
+            }
 
         }
 
@@ -885,6 +991,14 @@
 
 
         document
+            .getElementById("delete-news")
+            .addEventListener(
+                "click",
+                deleteCurrentNews
+            );
+
+
+        document
             .getElementById("menu-news")
             .addEventListener(
                 "click",
@@ -901,7 +1015,7 @@
 
 
         /* ------------------------------------------
-           처음 시작
+           시작
         ------------------------------------------ */
 
         openNewsIntro();
