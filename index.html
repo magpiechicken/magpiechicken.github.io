@@ -11,9 +11,9 @@
 
 <body>
 
-    <!-- ==================================================
+    <!-- =========================================
          상단 헤더
-    ================================================== -->
+    ========================================== -->
 
     <header class="top-bar">
 
@@ -27,141 +27,140 @@
 
     </header>
 
-
-    <!-- 상단 검은색 경계선 -->
     <div class="header-line"></div>
 
 
-    <!-- ==================================================
-         사이트 전체
-    ================================================== -->
+    <!-- =========================================
+         전체 레이아웃
+    ========================================== -->
 
     <div class="site-layout">
 
-
-        <!-- ==================================================
-             왼쪽 사이드바
-        ================================================== -->
+        <!-- =====================================
+             사이드바
+        ====================================== -->
 
         <aside class="sidebar">
 
-            <!-- 소식 -->
             <button
                 id="newsMenu"
                 class="menu-item active"
                 type="button"
                 onclick="showNewsHome()"
             >
-                <span>소식</span>
+                소식
             </button>
 
-
-            <!-- 기부 -->
             <button
                 id="donationMenu"
                 class="menu-item"
                 type="button"
                 onclick="showDonation()"
             >
-                <span>기부</span>
+                기부
             </button>
 
-
-            <!-- 고급소식 잠금 -->
             <button
                 class="menu-item locked"
                 type="button"
                 disabled
             >
-                <span>고급소식</span>
-                <span class="lock">🔒</span>
+                고급소식 🔒
             </button>
 
-
-            <!-- 영상미리보기 잠금 -->
             <button
                 class="menu-item locked"
                 type="button"
                 disabled
             >
-                <span>영상미리보기</span>
-                <span class="lock">🔒</span>
+                영상미리보기 🔒
             </button>
 
-
-            <!-- 추가 예정 -->
             <button
                 class="menu-item upcoming"
                 type="button"
                 disabled
             >
-                <span>(추가예정)</span>
+                (추가예정)
             </button>
 
-
-            <!-- 추가 예정 -->
             <button
                 class="menu-item upcoming"
                 type="button"
                 disabled
             >
-                <span>(추가예정)</span>
+                (추가예정)
             </button>
 
         </aside>
 
 
-        <!-- ==================================================
-             오른쪽 메인 영역
-        ================================================== -->
+        <!-- =====================================
+             메인 영역
+        ====================================== -->
 
         <main class="main-content">
 
 
-            <!-- ==================================================
-                 소식 메인 화면
-            ================================================== -->
+            <!-- =================================
+                 소식 메인
+            ================================== -->
 
             <section id="newsHome" class="page active-page">
 
-                <h1 class="page-heading">
-                    소식
-                </h1>
+                <div class="page-heading-row">
 
+                    <h1 class="page-heading">
+                        소식
+                    </h1>
 
-                <div class="news-box">
-
-                    <h2>
-                        까치치킨사장님 공식 소식
-                    </h2>
-
-
-                    <p>
-                        새로운 소식과 공지사항이 이곳에 표시됩니다.
-                    </p>
-
-
-                    <!-- 소식 자세히 보러가기 -->
+                    <!-- 임시 작성 버튼 -->
                     <button
-                        class="detail-button"
+                        class="write-button"
                         type="button"
-                        onclick="showNewsDetail()"
+                        onclick="showWritePage()"
                     >
-                        소식 자세히 보러가기
+                        소식 작성
                     </button>
 
                 </div>
 
+
+                <!-- 소식이 없으면 자동으로
+                     "소식 없음" 표시 -->
+                <div id="newsList"></div>
+
             </section>
 
 
-            <!-- ==================================================
-                 소식 전용 화면
-            ================================================== -->
+            <!-- =================================
+                 소식 상세
+            ================================== -->
 
             <section id="newsDetail" class="page">
 
-                <!-- 돌아가기 -->
+                <button
+                    class="back-button"
+                    type="button"
+                    onclick="showNewsHome()"
+                >
+                    ← 소식으로 돌아가기
+                </button>
+
+                <div
+                    id="newsDetailContent"
+                    class="detail-page"
+                ></div>
+
+            </section>
+
+
+            <!-- =================================
+                 소식 작성
+            ================================== -->
+
+            <section id="writePage" class="page">
+
                 <button
                     class="back-button"
                     type="button"
@@ -171,41 +170,84 @@
                 </button>
 
 
-                <div class="detail-page">
+                <div class="write-page">
+
+                    <h1 class="write-page-title">
+                        소식 작성
+                    </h1>
+
 
                     <!-- 작성자 -->
-                    <div class="detail-author">
-                        (까치치킨사장님)
-                    </div>
+
+                    <label class="form-label" for="authorInput">
+                        작성자
+                    </label>
+
+                    <input
+                        id="authorInput"
+                        class="form-input"
+                        type="text"
+                        placeholder="예: 까치치킨사장님"
+                    >
 
 
-                    <!-- 제목 + 날짜 -->
-                    <div class="detail-title-row">
+                    <!-- 제목 -->
 
-                        <h1 class="detail-title">
-                            새로운 소식이 올라왔습니다
-                        </h1>
+                    <label class="form-label" for="titleInput">
+                        제목
+                    </label>
 
-                        <span class="detail-date">
-                            2026.08.23
-                        </span>
-
-                    </div>
+                    <input
+                        id="titleInput"
+                        class="form-input"
+                        type="text"
+                        placeholder="소식 제목을 입력하세요"
+                    >
 
 
                     <!-- 내용 -->
-                    <p class="detail-content">
-                        새로운 소식의 내용이 이곳에 표시됩니다.
-                    </p>
+
+                    <label class="form-label" for="contentInput">
+                        내용
+                    </label>
+
+                    <textarea
+                        id="contentInput"
+                        class="form-textarea"
+                        placeholder="소식 내용을 입력하세요"
+                    ></textarea>
+
+
+                    <!-- 버튼 -->
+
+                    <div class="form-buttons">
+
+                        <button
+                            class="cancel-button"
+                            type="button"
+                            onclick="showNewsHome()"
+                        >
+                            취소
+                        </button>
+
+                        <button
+                            class="save-button"
+                            type="button"
+                            onclick="saveNews()"
+                        >
+                            소식 등록
+                        </button>
+
+                    </div>
 
                 </div>
 
             </section>
 
 
-            <!-- ==================================================
-                 기부 화면
-            ================================================== -->
+            <!-- =================================
+                 기부
+            ================================== -->
 
             <section id="donationPage" class="page">
 
@@ -215,46 +257,54 @@
 
             </section>
 
-
         </main>
 
     </div>
 
 
-    <!-- ==================================================
-         JavaScript
-    ================================================== -->
-
     <script>
 
-        /* ------------------------------------------
-           화면 요소 가져오기
-        ------------------------------------------ */
+        /* ==================================================
+           저장소
+        ================================================== */
+
+        const STORAGE_KEY = "kkachi_chicken_news";
+
+
+        /* ==================================================
+           화면 요소
+        ================================================== */
 
         const newsHome = document.getElementById("newsHome");
         const newsDetail = document.getElementById("newsDetail");
+        const writePage = document.getElementById("writePage");
         const donationPage = document.getElementById("donationPage");
 
         const newsMenu = document.getElementById("newsMenu");
         const donationMenu = document.getElementById("donationMenu");
 
+        const newsList = document.getElementById("newsList");
+        const newsDetailContent =
+            document.getElementById("newsDetailContent");
 
-        /* ------------------------------------------
-           모든 화면 숨기기
-        ------------------------------------------ */
+
+        /* ==================================================
+           페이지 숨기기
+        ================================================== */
 
         function hideAllPages() {
 
             newsHome.classList.remove("active-page");
             newsDetail.classList.remove("active-page");
+            writePage.classList.remove("active-page");
             donationPage.classList.remove("active-page");
 
         }
 
 
-        /* ------------------------------------------
-           소식 메인 화면
-        ------------------------------------------ */
+        /* ==================================================
+           소식 메인
+        ================================================== */
 
         function showNewsHome() {
 
@@ -265,14 +315,40 @@
             newsMenu.classList.add("active");
             donationMenu.classList.remove("active");
 
+            renderNewsList();
+
         }
 
 
-        /* ------------------------------------------
-           소식 전용 화면
-        ------------------------------------------ */
+        /* ==================================================
+           소식 작성
+        ================================================== */
 
-        function showNewsDetail() {
+        function showWritePage() {
+
+            hideAllPages();
+
+            writePage.classList.add("active-page");
+
+            newsMenu.classList.add("active");
+            donationMenu.classList.remove("active");
+
+        }
+
+
+        /* ==================================================
+           소식 상세
+        ================================================== */
+
+        function showNewsDetail(id) {
+
+            const news = getNewsList().find(function(item) {
+                return item.id === id;
+            });
+
+            if (!news) {
+                return;
+            }
 
             hideAllPages();
 
@@ -281,12 +357,37 @@
             newsMenu.classList.add("active");
             donationMenu.classList.remove("active");
 
+
+            newsDetailContent.innerHTML = `
+
+                <div class="detail-author">
+                    (${escapeHtml(news.author)})
+                </div>
+
+                <div class="detail-title-row">
+
+                    <h1 class="detail-title">
+                        ${escapeHtml(news.title)}
+                    </h1>
+
+                    <span class="detail-date">
+                        ${escapeHtml(news.date)}
+                    </span>
+
+                </div>
+
+                <p class="detail-content">
+                    ${escapeHtml(news.content).replace(/\n/g, "<br>")}
+                </p>
+
+            `;
+
         }
 
 
-        /* ------------------------------------------
-           기부 화면
-        ------------------------------------------ */
+        /* ==================================================
+           기부
+        ================================================== */
 
         function showDonation() {
 
@@ -300,9 +401,229 @@
         }
 
 
-        /* ------------------------------------------
-           처음 페이지를 열었을 때
-        ------------------------------------------ */
+        /* ==================================================
+           저장된 소식 가져오기
+        ================================================== */
+
+        function getNewsList() {
+
+            const saved =
+                localStorage.getItem(STORAGE_KEY);
+
+            if (!saved) {
+                return [];
+            }
+
+            try {
+
+                return JSON.parse(saved);
+
+            } catch (error) {
+
+                return [];
+
+            }
+
+        }
+
+
+        /* ==================================================
+           소식 저장
+        ================================================== */
+
+        function saveNews() {
+
+            const author =
+                document.getElementById("authorInput").value.trim();
+
+            const title =
+                document.getElementById("titleInput").value.trim();
+
+            const content =
+                document.getElementById("contentInput").value.trim();
+
+
+            if (!author) {
+                alert("작성자를 입력해주세요.");
+                return;
+            }
+
+            if (!title) {
+                alert("제목을 입력해주세요.");
+                return;
+            }
+
+            if (!content) {
+                alert("내용을 입력해주세요.");
+                return;
+            }
+
+
+            const now = new Date();
+
+            const date =
+                now.getFullYear()
+                + "."
+                + String(now.getMonth() + 1).padStart(2, "0")
+                + "."
+                + String(now.getDate()).padStart(2, "0");
+
+
+            const newNews = {
+
+                id:
+                    Date.now().toString(),
+
+                author:
+                    author,
+
+                title:
+                    title,
+
+                content:
+                    content,
+
+                date:
+                    date
+
+            };
+
+
+            const newsListData = getNewsList();
+
+            newsListData.unshift(newNews);
+
+
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(newsListData)
+            );
+
+
+            /* 입력창 초기화 */
+
+            document.getElementById("authorInput").value = "";
+            document.getElementById("titleInput").value = "";
+            document.getElementById("contentInput").value = "";
+
+
+            /* 소식 화면으로 이동 */
+
+            showNewsHome();
+
+        }
+
+
+        /* ==================================================
+           소식 목록 출력
+        ================================================== */
+
+        function renderNewsList() {
+
+            const items = getNewsList();
+
+
+            /* 소식이 없을 때 */
+
+            if (items.length === 0) {
+
+                newsList.innerHTML = `
+                    <div class="empty-news">
+                        소식 없음
+                    </div>
+                `;
+
+                return;
+
+            }
+
+
+            /* 소식이 있을 때 */
+
+            newsList.innerHTML = "";
+
+
+            items.forEach(function(news) {
+
+                const card =
+                    document.createElement("div");
+
+                card.className = "news-card";
+
+
+                card.innerHTML = `
+
+                    <div class="news-author">
+                        (${escapeHtml(news.author)})
+                    </div>
+
+                    <div class="news-card-title-row">
+
+                        <h2 class="news-card-title">
+                            ${escapeHtml(news.title)}
+                        </h2>
+
+                        <span class="news-card-date">
+                            ${escapeHtml(news.date)}
+                        </span>
+
+                    </div>
+
+                    <p class="news-card-content">
+                        ${escapeHtml(news.content)}
+                    </p>
+
+                    <button
+                        class="detail-button"
+                        type="button"
+                    >
+                        소식 자세히 보러가기
+                    </button>
+
+                `;
+
+
+                const button =
+                    card.querySelector(".detail-button");
+
+
+                button.addEventListener(
+                    "click",
+                    function() {
+
+                        showNewsDetail(news.id);
+
+                    }
+                );
+
+
+                newsList.appendChild(card);
+
+            });
+
+        }
+
+
+        /* ==================================================
+           HTML 문자 변환
+           입력한 내용을 그대로 HTML로 실행하지 않게 함
+        ================================================== */
+
+        function escapeHtml(value) {
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        /* ==================================================
+           시작
+        ================================================== */
 
         showNewsHome();
 
