@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>까치치킨사장님 공식 홈페이지</title>
 
-    <link rel="stylesheet" href="./style.css?v=11">
+    <link rel="stylesheet" href="./style.css?v=12">
 </head>
 
 <body>
 
-    <!-- =========================================
+    <!-- =========================
          상단 헤더
-    ========================================== -->
+    ========================== -->
 
     <header class="top-bar">
 
@@ -29,20 +30,19 @@
     <div class="header-line"></div>
 
 
-    <!-- =========================================
+    <!-- =========================
          전체 사이트
-    ========================================== -->
+    ========================== -->
 
     <div class="site-layout">
 
 
-        <!-- =====================================
+        <!-- =========================
              왼쪽 사이드바
-        ====================================== -->
+        ========================== -->
 
         <aside class="sidebar">
 
-            <!-- 소식 -->
             <button
                 id="menu-news"
                 class="menu-item active"
@@ -51,8 +51,6 @@
                 소식
             </button>
 
-
-            <!-- 기부 -->
             <button
                 id="menu-donation"
                 class="menu-item"
@@ -61,8 +59,6 @@
                 기부
             </button>
 
-
-            <!-- 고급소식 -->
             <button
                 class="menu-item locked"
                 type="button"
@@ -71,8 +67,6 @@
                 고급소식 🔒
             </button>
 
-
-            <!-- 영상미리보기 -->
             <button
                 class="menu-item locked"
                 type="button"
@@ -81,8 +75,6 @@
                 영상미리보기 🔒
             </button>
 
-
-            <!-- 추가예정 -->
             <button
                 class="menu-item upcoming"
                 type="button"
@@ -91,8 +83,6 @@
                 (추가예정)
             </button>
 
-
-            <!-- 추가예정 -->
             <button
                 class="menu-item upcoming"
                 type="button"
@@ -104,16 +94,16 @@
         </aside>
 
 
-        <!-- =====================================
+        <!-- =========================
              오른쪽 메인
-        ====================================== -->
+        ========================== -->
 
         <main class="main-content">
 
 
-            <!-- =================================
-                 1. 소식 소개 화면
-            ================================== -->
+            <!-- =========================
+                 1. 소식 소개
+            ========================== -->
 
             <section
                 id="screen-news-intro"
@@ -124,7 +114,6 @@
                     소식
                 </h1>
 
-
                 <div class="intro-box">
 
                     <h2>
@@ -134,7 +123,6 @@
                     <p>
                         새로운 소식과 공지사항이 이곳에 표시됩니다.
                     </p>
-
 
                     <button
                         id="show-news-list"
@@ -149,9 +137,9 @@
             </section>
 
 
-            <!-- =================================
+            <!-- =========================
                  2. 소식 목록
-            ================================== -->
+            ========================== -->
 
             <section
                 id="screen-news-list"
@@ -173,7 +161,6 @@
                     </div>
 
 
-                    <!-- 테스트용 작성 버튼 -->
                     <button
                         id="show-write"
                         class="orange-small-button"
@@ -185,15 +172,14 @@
                 </div>
 
 
-                <!-- 소식 목록 -->
                 <div id="news-list-container"></div>
 
             </section>
 
 
-            <!-- =================================
+            <!-- =========================
                  3. 소식 상세
-            ================================== -->
+            ========================== -->
 
             <section
                 id="screen-news-detail"
@@ -208,15 +194,11 @@
                     ← 소식 목록
                 </button>
 
-
                 <article
                     id="news-detail-container"
                     class="detail-box"
-                >
-                </article>
+                ></article>
 
-
-                <!-- 소식 삭제 -->
                 <button
                     id="delete-news"
                     class="delete-button"
@@ -228,9 +210,9 @@
             </section>
 
 
-            <!-- =================================
+            <!-- =========================
                  4. 소식 작성
-            ================================== -->
+            ========================== -->
 
             <section
                 id="screen-write"
@@ -245,13 +227,11 @@
                     ← 소식 목록
                 </button>
 
-
                 <div class="write-box">
 
                     <h1>
                         소식 작성
                     </h1>
-
 
                     <label for="input-author">
                         작성자
@@ -264,7 +244,6 @@
                         autocomplete="off"
                     >
 
-
                     <label for="input-title">
                         제목
                     </label>
@@ -276,7 +255,6 @@
                         autocomplete="off"
                     >
 
-
                     <label for="input-content">
                         내용
                     </label>
@@ -285,7 +263,6 @@
                         id="input-content"
                         placeholder="소식 내용을 입력하세요."
                     ></textarea>
-
 
                     <div class="write-actions">
 
@@ -312,9 +289,9 @@
             </section>
 
 
-            <!-- =================================
+            <!-- =========================
                  5. 기부
-            ================================== -->
+            ========================== -->
 
             <section
                 id="screen-donation"
@@ -327,36 +304,47 @@
 
             </section>
 
-
         </main>
 
     </div>
 
 
     <!-- ==================================================
-         JavaScript
-         index.html 안에 직접 포함
+         Supabase JavaScript
     ================================================== -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
 
-        /* ------------------------------------------
-           저장 키
-        ------------------------------------------ */
+        /* ==================================================
+           Supabase 연결
+        ================================================== */
 
-        const STORAGE_KEY = "kkachi_news_final_v11";
+        const SUPABASE_URL =
+            "https://kxrjevmxayolcqcgmixz.supabase.co";
+
+        const SUPABASE_PUBLISHABLE_KEY =
+            "sb_publishable_KrmPM2G4nuS1JXOAvnp-cA_Ik1nuYqS";
 
 
-        /* ------------------------------------------
-           현재 보고 있는 소식 ID
-        ------------------------------------------ */
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_PUBLISHABLE_KEY
+            );
+
+
+        /* ==================================================
+           현재 보고 있는 소식
+        ================================================== */
 
         let currentNewsId = null;
 
 
-        /* ------------------------------------------
-           화면 가져오기
-        ------------------------------------------ */
+        /* ==================================================
+           화면
+        ================================================== */
 
         const introScreen =
             document.getElementById("screen-news-intro");
@@ -374,9 +362,9 @@
             document.getElementById("screen-donation");
 
 
-        /* ------------------------------------------
+        /* ==================================================
            메뉴
-        ------------------------------------------ */
+        ================================================== */
 
         const newsMenu =
             document.getElementById("menu-news");
@@ -385,9 +373,9 @@
             document.getElementById("menu-donation");
 
 
-        /* ------------------------------------------
+        /* ==================================================
            모든 화면 숨기기
-        ------------------------------------------ */
+        ================================================== */
 
         function hideScreens() {
 
@@ -400,9 +388,9 @@
         }
 
 
-        /* ------------------------------------------
+        /* ==================================================
            소식 메뉴 활성화
-        ------------------------------------------ */
+        ================================================== */
 
         function activateNewsMenu() {
 
@@ -412,9 +400,9 @@
         }
 
 
-        /* ------------------------------------------
+        /* ==================================================
            기부 메뉴 활성화
-        ------------------------------------------ */
+        ================================================== */
 
         function activateDonationMenu() {
 
@@ -424,9 +412,9 @@
         }
 
 
-        /* ------------------------------------------
+        /* ==================================================
            소식 소개
-        ------------------------------------------ */
+        ================================================== */
 
         function openNewsIntro() {
 
@@ -441,11 +429,11 @@
         }
 
 
-        /* ------------------------------------------
-           소식 목록
-        ------------------------------------------ */
+        /* ==================================================
+           소식 목록 열기
+        ================================================== */
 
-        function openNewsList() {
+        async function openNewsList() {
 
             hideScreens();
 
@@ -453,16 +441,16 @@
 
             activateNewsMenu();
 
-            renderNews();
-
             scrollTop();
+
+            await renderNews();
 
         }
 
 
-        /* ------------------------------------------
-           글 작성 화면
-        ------------------------------------------ */
+        /* ==================================================
+           작성 화면
+        ================================================== */
 
         function openWriteScreen() {
 
@@ -477,9 +465,9 @@
         }
 
 
-        /* ------------------------------------------
+        /* ==================================================
            기부
-        ------------------------------------------ */
+        ================================================== */
 
         function openDonation() {
 
@@ -494,32 +482,227 @@
         }
 
 
-        /* ------------------------------------------
-           상세 화면
-        ------------------------------------------ */
+        /* ==================================================
+           Supabase에서 소식 가져오기
+        ================================================== */
 
-        function openNewsDetail(newsId) {
+        async function getNews() {
+
+            const {
+                data,
+                error
+            } = await supabaseClient
+                .from("news")
+                .select(
+                    "id, author, title, content, created_at"
+                )
+                .order(
+                    "created_at",
+                    {
+                        ascending: false
+                    }
+                );
+
+
+            if (error) {
+
+                console.error(
+                    "소식 불러오기 오류:",
+                    error
+                );
+
+                alert(
+                    "소식을 불러오지 못했습니다.\n\n"
+                    + error.message
+                );
+
+                return [];
+
+            }
+
+
+            return data || [];
+
+        }
+
+
+        /* ==================================================
+           날짜 표시
+        ================================================== */
+
+        function formatDate(value) {
+
+            const date =
+                new Date(value);
+
+
+            if (Number.isNaN(date.getTime())) {
+
+                return "";
+
+            }
+
+
+            return (
+                date.getFullYear()
+                + "."
+                + String(
+                    date.getMonth() + 1
+                ).padStart(2, "0")
+                + "."
+                + String(
+                    date.getDate()
+                ).padStart(2, "0")
+            );
+
+        }
+
+
+        /* ==================================================
+           소식 목록
+        ================================================== */
+
+        async function renderNews() {
+
+            const container =
+                document.getElementById(
+                    "news-list-container"
+                );
+
+
+            container.innerHTML = `
+                <div class="empty-box">
+                    <div class="empty-title">
+                        불러오는 중...
+                    </div>
+                </div>
+            `;
+
 
             const newsList =
-                getNews();
+                await getNews();
 
 
-            const news =
-                newsList.find(function(item) {
+            /* 소식이 없는 경우 */
 
-                    return item.id === newsId;
+            if (newsList.length === 0) {
 
-                });
+                container.innerHTML = `
 
+                    <div class="empty-box">
 
-            if (!news) {
+                        <div class="empty-title">
+                            소식 없음
+                        </div>
+
+                        <div class="empty-description">
+                            현재 등록된 소식이 없습니다.
+                        </div>
+
+                    </div>
+
+                `;
 
                 return;
 
             }
 
 
-            currentNewsId = newsId;
+            /* 소식 목록 */
+
+            container.innerHTML = "";
+
+
+            const list =
+                document.createElement("div");
+
+            list.className = "news-list";
+
+
+            newsList.forEach(function(news) {
+
+                const row =
+                    document.createElement("button");
+
+                row.type = "button";
+
+                row.className = "news-row";
+
+
+                row.innerHTML = `
+
+                    <span class="news-author">
+                        (${escapeHTML(news.author)})
+                    </span>
+
+                    <span class="news-title">
+                        ${escapeHTML(news.title)}
+                    </span>
+
+                    <span class="news-date">
+                        ${formatDate(news.created_at)}
+                    </span>
+
+                `;
+
+
+                row.addEventListener(
+                    "click",
+                    function() {
+
+                        openNewsDetail(news.id);
+
+                    }
+                );
+
+
+                list.appendChild(row);
+
+            });
+
+
+            container.appendChild(list);
+
+        }
+
+
+        /* ==================================================
+           특정 소식 상세보기
+        ================================================== */
+
+        async function openNewsDetail(newsId) {
+
+            const {
+                data: news,
+                error
+            } = await supabaseClient
+                .from("news")
+                .select(
+                    "id, author, title, content, created_at"
+                )
+                .eq("id", newsId)
+                .single();
+
+
+            if (error) {
+
+                console.error(
+                    "소식 상세 불러오기 오류:",
+                    error
+                );
+
+                alert(
+                    "소식을 불러오지 못했습니다.\n\n"
+                    + error.message
+                );
+
+                return;
+
+            }
+
+
+            currentNewsId =
+                news.id;
 
 
             hideScreens();
@@ -548,13 +731,18 @@
                     </h1>
 
                     <span class="detail-date">
-                        ${escapeHTML(news.date)}
+                        ${formatDate(news.created_at)}
                     </span>
 
                 </div>
 
                 <div class="detail-content">
-                    ${escapeHTML(news.content).replace(/\n/g, "<br>")}
+                    ${escapeHTML(
+                        news.content
+                    ).replace(
+                        /\n/g,
+                        "<br>"
+                    )}
                 </div>
 
             `;
@@ -565,279 +753,140 @@
         }
 
 
-        /* ------------------------------------------
-           소식 가져오기
-        ------------------------------------------ */
-
-        function getNews() {
-
-            const saved =
-                localStorage.getItem(STORAGE_KEY);
-
-
-            if (!saved) {
-
-                return [];
-
-            }
-
-
-            try {
-
-                const parsed =
-                    JSON.parse(saved);
-
-
-                if (!Array.isArray(parsed)) {
-
-                    return [];
-
-                }
-
-
-                return parsed;
-
-            } catch (error) {
-
-                console.error(
-                    "소식 데이터를 불러오지 못했습니다.",
-                    error
-                );
-
-                return [];
-
-            }
-
-        }
-
-
-        /* ------------------------------------------
-           소식 목록 그리기
-        ------------------------------------------ */
-
-        function renderNews() {
-
-            const container =
-                document.getElementById(
-                    "news-list-container"
-                );
-
-
-            const newsList =
-                getNews();
-
-
-            /* 소식 없음 */
-
-            if (newsList.length === 0) {
-
-                container.innerHTML = `
-
-                    <div class="empty-box">
-
-                        <div class="empty-title">
-                            소식 없음
-                        </div>
-
-                        <div class="empty-description">
-                            현재 등록된 소식이 없습니다.
-                        </div>
-
-                    </div>
-
-                `;
-
-                return;
-
-            }
-
-
-            /* 소식 있음 */
-
-            container.innerHTML = "";
-
-
-            const list =
-                document.createElement("div");
-
-
-            list.className = "news-list";
-
-
-            newsList.forEach(function(news) {
-
-                const row =
-                    document.createElement("button");
-
-
-                row.type = "button";
-
-                row.className = "news-row";
-
-
-                row.innerHTML = `
-
-                    <span class="news-author">
-                        (${escapeHTML(news.author)})
-                    </span>
-
-                    <span class="news-title">
-                        ${escapeHTML(news.title)}
-                    </span>
-
-                    <span class="news-date">
-                        ${escapeHTML(news.date)}
-                    </span>
-
-                `;
-
-
-                row.addEventListener(
-                    "click",
-                    function() {
-
-                        openNewsDetail(news.id);
-
-                    }
-                );
-
-
-                list.appendChild(row);
-
-            });
-
-
-            container.appendChild(list);
-
-        }
-
-
-        /* ------------------------------------------
+        /* ==================================================
            소식 등록
-        ------------------------------------------ */
+        ================================================== */
 
-        function saveNews() {
+        async function saveNews() {
 
             const author =
-                document.getElementById(
-                    "input-author"
-                ).value.trim();
+                document
+                    .getElementById("input-author")
+                    .value
+                    .trim();
 
 
             const title =
-                document.getElementById(
-                    "input-title"
-                ).value.trim();
+                document
+                    .getElementById("input-title")
+                    .value
+                    .trim();
 
 
             const content =
+                document
+                    .getElementById("input-content")
+                    .value
+                    .trim();
+
+
+            if (!author) {
+
+                alert(
+                    "작성자를 입력해주세요."
+                );
+
+                return;
+
+            }
+
+
+            if (!title) {
+
+                alert(
+                    "제목을 입력해주세요."
+                );
+
+                return;
+
+            }
+
+
+            if (!content) {
+
+                alert(
+                    "내용을 입력해주세요."
+                );
+
+                return;
+
+            }
+
+
+            const button =
                 document.getElementById(
-                    "input-content"
-                ).value.trim();
+                    "save-write"
+                );
 
 
-            if (author === "") {
+            button.disabled = true;
 
-                alert("작성자를 입력해주세요.");
+            button.textContent =
+                "등록 중...";
+
+
+            const {
+                error
+            } = await supabaseClient
+                .from("news")
+                .insert({
+                    author: author,
+                    title: title,
+                    content: content
+                });
+
+
+            button.disabled = false;
+
+            button.textContent =
+                "소식 등록";
+
+
+            if (error) {
+
+                console.error(
+                    "소식 등록 오류:",
+                    error
+                );
+
+                alert(
+                    "소식을 등록하지 못했습니다.\n\n"
+                    + error.message
+                );
 
                 return;
 
             }
 
 
-            if (title === "") {
+            document
+                .getElementById("input-author")
+                .value = "";
 
-                alert("제목을 입력해주세요.");
+            document
+                .getElementById("input-title")
+                .value = "";
 
-                return;
-
-            }
-
-
-            if (content === "") {
-
-                alert("내용을 입력해주세요.");
-
-                return;
-
-            }
+            document
+                .getElementById("input-content")
+                .value = "";
 
 
-            const today =
-                new Date();
-
-
-            const date =
-                today.getFullYear()
-                + "."
-                + String(today.getMonth() + 1)
-                    .padStart(2, "0")
-                + "."
-                + String(today.getDate())
-                    .padStart(2, "0");
-
-
-            const newNews = {
-
-                id:
-                    String(Date.now()),
-
-                author:
-                    author,
-
-                title:
-                    title,
-
-                content:
-                    content,
-
-                date:
-                    date
-
-            };
-
-
-            const currentNews =
-                getNews();
-
-
-            currentNews.unshift(newNews);
-
-
-            localStorage.setItem(
-                STORAGE_KEY,
-                JSON.stringify(currentNews)
+            alert(
+                "소식이 등록되었습니다."
             );
 
 
-            document.getElementById(
-                "input-author"
-            ).value = "";
-
-
-            document.getElementById(
-                "input-title"
-            ).value = "";
-
-
-            document.getElementById(
-                "input-content"
-            ).value = "";
-
-
-            currentNewsId = null;
-
-
-            openNewsList();
+            await openNewsList();
 
         }
 
 
-        /* ------------------------------------------
-           현재 소식 삭제
-        ------------------------------------------ */
+        /* ==================================================
+           소식 삭제
+        ================================================== */
 
-        function deleteCurrentNews() {
+        async function deleteCurrentNews() {
 
             if (!currentNewsId) {
 
@@ -846,29 +895,9 @@
             }
 
 
-            const newsList =
-                getNews();
-
-
-            const currentNews =
-                newsList.find(function(item) {
-
-                    return item.id === currentNewsId;
-
-                });
-
-
-            if (!currentNews) {
-
-                return;
-
-            }
-
-
             const confirmed =
                 window.confirm(
-                    "정말 이 소식을 삭제하시겠습니까?\n\n"
-                    + currentNews.title
+                    "정말 이 소식을 삭제하시겠습니까?"
                 );
 
 
@@ -879,47 +908,99 @@
             }
 
 
-            const updatedNews =
-                newsList.filter(function(item) {
-
-                    return item.id !== currentNewsId;
-
-                });
+            const button =
+                document.getElementById(
+                    "delete-news"
+                );
 
 
-            localStorage.setItem(
-                STORAGE_KEY,
-                JSON.stringify(updatedNews)
-            );
+            button.disabled = true;
+
+            button.textContent =
+                "삭제 중...";
+
+
+            const {
+                error
+            } = await supabaseClient
+                .from("news")
+                .delete()
+                .eq(
+                    "id",
+                    currentNewsId
+                );
+
+
+            button.disabled = false;
+
+            button.textContent =
+                "소식 삭제";
+
+
+            if (error) {
+
+                console.error(
+                    "소식 삭제 오류:",
+                    error
+                );
+
+                alert(
+                    "소식을 삭제하지 못했습니다.\n\n"
+                    + error.message
+                );
+
+                return;
+
+            }
 
 
             currentNewsId = null;
 
 
-            openNewsList();
+            alert(
+                "소식이 삭제되었습니다."
+            );
+
+
+            await openNewsList();
 
         }
 
 
-        /* ------------------------------------------
-           안전한 텍스트 처리
-        ------------------------------------------ */
+        /* ==================================================
+           안전한 HTML 표시
+        ================================================== */
 
         function escapeHTML(value) {
 
             return String(value)
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
 
         }
 
 
-        /* ------------------------------------------
-           스크롤 위로
-        ------------------------------------------ */
+        /* ==================================================
+           스크롤 맨 위
+        ================================================== */
 
         function scrollTop() {
 
@@ -938,9 +1019,9 @@
         }
 
 
-        /* ------------------------------------------
+        /* ==================================================
            버튼 연결
-        ------------------------------------------ */
+        ================================================== */
 
         document
             .getElementById("show-news-list")
@@ -1014,9 +1095,9 @@
             );
 
 
-        /* ------------------------------------------
+        /* ==================================================
            시작
-        ------------------------------------------ */
+        ================================================== */
 
         openNewsIntro();
 
