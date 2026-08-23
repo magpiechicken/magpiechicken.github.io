@@ -30,8 +30,6 @@ body {
 
 /* ==================================================
    상단 주황색 헤더
-
-   화면 높이의 1/9
 ================================================== */
 
 .top-bar {
@@ -50,15 +48,15 @@ body {
 
 
 /* ==================================================
-   사진 영역
-
-   화면이 충분히 크면 최대 120px
-   화면이 작으면 헤더에 맞춰 자동 축소
+   프로필 사진 영역
 ================================================== */
 
 .profile {
     width: min(120px, calc(11.111111vh - 20px));
     height: min(120px, calc(11.111111vh - 20px));
+
+    min-width: 50px;
+    min-height: 50px;
 
     flex: 0 0 min(120px, calc(11.111111vh - 20px));
 
@@ -77,7 +75,7 @@ body {
 
 
 /* ==================================================
-   실제 사진
+   실제 프로필 사진
 ================================================== */
 
 .profile img {
@@ -86,10 +84,10 @@ body {
 
     display: block;
 
-    object-fit: cover;
-
     margin: 0;
     padding: 0;
+
+    object-fit: cover;
 
     border: none;
     outline: none;
@@ -112,13 +110,12 @@ body {
     color: #ffffff;
 
     /*
-       글씨에 검은색 2px 테두리
+       제목 검은색 2px 테두리
     */
     -webkit-text-stroke: 2px #000000;
 
     /*
-       브라우저에서 테두리가 확실하게
-       보이도록 4방향 그림자 추가
+       브라우저별로 테두리가 잘 보이도록 보강
     */
     text-shadow:
         -2px -2px 0 #000000,
@@ -127,23 +124,19 @@ body {
          2px  2px 0 #000000;
 
     /*
-       제목이 여러 줄로 내려가지 않게 함
+       제목 줄바꿈 방지
     */
     white-space: nowrap;
 
     /*
-       제목이 사진과 겹치지 않도록
-       flex 아이템으로 고정
+       사진과 영역이 겹치지 않도록 고정
     */
     flex-shrink: 0;
 }
 
 
 /* ==================================================
-   주황색 헤더 아래 검은색 경계선
-
-   별도의 요소로 만들어서
-   정확한 위치에 표시
+   헤더 아래 검은색 경계선
 ================================================== */
 
 .header-line {
@@ -160,66 +153,421 @@ body {
 
 
 /* ==================================================
-   아래쪽 메인 영역
+   사이드바 + 메인 전체
 ================================================== */
 
-.main-content {
+.site-layout {
     width: 100%;
 
-    /*
-       헤더 1/9 + 검은 선 3px을 제외한 나머지
-    */
-    height: calc(88.888889vh - 3px);
+    height: calc(100vh - 11.111111vh - 3px);
 
-    margin: 0;
-    padding: 0;
+    min-height: 0;
+
+    display: flex;
 
     background-color: #ffffff;
 }
 
 
 /* ==================================================
-   PC 화면에서 제목이 너무 길 경우 대비
-
-   일반적인 PC 해상도에서는 64px 유지
+   왼쪽 사이드바
 ================================================== */
 
-@media (max-width: 1200px) {
+.sidebar {
+    width: 250px;
 
-    .title {
-        font-size: 48px;
+    height: 100%;
+
+    flex: 0 0 250px;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: #ffffff;
+
+    border-right: 4px solid #000000;
+
+    overflow-y: auto;
+}
+
+
+/* ==================================================
+   사이드바 메뉴 기본
+================================================== */
+
+.menu-item {
+    width: 100%;
+
+    min-height: 82px;
+
+    flex: 0 0 82px;
+
+    margin: 0;
+    padding: 0 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 10px;
+
+    background-color: #ffffff;
+
+    border: none;
+    border-bottom: 3px solid #000000;
+
+    font-family:
+        Arial,
+        "Malgun Gothic",
+        "맑은 고딕",
+        sans-serif;
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+    color: #000000;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+
+/* ==================================================
+   메뉴 글자
+================================================== */
+
+.menu-text {
+    display: inline-block;
+
+    white-space: nowrap;
+}
+
+
+/* ==================================================
+   잠금 아이콘
+================================================== */
+
+.lock-icon {
+    display: inline-block;
+
+    font-size: 23px;
+
+    line-height: 1;
+}
+
+
+/* ==================================================
+   현재 선택된 메뉴
+================================================== */
+
+.menu-item.active {
+    background-color: #FF9400;
+
+    color: #ffffff;
+
+    -webkit-text-stroke: 1px #000000;
+}
+
+
+/* ==================================================
+   일반 메뉴 마우스 올림
+================================================== */
+
+.menu-item:not(.active):not(.upcoming):hover {
+    background-color: #eeeeee;
+}
+
+
+/* ==================================================
+   잠긴 메뉴
+================================================== */
+
+.menu-item.locked {
+    background-color: #f7f7f7;
+
+    color: #555555;
+
+    cursor: not-allowed;
+}
+
+
+/* 잠긴 메뉴 마우스 올림 */
+.menu-item.locked:hover {
+    background-color: #eeeeee;
+}
+
+
+/* ==================================================
+   추가 예정 메뉴
+================================================== */
+
+.menu-item.upcoming {
+    background-color: #eeeeee;
+
+    color: #999999;
+
+    cursor: default;
+}
+
+
+/* 추가 예정 마우스 올림 */
+.menu-item.upcoming:hover {
+    background-color: #eeeeee;
+}
+
+
+/* ==================================================
+   오른쪽 메인 영역
+================================================== */
+
+.main-content {
+    flex: 1;
+
+    width: auto;
+
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    padding: 50px;
+
+    background-color: #ffffff;
+
+    overflow-y: auto;
+}
+
+
+/* ==================================================
+   메인 콘텐츠 박스
+================================================== */
+
+.content-box {
+    width: 100%;
+
+    min-height: 240px;
+
+    margin: 0 0 40px 0;
+
+    padding: 35px;
+
+    background-color: #ffffff;
+
+    border: 4px solid #000000;
+}
+
+
+/* ==================================================
+   콘텐츠 제목
+================================================== */
+
+.content-box h2 {
+    margin: 0 0 20px 0;
+
+    padding: 0;
+
+    font-size: 42px;
+
+    font-weight: 700;
+
+    line-height: 1.2;
+
+    color: #000000;
+}
+
+
+/* ==================================================
+   콘텐츠 설명
+================================================== */
+
+.content-box p {
+    margin: 0;
+
+    padding: 0;
+
+    font-size: 24px;
+
+    line-height: 1.6;
+
+    color: #333333;
+}
+
+
+/* ==================================================
+   큰 PC 화면
+================================================== */
+
+@media (min-width: 1600px) {
+
+    .sidebar {
+        width: 270px;
+
+        flex-basis: 270px;
+    }
+
+    .menu-item {
+        min-height: 90px;
+
+        flex-basis: 90px;
+
+        font-size: 32px;
+    }
+
+    .main-content {
+        padding: 55px;
+    }
+
+    .content-box {
+        padding: 40px;
     }
 
 }
 
 
 /* ==================================================
-   작은 PC / 노트북 화면 대응
+   일반 PC 화면
 ================================================== */
 
-@media (max-width: 900px) {
+@media (max-width: 1400px) {
+
+    .title {
+        font-size: 56px;
+    }
+
+    .sidebar {
+        width: 230px;
+
+        flex-basis: 230px;
+    }
+
+    .menu-item {
+        min-height: 78px;
+
+        flex-basis: 78px;
+
+        font-size: 27px;
+    }
+
+}
+
+
+/* ==================================================
+   작은 PC / 노트북
+================================================== */
+
+@media (max-width: 1100px) {
+
+    .title {
+        margin-left: 22px;
+
+        font-size: 44px;
+
+        -webkit-text-stroke: 1.5px #000000;
+
+        text-shadow:
+            -1.5px -1.5px 0 #000000,
+             1.5px -1.5px 0 #000000,
+            -1.5px  1.5px 0 #000000,
+             1.5px  1.5px 0 #000000;
+    }
+
+    .sidebar {
+        width: 200px;
+
+        flex-basis: 200px;
+    }
+
+    .menu-item {
+        min-height: 70px;
+
+        flex-basis: 70px;
+
+        padding: 0 15px;
+
+        font-size: 23px;
+    }
+
+    .lock-icon {
+        font-size: 18px;
+    }
+
+    .main-content {
+        padding: 30px;
+    }
+
+    .content-box {
+        padding: 25px;
+    }
+
+    .content-box h2 {
+        font-size: 34px;
+    }
+
+    .content-box p {
+        font-size: 20px;
+    }
+
+}
+
+
+/* ==================================================
+   아주 작은 화면
+================================================== */
+
+@media (max-width: 800px) {
 
     .top-bar {
-        padding-left: 12px;
+        padding-left: 10px;
     }
 
     .title {
-        margin-left: 20px;
-        font-size: 36px;
+        margin-left: 15px;
+
+        font-size: 30px;
     }
 
-}
+    .sidebar {
+        width: 160px;
 
+        flex-basis: 160px;
+    }
 
-/* ==================================================
-   아주 작은 화면 대응
-================================================== */
+    .menu-item {
+        min-height: 60px;
 
-@media (max-width: 600px) {
+        flex-basis: 60px;
 
-    .title {
-        margin-left: 12px;
-        font-size: 24px;
+        padding: 0 10px;
+
+        font-size: 18px;
+    }
+
+    .lock-icon {
+        font-size: 15px;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .content-box {
+        padding: 20px;
+
+        min-height: 180px;
+    }
+
+    .content-box h2 {
+        font-size: 28px;
+    }
+
+    .content-box p {
+        font-size: 17px;
     }
 
 }
