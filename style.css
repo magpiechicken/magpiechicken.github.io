@@ -1,81 +1,88 @@
-/* =========================
-   기본 설정
-========================= */
-
+/* 전체 기본 설정 */
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html,
 body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
+/* 전체 화면 */
 body {
-  font-family: Arial, "Malgun Gothic", sans-serif;
-  background-color: #ffffff;
-  color: #222222;
+    font-family: Arial, "Malgun Gothic", sans-serif;
+    background-color: white;
+    color: #222222;
 }
-
 
 /* =========================
-   상단 헤더
-   화면 세로의 1/9
-========================= */
+   상단 주황색 영역
+   화면 높이의 1/9
+   ========================= */
 
 .top-bar {
-  width: 100%;
-  height: 11.111vh;
+    width: 100%;
+    height: 11.111vh;
 
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 
-  border-bottom: 2px solid #222222;
+    background-color: #FF9400;
 
-  padding-left: 20px;
+    padding-left: 20px;
 }
-
 
 /* =========================
    사진 자리
-========================= */
+   ========================= */
 
 .profile {
-  width: 70px;
-  height: 70px;
+    width: 70px;
+    height: 70px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  border: 1px solid #cccccc;
-  border-radius: 8px;
+    background-color: white;
+    border-radius: 8px;
 
-  font-size: 14px;
+    font-size: 14px;
+    color: #555555;
+
+    overflow: hidden;
 }
 
+/* 나중에 사진을 넣었을 때 */
+.profile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
 /* =========================
    까사장 글자
-========================= */
+   ========================= */
 
 .title {
-  margin-left: 15px;
+    margin-left: 15px;
 
-  font-size: 32px;
-  font-weight: 700;
+    font-size: 32px;
+    font-weight: bold;
+
+    color: white;
 }
 
-
 /* =========================
-   메인 화면
-   나머지 8/9
-========================= */
+   아래쪽 메인 영역
+   ========================= */
 
 .main-content {
-  width: 100%;
-  height: 88.889vh;
+    width: 100%;
+    height: 88.889vh;
+
+    background-color: white;
 }
