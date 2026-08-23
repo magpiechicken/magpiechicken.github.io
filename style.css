@@ -24,7 +24,7 @@ body {
     background-color: #ffffff;
     color: #222222;
 
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 
@@ -48,15 +48,12 @@ body {
 
 
 /* ==================================================
-   프로필 사진 영역
+   프로필 사진
 ================================================== */
 
 .profile {
     width: min(120px, calc(11.111111vh - 20px));
     height: min(120px, calc(11.111111vh - 20px));
-
-    min-width: 50px;
-    min-height: 50px;
 
     flex: 0 0 min(120px, calc(11.111111vh - 20px));
 
@@ -69,14 +66,7 @@ body {
     outline: none;
 
     overflow: hidden;
-
-    display: block;
 }
-
-
-/* ==================================================
-   실제 프로필 사진
-================================================== */
 
 .profile img {
     width: 100%;
@@ -102,41 +92,28 @@ body {
     margin-left: 30px;
 
     font-size: 64px;
-
     font-weight: 700;
 
     line-height: 1;
 
     color: #ffffff;
 
-    /*
-       제목 검은색 2px 테두리
-    */
     -webkit-text-stroke: 2px #000000;
 
-    /*
-       브라우저별로 테두리가 잘 보이도록 보강
-    */
     text-shadow:
         -2px -2px 0 #000000,
          2px -2px 0 #000000,
         -2px  2px 0 #000000,
          2px  2px 0 #000000;
 
-    /*
-       제목 줄바꿈 방지
-    */
     white-space: nowrap;
 
-    /*
-       사진과 영역이 겹치지 않도록 고정
-    */
     flex-shrink: 0;
 }
 
 
 /* ==================================================
-   헤더 아래 검은색 경계선
+   헤더 아래 검은색 선
 ================================================== */
 
 .header-line {
@@ -147,21 +124,16 @@ body {
     padding: 0;
 
     background-color: #000000;
-
-    flex-shrink: 0;
 }
 
 
 /* ==================================================
-   사이드바 + 메인 전체
+   사이드바 + 메인 영역
 ================================================== */
 
 .site-layout {
     width: 100%;
-
     height: calc(100vh - 11.111111vh - 3px);
-
-    min-height: 0;
 
     display: flex;
 
@@ -175,7 +147,6 @@ body {
 
 .sidebar {
     width: 250px;
-
     height: 100%;
 
     flex: 0 0 250px;
@@ -192,12 +163,12 @@ body {
 
 
 /* ==================================================
-   사이드바 메뉴 기본
+   사이드바 버튼
 ================================================== */
 
 .menu-item {
     width: 100%;
-
+    height: 82px;
     min-height: 82px;
 
     flex: 0 0 82px;
@@ -223,7 +194,6 @@ body {
         sans-serif;
 
     font-size: 30px;
-
     font-weight: 700;
 
     color: #000000;
@@ -231,10 +201,6 @@ body {
     text-align: left;
 
     cursor: pointer;
-
-    transition:
-        background-color 0.15s ease,
-        color 0.15s ease;
 }
 
 
@@ -243,8 +209,6 @@ body {
 ================================================== */
 
 .menu-text {
-    display: inline-block;
-
     white-space: nowrap;
 }
 
@@ -253,17 +217,15 @@ body {
    잠금 아이콘
 ================================================== */
 
-.lock-icon {
-    display: inline-block;
-
-    font-size: 23px;
+.lock {
+    font-size: 22px;
 
     line-height: 1;
 }
 
 
 /* ==================================================
-   현재 선택된 메뉴
+   선택된 메뉴
 ================================================== */
 
 .menu-item.active {
@@ -276,10 +238,10 @@ body {
 
 
 /* ==================================================
-   일반 메뉴 마우스 올림
+   일반 메뉴
 ================================================== */
 
-.menu-item:not(.active):not(.upcoming):hover {
+.menu-item:not(.active):not(.locked):not(.upcoming):hover {
     background-color: #eeeeee;
 }
 
@@ -289,17 +251,15 @@ body {
 ================================================== */
 
 .menu-item.locked {
-    background-color: #f7f7f7;
+    background-color: #f5f5f5;
 
     color: #555555;
 
     cursor: not-allowed;
 }
 
-
-/* 잠긴 메뉴 마우스 올림 */
 .menu-item.locked:hover {
-    background-color: #eeeeee;
+    background-color: #e9e9e9;
 }
 
 
@@ -315,8 +275,6 @@ body {
     cursor: default;
 }
 
-
-/* 추가 예정 마우스 올림 */
 .menu-item.upcoming:hover {
     background-color: #eeeeee;
 }
@@ -329,109 +287,38 @@ body {
 .main-content {
     flex: 1;
 
-    width: auto;
-
+    width: 100%;
     height: 100%;
 
-    min-width: 0;
-    min-height: 0;
-
-    padding: 50px;
-
     background-color: #ffffff;
 
-    overflow-y: auto;
+    overflow: auto;
 }
 
 
 /* ==================================================
-   메인 콘텐츠 박스
-================================================== */
-
-.content-box {
-    width: 100%;
-
-    min-height: 240px;
-
-    margin: 0 0 40px 0;
-
-    padding: 35px;
-
-    background-color: #ffffff;
-
-    border: 4px solid #000000;
-}
-
-
-/* ==================================================
-   콘텐츠 제목
-================================================== */
-
-.content-box h2 {
-    margin: 0 0 20px 0;
-
-    padding: 0;
-
-    font-size: 42px;
-
-    font-weight: 700;
-
-    line-height: 1.2;
-
-    color: #000000;
-}
-
-
-/* ==================================================
-   콘텐츠 설명
-================================================== */
-
-.content-box p {
-    margin: 0;
-
-    padding: 0;
-
-    font-size: 24px;
-
-    line-height: 1.6;
-
-    color: #333333;
-}
-
-
-/* ==================================================
-   큰 PC 화면
+   큰 화면
 ================================================== */
 
 @media (min-width: 1600px) {
 
     .sidebar {
         width: 270px;
-
         flex-basis: 270px;
     }
 
     .menu-item {
+        height: 90px;
         min-height: 90px;
-
         flex-basis: 90px;
 
         font-size: 32px;
     }
-
-    .main-content {
-        padding: 55px;
-    }
-
-    .content-box {
-        padding: 40px;
-    }
-
 }
 
 
 /* ==================================================
-   일반 PC 화면
+   일반 PC
 ================================================== */
 
 @media (max-width: 1400px) {
@@ -442,50 +329,36 @@ body {
 
     .sidebar {
         width: 230px;
-
         flex-basis: 230px;
     }
 
     .menu-item {
-        min-height: 78px;
-
-        flex-basis: 78px;
-
         font-size: 27px;
     }
-
 }
 
 
 /* ==================================================
-   작은 PC / 노트북
+   작은 PC
 ================================================== */
 
 @media (max-width: 1100px) {
 
     .title {
         margin-left: 22px;
-
         font-size: 44px;
 
         -webkit-text-stroke: 1.5px #000000;
-
-        text-shadow:
-            -1.5px -1.5px 0 #000000,
-             1.5px -1.5px 0 #000000,
-            -1.5px  1.5px 0 #000000,
-             1.5px  1.5px 0 #000000;
     }
 
     .sidebar {
         width: 200px;
-
         flex-basis: 200px;
     }
 
     .menu-item {
+        height: 70px;
         min-height: 70px;
-
         flex-basis: 70px;
 
         padding: 0 15px;
@@ -493,26 +366,9 @@ body {
         font-size: 23px;
     }
 
-    .lock-icon {
+    .lock {
         font-size: 18px;
     }
-
-    .main-content {
-        padding: 30px;
-    }
-
-    .content-box {
-        padding: 25px;
-    }
-
-    .content-box h2 {
-        font-size: 34px;
-    }
-
-    .content-box p {
-        font-size: 20px;
-    }
-
 }
 
 
@@ -528,19 +384,17 @@ body {
 
     .title {
         margin-left: 15px;
-
         font-size: 30px;
     }
 
     .sidebar {
         width: 160px;
-
         flex-basis: 160px;
     }
 
     .menu-item {
+        height: 60px;
         min-height: 60px;
-
         flex-basis: 60px;
 
         padding: 0 10px;
@@ -548,26 +402,7 @@ body {
         font-size: 18px;
     }
 
-    .lock-icon {
+    .lock {
         font-size: 15px;
     }
-
-    .main-content {
-        padding: 20px;
-    }
-
-    .content-box {
-        padding: 20px;
-
-        min-height: 180px;
-    }
-
-    .content-box h2 {
-        font-size: 28px;
-    }
-
-    .content-box p {
-        font-size: 17px;
-    }
-
 }
