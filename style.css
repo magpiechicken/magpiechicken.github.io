@@ -1,4 +1,7 @@
-/* 전체 기본 설정 */
+/* ========================================
+   전체 기본 설정
+======================================== */
+
 * {
     box-sizing: border-box;
 }
@@ -13,14 +16,15 @@ body {
 
 body {
     font-family: Arial, "Malgun Gothic", sans-serif;
-    background: #ffffff;
+    background-color: #ffffff;
+    color: #222222;
 }
 
 
-/* =========================
-   상단 주황색 영역
-   화면 높이의 1/9
-========================= */
+/* ========================================
+   상단 헤더
+   PC 화면 높이의 1/9
+======================================== */
 
 .top-bar {
     width: 100%;
@@ -32,33 +36,32 @@ body {
     background-color: #FF9400;
 
     padding-left: 20px;
+
+    overflow: hidden;
 }
 
 
-/* =========================
-   사진 영역
-========================= */
+/* ========================================
+   프로필 사진
+======================================== */
 
 .profile {
-    width: 60px;
-    height: 60px;
+    width: 120px;
+    height: 120px;
+
+    flex: 0 0 120px;
 
     margin: 0;
     padding: 0;
 
-    background: transparent;
-    border: none;
+    background-color: transparent;
 
     overflow: hidden;
-
-    flex-shrink: 0;
 }
 
-
-/* 실제 사진 */
 .profile img {
-    width: 60px;
-    height: 60px;
+    width: 120px;
+    height: 120px;
 
     display: block;
 
@@ -69,27 +72,29 @@ body {
 }
 
 
-/* =========================
-   까사장
-========================= */
+/* ========================================
+   홈페이지 제목
+======================================== */
 
 .title {
-    margin-left: 15px;
+    margin-left: 30px;
 
-    font-size: 32px;
+    font-size: 64px;
     font-weight: 700;
 
-    color: white;
+    color: #ffffff;
+
+    white-space: nowrap;
 }
 
 
-/* =========================
-   메인 영역
-========================= */
+/* ========================================
+   메인 화면
+======================================== */
 
 .main-content {
     width: 100%;
     height: 88.889vh;
 
-    background-color: white;
+    background-color: #ffffff;
 }
