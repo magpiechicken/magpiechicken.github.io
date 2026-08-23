@@ -853,3 +853,583 @@ body {
     }
 
 }
+/* ==================================================
+   모바일 전용
+   700px 이하부터 모바일 레이아웃
+================================================== */
+
+@media (max-width: 700px) {
+
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+
+        overflow: hidden;
+    }
+
+
+    /* =========================
+       상단 헤더
+    ========================= */
+
+    .top-bar {
+        height: 72px;
+
+        padding-left: 12px;
+        padding-right: 10px;
+    }
+
+
+    .profile {
+        width: 48px;
+        height: 48px;
+
+        flex: 0 0 48px;
+    }
+
+
+    .title {
+        margin-left: 12px;
+
+        font-size: 26px;
+
+        line-height: 1;
+
+        -webkit-text-stroke: 1px #000000;
+
+        text-shadow:
+            -1px -1px 0 #000000,
+             1px -1px 0 #000000,
+            -1px  1px 0 #000000,
+             1px  1px 0 #000000;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    /* 관리자 버튼 */
+
+    .admin-button {
+        margin-left: 8px;
+        margin-right: 0;
+
+        padding: 7px 9px;
+
+        font-size: 11px;
+
+        border-width: 2px;
+
+        flex-shrink: 0;
+    }
+
+
+    /* =========================
+       헤더 선
+    ========================= */
+
+    .header-line {
+        height: 2px;
+    }
+
+
+    /* =========================
+       전체 레이아웃
+    ========================= */
+
+    .site-layout {
+        height: calc(100vh - 74px);
+
+        display: flex;
+    }
+
+
+    /* =========================
+       모바일 사이드바
+    ========================= */
+
+    .sidebar {
+        width: 88px;
+
+        flex: 0 0 88px;
+
+        height: 100%;
+
+        border-right: 3px solid #000000;
+    }
+
+
+    .menu-item {
+        width: 100%;
+        height: 58px;
+        min-height: 58px;
+
+        padding: 0 5px;
+
+        justify-content: center;
+
+        font-size: 15px;
+
+        line-height: 1.2;
+
+        text-align: center;
+
+        border-bottom: 2px solid #000000;
+    }
+
+
+    /* 잠금 메뉴 */
+
+    .menu-item.locked {
+        font-size: 13px;
+
+        flex-direction: column;
+
+        gap: 2px;
+    }
+
+
+    /* =========================
+       메인 영역
+    ========================= */
+
+    .main-content {
+        flex: 1;
+
+        width: calc(100% - 88px);
+
+        min-width: 0;
+
+        height: 100%;
+
+        padding: 18px 14px;
+
+        overflow-y: auto;
+    }
+
+
+    /* =========================
+       제목
+    ========================= */
+
+    .page-heading {
+        font-size: 28px;
+    }
+
+
+    .page-subtitle {
+        margin-top: 7px;
+
+        font-size: 13px;
+
+        line-height: 1.5;
+    }
+
+
+    /* =========================
+       처음 소식 박스
+    ========================= */
+
+    .intro-box {
+        margin-top: 18px;
+
+        padding: 20px;
+
+        border-width: 2px;
+    }
+
+
+    .intro-box h2 {
+        margin-bottom: 12px;
+
+        font-size: 22px;
+
+        line-height: 1.35;
+    }
+
+
+    .intro-box p {
+        margin-bottom: 20px;
+
+        font-size: 14px;
+
+        line-height: 1.6;
+    }
+
+
+    /* =========================
+       자세히 보기 버튼
+    ========================= */
+
+    .orange-button {
+        width: 100%;
+
+        padding: 11px 10px;
+
+        border-width: 2px;
+
+        font-size: 15px;
+    }
+
+
+    /* =========================
+       목록 상단
+    ========================= */
+
+    .list-header {
+        margin-bottom: 18px;
+
+        gap: 10px;
+    }
+
+
+    .orange-small-button {
+        padding: 9px 12px;
+
+        border-width: 2px;
+
+        font-size: 13px;
+    }
+
+
+    /* =========================
+       소식 없음
+    ========================= */
+
+    .empty-box {
+        min-height: 220px;
+
+        border-width: 2px;
+    }
+
+
+    .empty-title {
+        font-size: 24px;
+    }
+
+
+    .empty-description {
+        margin-top: 7px;
+
+        font-size: 13px;
+    }
+
+
+    /* =========================
+       소식 목록
+    ========================= */
+
+    .news-list {
+        gap: 9px;
+    }
+
+
+    .news-row {
+        min-height: 64px;
+
+        border-width: 2px;
+    }
+
+
+    .news-author {
+        width: 86px;
+
+        padding: 0 7px;
+
+        font-size: 11px;
+    }
+
+
+    .news-title {
+        padding: 0 7px;
+
+        font-size: 15px;
+    }
+
+
+    .news-date {
+        width: 74px;
+
+        padding: 0 6px;
+
+        font-size: 10px;
+    }
+
+
+    /* =========================
+       상세 페이지
+    ========================= */
+
+    .white-button {
+        margin-bottom: 16px;
+
+        padding: 8px 12px;
+
+        border-width: 2px;
+
+        font-size: 13px;
+    }
+
+
+    .detail-box {
+        padding: 20px;
+
+        border-width: 2px;
+    }
+
+
+    .detail-author {
+        margin-bottom: 8px;
+
+        font-size: 13px;
+    }
+
+
+    .detail-title-line {
+        gap: 6px;
+
+        margin-bottom: 20px;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    .detail-title {
+        font-size: 27px;
+
+        line-height: 1.35;
+    }
+
+
+    .detail-date {
+        font-size: 12px;
+    }
+
+
+    .detail-content {
+        font-size: 15px;
+
+        line-height: 1.8;
+    }
+
+
+    /* =========================
+       삭제 버튼
+    ========================= */
+
+    .delete-button {
+        margin-top: 12px;
+
+        padding: 9px 14px;
+
+        border-width: 2px;
+
+        font-size: 13px;
+    }
+
+
+    /* =========================
+       작성 화면
+    ========================= */
+
+    .write-box {
+        padding: 20px;
+
+        border-width: 2px;
+    }
+
+
+    .write-box h1 {
+        margin-bottom: 22px;
+
+        font-size: 27px;
+    }
+
+
+    .write-box label {
+        margin-bottom: 7px;
+
+        font-size: 14px;
+    }
+
+
+    .write-box input,
+    .write-box textarea {
+        margin-bottom: 17px;
+
+        padding: 10px;
+
+        border-width: 2px;
+
+        font-size: 14px;
+    }
+
+
+    .write-box textarea {
+        min-height: 180px;
+    }
+
+
+    .write-actions {
+        gap: 8px;
+    }
+
+
+    /* =========================
+       관리자 로그인
+    ========================= */
+
+    .login-box {
+        width: 100%;
+
+        margin: 20px auto;
+
+        padding: 22px;
+
+        border-width: 2px;
+    }
+
+
+    .login-box h1 {
+        margin-bottom: 8px;
+
+        font-size: 26px;
+    }
+
+
+    .login-description {
+        margin-bottom: 22px;
+
+        font-size: 13px;
+    }
+
+
+    .login-box label {
+        font-size: 14px;
+    }
+
+
+    .login-box input {
+        margin-bottom: 17px;
+
+        padding: 10px;
+
+        border-width: 2px;
+
+        font-size: 14px;
+    }
+
+
+    .login-button,
+    .login-cancel-button {
+        padding: 11px;
+
+        border-width: 2px;
+
+        font-size: 15px;
+    }
+
+
+    .login-error {
+        font-size: 12px;
+    }
+
+}
+
+
+/* ==================================================
+   아주 작은 휴대폰
+   480px 이하
+================================================== */
+
+@media (max-width: 480px) {
+
+    .top-bar {
+        height: 62px;
+
+        padding-left: 8px;
+        padding-right: 7px;
+    }
+
+
+    .profile {
+        width: 40px;
+        height: 40px;
+
+        flex-basis: 40px;
+    }
+
+
+    .title {
+        margin-left: 8px;
+
+        font-size: 21px;
+    }
+
+
+    .admin-button {
+        padding: 6px 7px;
+
+        font-size: 10px;
+    }
+
+
+    .site-layout {
+        height: calc(100vh - 64px);
+    }
+
+
+    .sidebar {
+        width: 72px;
+
+        flex-basis: 72px;
+    }
+
+
+    .main-content {
+        width: calc(100% - 72px);
+
+        padding: 14px 10px;
+    }
+
+
+    .menu-item {
+        height: 52px;
+        min-height: 52px;
+
+        font-size: 13px;
+    }
+
+
+    .menu-item.locked {
+        font-size: 11px;
+    }
+
+
+    .page-heading {
+        font-size: 24px;
+    }
+
+
+    .news-author {
+        width: 70px;
+
+        font-size: 10px;
+    }
+
+
+    .news-title {
+        font-size: 13px;
+    }
+
+
+    .news-date {
+        width: 65px;
+
+        font-size: 9px;
+    }
+
+}
