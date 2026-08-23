@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>까치치킨사장님 공식 홈페이지</title>
 
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -26,8 +25,7 @@
 
     </header>
 
-
-    <!-- 상단 검은색 선 -->
+    <!-- 검은색 선 -->
     <div class="header-line"></div>
 
 
@@ -36,49 +34,72 @@
     ========================== -->
     <div class="site-layout">
 
-        <!-- =====================
-             왼쪽 사이드바
-        ====================== -->
+        <!-- 사이드바 -->
         <aside class="sidebar">
 
-            <button class="menu-item active" id="newsMenu" type="button">
-                <span>소식</span>
+            <button
+                class="menu-item active"
+                id="newsMenu"
+                type="button"
+                onclick="showNewsHome()"
+            >
+                소식
             </button>
 
-            <button class="menu-item" id="donationMenu" type="button">
-                <span>기부</span>
+            <button
+                class="menu-item"
+                id="donationMenu"
+                type="button"
+                onclick="showDonation()"
+            >
+                기부
             </button>
 
-            <button class="menu-item locked" type="button" disabled>
-                <span>고급소식</span>
-                <span>🔒</span>
+            <button
+                class="menu-item locked"
+                type="button"
+                disabled
+            >
+                고급소식 🔒
             </button>
 
-            <button class="menu-item locked" type="button" disabled>
-                <span>영상미리보기</span>
-                <span>🔒</span>
+            <button
+                class="menu-item locked"
+                type="button"
+                disabled
+            >
+                영상미리보기 🔒
             </button>
 
-            <button class="menu-item upcoming" type="button" disabled>
-                <span>(추가예정)</span>
+            <button
+                class="menu-item upcoming"
+                type="button"
+                disabled
+            >
+                (추가예정)
             </button>
 
-            <button class="menu-item upcoming" type="button" disabled>
-                <span>(추가예정)</span>
+            <button
+                class="menu-item upcoming"
+                type="button"
+                disabled
+            >
+                (추가예정)
             </button>
 
         </aside>
 
 
-        <!-- =====================
-             오른쪽 메인 영역
-        ====================== -->
+        <!-- =========================
+             오른쪽 메인 화면
+        ========================== -->
         <main class="main-content">
 
-            <!-- =================
-                 기본 소식 화면
-            ================== -->
-            <section id="newsHome" class="page active-page">
+
+            <!-- =====================
+                 소식 메인
+            ====================== -->
+            <div id="newsHome" class="page">
 
                 <h1 class="page-heading">
                     소식
@@ -95,27 +116,27 @@
                     </p>
 
                     <button
-                        id="newsDetailButton"
                         class="detail-button"
                         type="button"
+                        onclick="showNewsDetail()"
                     >
                         소식 자세히 보러가기
                     </button>
 
                 </div>
 
-            </section>
+            </div>
 
 
-            <!-- =================
+            <!-- =====================
                  소식 전용 화면
-            ================== -->
-            <section id="newsDetail" class="page">
+            ====================== -->
+            <div id="newsDetail" class="page">
 
                 <button
-                    id="backToNewsButton"
                     class="back-button"
                     type="button"
+                    onclick="showNewsHome()"
                 >
                     ← 소식으로 돌아가기
                 </button>
@@ -127,31 +148,91 @@
                     </h1>
 
                     <p>
-                        이곳에 앞으로 실제 소식들이 표시됩니다.
+                        이곳이 소식 전용 화면입니다.
                     </p>
 
                 </div>
 
-            </section>
+            </div>
 
 
-            <!-- =================
+            <!-- =====================
                  기부 화면
-            ================== -->
-            <section id="donationPage" class="page">
+            ====================== -->
+            <div id="donationPage" class="page">
 
                 <h1 class="page-heading">
                     기부
                 </h1>
 
-            </section>
+            </div>
+
 
         </main>
 
     </div>
 
 
-    <script src="./script.js"></script>
+    <!-- =========================
+         JavaScript
+         HTML 안에 직접 넣음
+    ========================== -->
+    <script>
+
+        const newsHome = document.getElementById("newsHome");
+        const newsDetail = document.getElementById("newsDetail");
+        const donationPage = document.getElementById("donationPage");
+
+        const newsMenu = document.getElementById("newsMenu");
+        const donationMenu = document.getElementById("donationMenu");
+
+
+        function hideAllPages() {
+
+            newsHome.style.display = "none";
+            newsDetail.style.display = "none";
+            donationPage.style.display = "none";
+
+        }
+
+
+        function showNewsHome() {
+
+            hideAllPages();
+
+            newsHome.style.display = "block";
+
+            newsMenu.classList.add("active");
+            donationMenu.classList.remove("active");
+
+        }
+
+
+        function showNewsDetail() {
+
+            hideAllPages();
+
+            newsDetail.style.display = "block";
+
+        }
+
+
+        function showDonation() {
+
+            hideAllPages();
+
+            donationPage.style.display = "block";
+
+            donationMenu.classList.add("active");
+            newsMenu.classList.remove("active");
+
+        }
+
+
+        // 처음 사이트에 들어왔을 때
+        showNewsHome();
+
+    </script>
 
 </body>
 </html>
