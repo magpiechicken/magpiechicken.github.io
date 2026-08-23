@@ -1,7 +1,4 @@
-/* =========================
-   전체 기본 설정
-========================= */
-
+/* 전체 기본 설정 */
 * {
     box-sizing: border-box;
 }
@@ -16,13 +13,12 @@ body {
 
 body {
     font-family: Arial, "Malgun Gothic", sans-serif;
-    background-color: #ffffff;
-    color: #222222;
+    background: #ffffff;
 }
 
 
 /* =========================
-   상단 영역
+   상단 주황색 영역
    화면 높이의 1/9
 ========================= */
 
@@ -40,53 +36,60 @@ body {
 
 
 /* =========================
-   프로필 사진
+   사진 영역
 ========================= */
 
 .profile {
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
 
-    border-radius: 8px;
+    margin: 0;
+    padding: 0;
+
+    background: transparent;
+    border: none;
 
     overflow: hidden;
 
-    background-color: #ffffff;
+    flex-shrink: 0;
 }
 
 
-/* 사진 자체 */
+/* 실제 사진 */
 .profile img {
-    width: 100%;
-    height: 100%;
+    width: 60px;
+    height: 60px;
 
     display: block;
 
     object-fit: cover;
+
+    border: none;
+    outline: none;
 }
 
 
 /* =========================
-   까사장 글자
+   까사장
 ========================= */
 
 .title {
     margin-left: 15px;
 
     font-size: 32px;
-    font-weight: bold;
+    font-weight: 700;
 
-    color: #ffffff;
+    color: white;
 }
 
 
 /* =========================
-   아래쪽 메인 영역
+   메인 영역
 ========================= */
 
 .main-content {
     width: 100%;
     height: 88.889vh;
 
-    background-color: #ffffff;
+    background-color: white;
 }
