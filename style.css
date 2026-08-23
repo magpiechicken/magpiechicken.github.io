@@ -74,6 +74,9 @@ body {
 
     display: block;
 
+    margin: 0;
+    padding: 0;
+
     object-fit: cover;
 
     border: none;
@@ -89,14 +92,21 @@ body {
     margin-left: 30px;
 
     font-size: 64px;
+
     font-weight: 700;
 
     line-height: 1;
 
     color: #ffffff;
 
+    /*
+       검은색 2px 테두리
+    */
     -webkit-text-stroke: 2px #000000;
 
+    /*
+       테두리가 확실하게 보이도록 보강
+    */
     text-shadow:
         -2px -2px 0 #000000,
          2px -2px 0 #000000,
@@ -117,16 +127,20 @@ body {
     width: 100%;
     height: 3px;
 
+    margin: 0;
+    padding: 0;
+
     background-color: #000000;
 }
 
 
 /* ==================================================
-   전체 사이트 레이아웃
+   전체 레이아웃
 ================================================== */
 
 .site-layout {
     width: 100%;
+
     height: calc(100vh - 11.111111vh - 3px);
 
     display: flex;
@@ -136,7 +150,7 @@ body {
 
 
 /* ==================================================
-   사이드바
+   왼쪽 사이드바
 ================================================== */
 
 .sidebar {
@@ -151,11 +165,13 @@ body {
     background-color: #ffffff;
 
     border-right: 4px solid #000000;
+
+    overflow: hidden;
 }
 
 
 /* ==================================================
-   메뉴 버튼
+   사이드바 메뉴 기본
 ================================================== */
 
 .menu-item {
@@ -163,13 +179,16 @@ body {
     height: 82px;
     min-height: 82px;
 
+    flex: 0 0 82px;
+
+    margin: 0;
+    padding: 0 20px;
+
     display: flex;
     align-items: center;
     justify-content: flex-start;
 
     gap: 10px;
-
-    padding: 0 20px;
 
     background-color: #ffffff;
 
@@ -183,41 +202,87 @@ body {
         sans-serif;
 
     font-size: 30px;
+
     font-weight: 700;
 
     color: #000000;
 
+    text-align: left;
+
     cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
 }
 
 
-/* 선택된 메뉴 */
+/* ==================================================
+   선택된 메뉴
+================================================== */
 
 .menu-item.active {
     background-color: #FF9400;
+
     color: #ffffff;
 
     -webkit-text-stroke: 1px #000000;
 }
 
 
-/* 잠긴 메뉴 */
+/* ==================================================
+   일반 메뉴 hover
+================================================== */
+
+.menu-item:not(.active):not(.locked):not(.upcoming):hover {
+    background-color: #eeeeee;
+}
+
+
+/* ==================================================
+   잠금 메뉴
+================================================== */
 
 .menu-item.locked {
     background-color: #f5f5f5;
+
     color: #555555;
 
     cursor: not-allowed;
 }
 
 
-/* 추가 예정 */
+/* ==================================================
+   추가 예정 메뉴
+================================================== */
 
 .menu-item.upcoming {
     background-color: #eeeeee;
+
     color: #999999;
 
     cursor: not-allowed;
+}
+
+
+/* ==================================================
+   잠금 / 추가예정 hover 방지
+================================================== */
+
+.menu-item.locked:hover,
+.menu-item.upcoming:hover {
+    background-color: inherit;
+}
+
+
+/* ==================================================
+   잠금 아이콘
+================================================== */
+
+.lock {
+    font-size: 22px;
+
+    line-height: 1;
 }
 
 
@@ -227,7 +292,12 @@ body {
 
 .main-content {
     flex: 1;
+
+    width: 100%;
     height: 100%;
+
+    min-width: 0;
+    min-height: 0;
 
     padding: 45px;
 
@@ -238,13 +308,18 @@ body {
 
 
 /* ==================================================
-   페이지 공통
+   모든 페이지 기본 상태
 ================================================== */
 
 .page {
     display: none;
+
     width: 100%;
 }
+
+
+/* 현재 활성화된 페이지
+================================================== */
 
 .page.active-page {
     display: block;
@@ -258,8 +333,15 @@ body {
 .page-heading {
     margin: 0 0 35px 0;
 
+    padding: 0;
+
     font-size: 46px;
+
     font-weight: 700;
+
+    line-height: 1.2;
+
+    color: #000000;
 }
 
 
@@ -272,29 +354,58 @@ body {
 
     padding: 40px;
 
-    border: 4px solid #000000;
-
     background-color: #ffffff;
-}
 
-.news-box h2 {
-    margin: 0 0 22px 0;
-
-    font-size: 34px;
-}
-
-.news-box p {
-    margin: 0 0 30px 0;
-
-    font-size: 22px;
+    border: 4px solid #000000;
 }
 
 
 /* ==================================================
-   자세히 보러가기 버튼
+   소식 박스 제목
+================================================== */
+
+.news-box h2 {
+    margin: 0 0 22px 0;
+
+    padding: 0;
+
+    font-size: 34px;
+
+    font-weight: 700;
+
+    line-height: 1.3;
+
+    color: #000000;
+}
+
+
+/* ==================================================
+   소식 박스 설명
+================================================== */
+
+.news-box p {
+    margin: 0 0 30px 0;
+
+    padding: 0;
+
+    font-size: 22px;
+
+    line-height: 1.6;
+
+    color: #333333;
+}
+
+
+/* ==================================================
+   소식 자세히 보러가기 버튼
 ================================================== */
 
 .detail-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0;
     padding: 14px 28px;
 
     background-color: #FF9400;
@@ -308,25 +419,45 @@ body {
         sans-serif;
 
     font-size: 22px;
+
     font-weight: 700;
+
+    line-height: 1;
 
     color: #ffffff;
 
     cursor: pointer;
+
+    transition:
+        background-color 0.15s ease,
+        transform 0.1s ease;
 }
 
+
+/* 버튼 hover */
+
 .detail-button:hover {
-    background-color: #e88a00;
+    background-color: #e88900;
+}
+
+
+/* 버튼 클릭 */
+
+.detail-button:active {
+    transform: translateY(2px);
 }
 
 
 /* ==================================================
-   소식 상세 화면
+   소식 상세 화면 돌아가기 버튼
 ================================================== */
 
 .back-button {
-    margin-bottom: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
+    margin: 0 0 30px 0;
     padding: 12px 20px;
 
     background-color: #ffffff;
@@ -340,39 +471,157 @@ body {
         sans-serif;
 
     font-size: 20px;
+
     font-weight: 700;
+
+    line-height: 1;
+
+    color: #000000;
 
     cursor: pointer;
 }
+
+
+/* 돌아가기 hover */
 
 .back-button:hover {
     background-color: #eeeeee;
 }
 
+
+/* ==================================================
+   소식 상세 페이지 박스
+================================================== */
+
 .detail-page {
     width: 100%;
-    min-height: 400px;
 
-    padding: 50px;
+    min-height: 450px;
+
+    padding: 45px;
+
+    background-color: #ffffff;
 
     border: 4px solid #000000;
 }
 
-.detail-page h1 {
-    margin: 0 0 25px 0;
 
-    font-size: 48px;
-}
+/* ==================================================
+   작성자
+================================================== */
 
-.detail-page p {
-    margin: 0;
+.detail-author {
+    margin: 0 0 12px 0;
 
-    font-size: 24px;
+    font-size: 21px;
+
+    font-weight: 700;
+
+    line-height: 1.4;
+
+    color: #555555;
 }
 
 
 /* ==================================================
-   반응형
+   상세 제목 + 날짜
+================================================== */
+
+.detail-title-row {
+    width: 100%;
+
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin: 0 0 30px 0;
+}
+
+
+/* 큰 제목 */
+
+.detail-title {
+    margin: 0;
+
+    padding: 0;
+
+    font-size: 48px;
+
+    font-weight: 700;
+
+    line-height: 1.25;
+
+    color: #000000;
+}
+
+
+/* 날짜 */
+
+.detail-date {
+    flex-shrink: 0;
+
+    font-size: 18px;
+
+    font-weight: 400;
+
+    line-height: 1.4;
+
+    color: #777777;
+}
+
+
+/* ==================================================
+   상세 내용
+================================================== */
+
+.detail-content {
+    margin: 0;
+
+    padding: 0;
+
+    font-size: 25px;
+
+    line-height: 1.8;
+
+    color: #333333;
+}
+
+
+/* ==================================================
+   기부 화면
+================================================== */
+
+#donationPage {
+    width: 100%;
+}
+
+
+/* ==================================================
+   큰 PC
+================================================== */
+
+@media (min-width: 1600px) {
+
+    .sidebar {
+        width: 270px;
+        flex-basis: 270px;
+    }
+
+    .menu-item {
+        height: 90px;
+        min-height: 90px;
+        flex-basis: 90px;
+
+        font-size: 32px;
+    }
+
+}
+
+
+/* ==================================================
+   일반 PC
 ================================================== */
 
 @media (max-width: 1400px) {
@@ -393,11 +642,24 @@ body {
 }
 
 
+/* ==================================================
+   작은 PC
+================================================== */
+
 @media (max-width: 1100px) {
 
     .title {
         margin-left: 22px;
+
         font-size: 44px;
+
+        -webkit-text-stroke: 1.5px #000000;
+
+        text-shadow:
+            -1.5px -1.5px 0 #000000,
+             1.5px -1.5px 0 #000000,
+            -1.5px  1.5px 0 #000000,
+             1.5px  1.5px 0 #000000;
     }
 
     .sidebar {
@@ -406,20 +668,67 @@ body {
     }
 
     .menu-item {
+        height: 70px;
+        min-height: 70px;
+        flex-basis: 70px;
+
+        padding: 0 15px;
+
         font-size: 23px;
+    }
+
+    .lock {
+        font-size: 18px;
     }
 
     .main-content {
         padding: 30px;
     }
 
+    .page-heading {
+        font-size: 38px;
+    }
+
+    .news-box {
+        padding: 30px;
+    }
+
+    .news-box h2 {
+        font-size: 30px;
+    }
+
+    .news-box p {
+        font-size: 20px;
+    }
+
+    .detail-page {
+        padding: 30px;
+    }
+
+    .detail-title {
+        font-size: 40px;
+    }
+
+    .detail-content {
+        font-size: 21px;
+    }
+
 }
 
 
+/* ==================================================
+   작은 화면
+================================================== */
+
 @media (max-width: 800px) {
+
+    .top-bar {
+        padding-left: 10px;
+    }
 
     .title {
         margin-left: 15px;
+
         font-size: 30px;
     }
 
@@ -429,7 +738,55 @@ body {
     }
 
     .menu-item {
+        height: 60px;
+        min-height: 60px;
+        flex-basis: 60px;
+
         padding: 0 10px;
+
+        font-size: 18px;
+    }
+
+    .lock {
+        font-size: 15px;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .page-heading {
+        font-size: 30px;
+    }
+
+    .news-box {
+        padding: 22px;
+    }
+
+    .news-box h2 {
+        font-size: 24px;
+    }
+
+    .news-box p {
+        font-size: 17px;
+    }
+
+    .detail-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+
+        gap: 8px;
+    }
+
+    .detail-title {
+        font-size: 32px;
+    }
+
+    .detail-date {
+        font-size: 16px;
+    }
+
+    .detail-content {
         font-size: 18px;
     }
 
