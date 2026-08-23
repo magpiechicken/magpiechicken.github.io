@@ -16,12 +16,9 @@
     ========================================== -->
     <header class="top-bar">
 
-        <!-- 사진 -->
+        <!-- 프로필 사진 -->
         <div class="profile">
-            <img
-                src="profile.png"
-                alt="까치치킨사장님"
-            >
+            <img src="profile.png" alt="까치치킨사장님">
         </div>
 
         <!-- 홈페이지 제목 -->
@@ -39,12 +36,87 @@
 
 
     <!-- =========================================
-         메인 영역
+         본문 전체
     ========================================== -->
-    <main class="main-content">
+    <div class="site-layout">
 
-    </main>
 
+        <!-- =====================================
+             왼쪽 사이드바
+        ====================================== -->
+        <aside class="sidebar">
+
+
+            <!-- 소식 -->
+            <button class="menu-item active" type="button">
+                <span class="menu-text">소식</span>
+            </button>
+
+
+            <!-- 기부 -->
+            <button class="menu-item" type="button">
+                <span class="menu-text">기부</span>
+            </button>
+
+
+            <!-- 고급소식 -->
+            <button class="menu-item locked" type="button">
+                <span class="menu-text">고급소식</span>
+                <span class="lock-icon">🔒</span>
+            </button>
+
+
+            <!-- 영상미리보기 -->
+            <button class="menu-item locked" type="button">
+                <span class="menu-text">영상미리보기</span>
+                <span class="lock-icon">🔒</span>
+            </button>
+
+
+            <!-- 추가 예정 -->
+            <button class="menu-item upcoming" type="button">
+                <span class="menu-text">(추가예정)</span>
+            </button>
+
+
+            <!-- 추가 예정 -->
+            <button class="menu-item upcoming" type="button">
+                <span class="menu-text">(추가예정)</span>
+            </button>
+
+
+        </aside>
+
+
+        <!-- =====================================
+             오른쪽 메인 화면
+        ====================================== -->
+        <main class="main-content">
+
+
+            <!-- 소식 박스 -->
+            <section class="content-box">
+                <h2>까사장 소식</h2>
+
+                <p>
+                    새로운 소식이 이곳에 표시됩니다.
+                </p>
+            </section>
+
+
+            <!-- 추천 영상 박스 -->
+            <section class="content-box">
+                <h2>까사장 추천영상</h2>
+
+                <p>
+                    추천 영상이 이곳에 표시됩니다.
+                </p>
+            </section>
+
+
+        </main>
+
+    </div>
 
 </body>
 </html>
