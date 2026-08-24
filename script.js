@@ -18,156 +18,87 @@ let isAdmin = false;
 let currentNewsId = null;
 
 const introScreen =
-    document.getElementById(
-        "screen-news-intro"
-    );
+    document.getElementById("screen-news-intro");
 
 const listScreen =
-    document.getElementById(
-        "screen-news-list"
-    );
+    document.getElementById("screen-news-list");
 
 const detailScreen =
-    document.getElementById(
-        "screen-news-detail"
-    );
+    document.getElementById("screen-news-detail");
 
 const writeScreen =
-    document.getElementById(
-        "screen-write"
-    );
+    document.getElementById("screen-write");
 
 const authScreen =
-    document.getElementById(
-        "screen-auth"
-    );
+    document.getElementById("screen-auth");
 
 const donationScreen =
-    document.getElementById(
-        "screen-donation"
-    );
+    document.getElementById("screen-donation");
 
 const newsMenu =
-    document.getElementById(
-        "menu-news"
-    );
+    document.getElementById("menu-news");
 
 const donationMenu =
-    document.getElementById(
-        "menu-donation"
-    );
+    document.getElementById("menu-donation");
 
 const accountButton =
-    document.getElementById(
-        "accountButton"
-    );
+    document.getElementById("accountButton");
 
 const loginInfoButton =
-    document.getElementById(
-        "loginInfoButton"
-    );
+    document.getElementById("loginInfoButton");
 
 const loginInfoModal =
-    document.getElementById(
-        "loginInfoModal"
-    );
+    document.getElementById("loginInfoModal");
 
 const closeLoginInfo =
-    document.getElementById(
-        "closeLoginInfo"
-    );
+    document.getElementById("closeLoginInfo");
 
 const loginInfoContent =
-    document.getElementById(
-        "loginInfoContent"
-    );
+    document.getElementById("loginInfoContent");
 
 const showWriteButton =
-    document.getElementById(
-        "show-write"
-    );
+    document.getElementById("show-write");
 
 const deleteNewsButton =
-    document.getElementById(
-        "delete-news"
-    );
+    document.getElementById("delete-news");
 
 const loginTab =
-    document.getElementById(
-        "login-tab"
-    );
+    document.getElementById("login-tab");
 
 const signupTab =
-    document.getElementById(
-        "signup-tab"
-    );
+    document.getElementById("signup-tab");
 
 const loginPanel =
-    document.getElementById(
-        "auth-login-panel"
-    );
+    document.getElementById("auth-login-panel");
 
 const signupPanel =
-    document.getElementById(
-        "auth-signup-panel"
-    );
+    document.getElementById("auth-signup-panel");
 
 const authMessage =
-    document.getElementById(
-        "auth-message"
-    );
+    document.getElementById("auth-message");
 
 function hideAllScreens() {
-    introScreen.classList.remove(
-        "visible"
-    );
-
-    listScreen.classList.remove(
-        "visible"
-    );
-
-    detailScreen.classList.remove(
-        "visible"
-    );
-
-    writeScreen.classList.remove(
-        "visible"
-    );
-
-    authScreen.classList.remove(
-        "visible"
-    );
-
-    donationScreen.classList.remove(
-        "visible"
-    );
+    introScreen.classList.remove("visible");
+    listScreen.classList.remove("visible");
+    detailScreen.classList.remove("visible");
+    writeScreen.classList.remove("visible");
+    authScreen.classList.remove("visible");
+    donationScreen.classList.remove("visible");
 }
 
 function activateNewsMenu() {
-    newsMenu.classList.add(
-        "active"
-    );
-
-    donationMenu.classList.remove(
-        "active"
-    );
+    newsMenu.classList.add("active");
+    donationMenu.classList.remove("active");
 }
 
 function activateDonationMenu() {
-    donationMenu.classList.add(
-        "active"
-    );
-
-    newsMenu.classList.remove(
-        "active"
-    );
+    donationMenu.classList.add("active");
+    newsMenu.classList.remove("active");
 }
 
 function scrollTop() {
     const main =
-        document.querySelector(
-            ".main-content"
-        );
+        document.querySelector(".main-content");
 
     if (main) {
         main.scrollTop = 0;
@@ -176,21 +107,10 @@ function scrollTop() {
 
 function updateAuthUI() {
     if (!currentUser) {
-        accountButton.textContent =
-            "로그인";
-
-        accountButton.classList.remove(
-            "logged-in"
-        );
-
-        showWriteButton.classList.add(
-            "hidden"
-        );
-
-        deleteNewsButton.classList.add(
-            "hidden"
-        );
-
+        accountButton.textContent = "로그인";
+        accountButton.classList.remove("logged-in");
+        showWriteButton.classList.add("hidden");
+        deleteNewsButton.classList.add("hidden");
         return;
     }
 
@@ -203,22 +123,13 @@ function updateAuthUI() {
         accountButton.textContent =
             `${username} · 관리자`;
 
-        accountButton.classList.add(
-            "logged-in"
-        );
-
-        showWriteButton.classList.remove(
-            "hidden"
-        );
+        accountButton.classList.add("logged-in");
+        showWriteButton.classList.remove("hidden");
 
         if (currentNewsId !== null) {
-            deleteNewsButton.classList.remove(
-                "hidden"
-            );
+            deleteNewsButton.classList.remove("hidden");
         } else {
-            deleteNewsButton.classList.add(
-                "hidden"
-            );
+            deleteNewsButton.classList.add("hidden");
         }
 
         return;
@@ -227,26 +138,16 @@ function updateAuthUI() {
     accountButton.textContent =
         `${username} · 로그아웃`;
 
-    accountButton.classList.remove(
-        "logged-in"
-    );
-
-    showWriteButton.classList.add(
-        "hidden"
-    );
-
-    deleteNewsButton.classList.add(
-        "hidden"
-    );
+    accountButton.classList.remove("logged-in");
+    showWriteButton.classList.add("hidden");
+    deleteNewsButton.classList.add("hidden");
 }
 
 async function loadCurrentProfile() {
     if (!currentUser) {
         currentProfile = null;
         isAdmin = false;
-
         updateAuthUI();
-
         return;
     }
 
@@ -272,9 +173,7 @@ async function loadCurrentProfile() {
 
         currentProfile = null;
         isAdmin = false;
-
         updateAuthUI();
-
         return;
     }
 
@@ -301,14 +200,11 @@ async function refreshAuthState() {
         currentUser = null;
         currentProfile = null;
         isAdmin = false;
-
         updateAuthUI();
-
         return;
     }
 
-    currentUser =
-        data.user;
+    currentUser = data.user;
 
     await loadCurrentProfile();
 }
@@ -316,9 +212,7 @@ async function refreshAuthState() {
 function openNewsIntro() {
     hideAllScreens();
 
-    introScreen.classList.add(
-        "visible"
-    );
+    introScreen.classList.add("visible");
 
     activateNewsMenu();
 
@@ -332,9 +226,7 @@ function openNewsIntro() {
 async function openNewsList() {
     hideAllScreens();
 
-    listScreen.classList.add(
-        "visible"
-    );
+    listScreen.classList.add("visible");
 
     activateNewsMenu();
 
@@ -349,10 +241,7 @@ async function openNewsList() {
 
 function openWriteScreen() {
     if (!currentUser) {
-        openAuthScreen(
-            "login"
-        );
-
+        openAuthScreen("login");
         return;
     }
 
@@ -360,15 +249,12 @@ function openWriteScreen() {
         alert(
             "관리자만 소식을 작성할 수 있습니다."
         );
-
         return;
     }
 
     hideAllScreens();
 
-    writeScreen.classList.add(
-        "visible"
-    );
+    writeScreen.classList.add("visible");
 
     activateNewsMenu();
 
@@ -378,9 +264,7 @@ function openWriteScreen() {
 function openDonation() {
     hideAllScreens();
 
-    donationScreen.classList.add(
-        "visible"
-    );
+    donationScreen.classList.add("visible");
 
     activateDonationMenu();
 
@@ -392,9 +276,7 @@ function openAuthScreen(
 ) {
     hideAllScreens();
 
-    authScreen.classList.add(
-        "visible"
-    );
+    authScreen.classList.add("visible");
 
     activateNewsMenu();
 
@@ -432,10 +314,7 @@ function showAuthMode(mode) {
 
 async function handleAccountButton() {
     if (!currentUser) {
-        openAuthScreen(
-            "login"
-        );
-
+        openAuthScreen("login");
         return;
     }
 
@@ -443,153 +322,115 @@ async function handleAccountButton() {
 }
 
 function openLoginInfo() {
-    if (!currentUser) {
-        loginInfoContent.innerHTML = `
+    const currentStatus = currentUser
+        ? `
+            <div class="login-info-status">
+                현재 상태: 로그인 상태
+                <br>
+                사용자:
+                ${escapeHTML(
+                    currentProfile?.username ||
+                    currentUser.email ||
+                    "회원"
+                )}
+                <br>
+                권한:
+                ${isAdmin ? "관리자" : "일반 회원"}
+            </div>
+        `
+        : `
             <div class="login-info-status">
                 현재 상태: 로그아웃 상태
             </div>
-
-            <div class="login-info-section">
-                <h3>장점</h3>
-
-                <ul>
-                    <li>
-                        로그인하지 않아도 사이트와 소식을 볼 수 있습니다.
-                    </li>
-
-                    <li>
-                        계정과 비밀번호를 입력할 필요가 없습니다.
-                    </li>
-
-                    <li>
-                        빠르게 사이트에 접근할 수 있습니다.
-                    </li>
-                </ul>
-            </div>
-
-            <div class="login-info-section">
-                <h3>단점</h3>
-
-                <ul>
-                    <li>
-                        개인별 안읽은 소식 표시를 사용할 수 없습니다.
-                    </li>
-
-                    <li>
-                        소식 작성 및 삭제 기능을 사용할 수 없습니다.
-                    </li>
-
-                    <li>
-                        계정별 기능을 사용할 수 없습니다.
-                    </li>
-                </ul>
-            </div>
         `;
 
-    } else if (isAdmin) {
-        const username =
-            currentProfile?.username ||
-            currentUser.email ||
-            "회원";
+    loginInfoContent.innerHTML = `
+        ${currentStatus}
 
-        loginInfoContent.innerHTML = `
-            <div class="login-info-status">
-                현재 상태: 로그인 상태
-                <br>
-                사용자: ${escapeHTML(
-                    username
-                )}
-                <br>
-                권한: 관리자
-            </div>
+        <div class="login-info-section">
+            <h3>로그아웃 상태 · 장점</h3>
 
-            <div class="login-info-section">
-                <h3>장점</h3>
+            <ul>
+                <li>
+                    로그인하지 않아도 사이트를 볼 수 있습니다.
+                </li>
 
-                <ul>
-                    <li>
-                        개인별 안읽은 소식을 확인할 수 있습니다.
-                    </li>
+                <li>
+                    계정과 비밀번호를 입력할 필요가 없습니다.
+                </li>
 
-                    <li>
-                        읽은 소식은 안읽은 표시가 사라집니다.
-                    </li>
+                <li>
+                    빠르게 소식을 확인할 수 있습니다.
+                </li>
 
-                    <li>
-                        관리자는 소식을 작성할 수 있습니다.
-                    </li>
+                <li>
+                    공용 기기에서도 편하게 사용할 수 있습니다.
+                </li>
+            </ul>
+        </div>
 
-                    <li>
-                        관리자는 소식을 삭제할 수 있습니다.
-                    </li>
-                </ul>
-            </div>
+        <div class="login-info-section">
+            <h3>로그아웃 상태 · 단점</h3>
 
-            <div class="login-info-section">
-                <h3>단점</h3>
+            <ul>
+                <li>
+                    개인별 안읽은 소식 표시를 사용할 수 없습니다.
+                </li>
 
-                <ul>
-                    <li>
-                        로그인 상태를 유지해야 합니다.
-                    </li>
+                <li>
+                    소식 작성 및 삭제 기능을 사용할 수 없습니다.
+                </li>
 
-                    <li>
-                        다른 기기에서는 다시 로그인해야 할 수 있습니다.
-                    </li>
-                </ul>
-            </div>
-        `;
+                <li>
+                    계정별 기능을 사용할 수 없습니다.
+                </li>
 
-    } else {
-        const username =
-            currentProfile?.username ||
-            currentUser.email ||
-            "회원";
+                <li>
+                    다른 회원과 구분되는 개인 설정을 사용할 수 없습니다.
+                </li>
+            </ul>
+        </div>
 
-        loginInfoContent.innerHTML = `
-            <div class="login-info-status">
-                현재 상태: 로그인 상태
-                <br>
-                사용자: ${escapeHTML(
-                    username
-                )}
-                <br>
-                권한: 일반 회원
-            </div>
+        <div class="login-info-section">
+            <h3>로그인 상태 · 장점</h3>
 
-            <div class="login-info-section">
-                <h3>장점</h3>
+            <ul>
+                <li>
+                    개인별 안읽은 소식을 확인할 수 있습니다.
+                </li>
 
-                <ul>
-                    <li>
-                        개인별 안읽은 소식을 확인할 수 있습니다.
-                    </li>
+                <li>
+                    소식을 읽으면 해당 계정의 안읽은 표시가 사라집니다.
+                </li>
 
-                    <li>
-                        소식을 읽으면 안읽은 표시가 자동으로 사라집니다.
-                    </li>
+                <li>
+                    내 계정으로 사이트를 이용할 수 있습니다.
+                </li>
 
-                    <li>
-                        내 계정으로 사이트를 이용할 수 있습니다.
-                    </li>
-                </ul>
-            </div>
+                <li>
+                    관리자 계정이라면 소식을 작성하고 삭제할 수 있습니다.
+                </li>
+            </ul>
+        </div>
 
-            <div class="login-info-section">
-                <h3>단점</h3>
+        <div class="login-info-section">
+            <h3>로그인 상태 · 단점</h3>
 
-                <ul>
-                    <li>
-                        로그인 상태를 유지해야 합니다.
-                    </li>
+            <ul>
+                <li>
+                    로그인과 비밀번호가 필요합니다.
+                </li>
 
-                    <li>
-                        관리자 기능은 사용할 수 없습니다.
-                    </li>
-                </ul>
-            </div>
-        `;
-    }
+                <li>
+                    다른 기기에서는 다시 로그인해야 할 수 있습니다.
+                </li>
+
+                <li>
+                    계정 정보를 안전하게 관리해야 합니다.
+                </li>
+            </ul>
+        </div>
+    `;
 
     loginInfoModal.classList.remove(
         "hidden"
@@ -605,30 +446,26 @@ function closeLoginInfoModal() {
 async function login() {
     const email =
         document
-            .getElementById(
-                "login-email"
-            )
+            .getElementById("login-email")
             .value
             .trim();
 
     const password =
-        document.getElementById(
-            "login-password"
-        ).value;
+        document
+            .getElementById("login-password")
+            .value;
 
     authMessage.textContent = "";
 
     if (!email) {
         authMessage.textContent =
             "이메일을 입력해주세요.";
-
         return;
     }
 
     if (!password) {
         authMessage.textContent =
             "비밀번호를 입력해주세요.";
-
         return;
     }
 
@@ -735,42 +572,36 @@ async function signup() {
     if (!username) {
         authMessage.textContent =
             "아이디를 입력해주세요.";
-
         return;
     }
 
     if (username.length < 2) {
         authMessage.textContent =
             "아이디는 2자 이상 입력해주세요.";
-
         return;
     }
 
     if (!email) {
         authMessage.textContent =
             "이메일을 입력해주세요.";
-
         return;
     }
 
     if (!password) {
         authMessage.textContent =
             "비밀번호를 입력해주세요.";
-
         return;
     }
 
     if (password.length < 6) {
         authMessage.textContent =
             "비밀번호는 6자 이상 입력해주세요.";
-
         return;
     }
 
     if (password !== passwordConfirm) {
         authMessage.textContent =
             "비밀번호가 일치하지 않습니다.";
-
         return;
     }
 
@@ -847,9 +678,7 @@ async function signup() {
             "login-email"
         ).value = email;
 
-        showAuthMode(
-            "login"
-        );
+        showAuthMode("login");
 
     } catch (error) {
         console.error(
@@ -878,7 +707,6 @@ async function logout() {
             "로그아웃 오류:",
             error
         );
-
         return;
     }
 
@@ -896,17 +724,18 @@ async function getNews() {
     const {
         data,
         error
-    } = await supabaseClient
-        .from("news")
-        .select(
-            "id, author, title, content, created_at"
-        )
-        .order(
-            "created_at",
-            {
-                ascending: false
-            }
-        );
+    } =
+        await supabaseClient
+            .from("news")
+            .select(
+                "id, author, title, content, created_at"
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
 
     if (error) {
         console.error(
@@ -948,19 +777,20 @@ async function getReadNewsIds(
     const {
         data,
         error
-    } = await supabaseClient
-        .from("news_reads")
-        .select(
-            "news_id"
-        )
-        .eq(
-            "user_id",
-            currentUser.id
-        )
-        .in(
-            "news_id",
-            newsIds
-        );
+    } =
+        await supabaseClient
+            .from("news_reads")
+            .select(
+                "news_id"
+            )
+            .eq(
+                "user_id",
+                currentUser.id
+            )
+            .in(
+                "news_id",
+                newsIds
+            );
 
     if (error) {
         console.error(
@@ -991,24 +821,25 @@ async function markNewsAsRead(
 
     const {
         error
-    } = await supabaseClient
-        .from("news_reads")
-        .upsert(
-            {
-                user_id:
-                    currentUser.id,
+    } =
+        await supabaseClient
+            .from("news_reads")
+            .upsert(
+                {
+                    user_id:
+                        currentUser.id,
 
-                news_id:
-                    String(newsId),
+                    news_id:
+                        String(newsId),
 
-                read_at:
-                    new Date().toISOString()
-            },
-            {
-                onConflict:
-                    "user_id,news_id"
-            }
-        );
+                    read_at:
+                        new Date().toISOString()
+                },
+                {
+                    onConflict:
+                        "user_id,news_id"
+                }
+            );
 
     if (error) {
         console.error(
@@ -1018,9 +849,7 @@ async function markNewsAsRead(
     }
 }
 
-function formatDate(
-    value
-) {
+function formatDate(value) {
     const date =
         new Date(value);
 
@@ -1097,7 +926,6 @@ async function renderNews() {
 
     newsList.forEach(
         function(news) {
-
             const newsKey =
                 String(news.id);
 
@@ -1112,8 +940,7 @@ async function renderNews() {
                     "button"
                 );
 
-            row.type =
-                "button";
+            row.type = "button";
 
             row.className =
                 isUnread
@@ -1159,15 +986,11 @@ async function renderNews() {
                 }
             );
 
-            list.appendChild(
-                row
-            );
+            list.appendChild(row);
         }
     );
 
-    container.appendChild(
-        list
-    );
+    container.appendChild(list);
 }
 
 async function openNewsDetail(
@@ -1260,9 +1083,7 @@ async function saveNews() {
             "로그인이 필요합니다."
         );
 
-        openAuthScreen(
-            "login"
-        );
+        openAuthScreen("login");
 
         return;
     }
@@ -1363,18 +1184,19 @@ async function saveNews() {
 
     const {
         error
-    } = await supabaseClient
-        .from("news")
-        .insert({
-            author:
-                profile.username,
+    } =
+        await supabaseClient
+            .from("news")
+            .insert({
+                author:
+                    profile.username,
 
-            title:
-                title,
+                title:
+                    title,
 
-            content:
-                content
-        });
+                content:
+                    content
+            });
 
     if (error) {
         console.error(
@@ -1457,9 +1279,7 @@ async function deleteCurrentNews() {
     await openNewsList();
 }
 
-function escapeHTML(
-    value
-) {
+function escapeHTML(value) {
     return String(value)
         .replace(
             /&/g,
@@ -1564,14 +1384,10 @@ document
         openDonation
     );
 
-document
-    .getElementById(
-        "accountButton"
-    )
-    .addEventListener(
-        "click",
-        handleAccountButton
-    );
+accountButton.addEventListener(
+    "click",
+    handleAccountButton
+);
 
 loginInfoButton.addEventListener(
     "click",
@@ -1586,14 +1402,12 @@ closeLoginInfo.addEventListener(
 loginInfoModal.addEventListener(
     "click",
     function(event) {
-
         if (
             event.target ===
             loginInfoModal
         ) {
             closeLoginInfoModal();
         }
-
     }
 );
 
@@ -1645,14 +1459,11 @@ document
     .addEventListener(
         "keydown",
         function(event) {
-
             if (
-                event.key ===
-                "Enter"
+                event.key === "Enter"
             ) {
                 login();
             }
-
         }
     );
 
@@ -1663,14 +1474,11 @@ document
     .addEventListener(
         "keydown",
         function(event) {
-
             if (
-                event.key ===
-                "Enter"
+                event.key === "Enter"
             ) {
                 signup();
             }
-
         }
     );
 
@@ -1679,7 +1487,6 @@ supabaseClient.auth.onAuthStateChange(
         event,
         session
     ) {
-
         if (
             event ===
             "SIGNED_OUT"
@@ -1702,7 +1509,6 @@ supabaseClient.auth.onAuthStateChange(
 
             await loadCurrentProfile();
         }
-
     }
 );
 
