@@ -738,7 +738,7 @@ button:disabled {
 }
 
 /* =========================
-   반응형
+   태블릿 / 모바일
 ========================= */
 
 @media (max-width: 1400px) {
@@ -754,11 +754,6 @@ button:disabled {
 
     .menu-item {
         font-size: 27px;
-    }
-
-    .news-image {
-        height: 165px !important;
-        max-height: 165px !important;
     }
 }
 
@@ -799,11 +794,6 @@ button:disabled {
         padding: 8px 10px;
         font-size: 13px;
     }
-
-    .news-image {
-        height: 150px !important;
-        max-height: 150px !important;
-    }
 }
 
 @media (max-width: 800px) {
@@ -841,11 +831,6 @@ button:disabled {
         width: 100px;
         padding: 0 10px;
         font-size: 14px;
-    }
-
-    .news-image {
-        height: 140px !important;
-        max-height: 140px !important;
     }
 }
 
@@ -1060,6 +1045,10 @@ button:disabled {
         line-height: 1.8;
     }
 
+    /*
+      모바일 사진은 현재 괜찮다고 했으므로
+      기존 크기 유지
+    */
     .news-images {
         margin-top: 14px;
         gap: 7px;
@@ -1304,5 +1293,38 @@ button:disabled {
 
     .login-info-content {
         font-size: 12px;
+    }
+}
+
+/* ==========================================================
+   최종 강제 적용
+   PC/컴퓨터에서만 사진 크기를 확실하게 175px로 고정
+   위의 다른 규칙보다 마지막에 적용됨
+========================================================== */
+
+@media (min-width: 701px) {
+
+    .news-images {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        gap: 14px !important;
+    }
+
+    .news-image {
+        width: auto !important;
+        height: 175px !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        max-width: none !important;
+        max-height: 175px !important;
+
+        flex: 0 0 auto !important;
+
+        object-fit: contain !important;
     }
 }
