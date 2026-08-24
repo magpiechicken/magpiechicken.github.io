@@ -417,13 +417,8 @@ button:disabled {
 }
 
 /* =========================
-   상세 사진
-   핵심:
-   - 고정 width 금지
-   - 사진 원본 비율 유지
-   - 높이만 통일
-   - 사진 자체 크기만큼만 공간 차지
-   - 최대 3장 한 줄
+   사진
+   핵심 수정 부분
 ========================= */
 
 .news-images {
@@ -437,38 +432,42 @@ button:disabled {
     align-items: flex-start;
     justify-content: flex-start;
 
-    gap: 14px;
+    gap: 12px;
 
     background: transparent;
     border: none;
+
+    line-height: 0;
 }
 
-/*
-   사진을 가로로 강제로 늘리지 않는다.
-   높이를 기준으로 원본 비율에 맞춰
-   width가 자동으로 결정된다.
-*/
 .news-image {
-    display: block;
+    /* 사진 자체의 실제 비율을 유지 */
+    width: auto !important;
+    height: 70px !important;
 
-    height: 70px;
-    width: auto;
+    /* 가장 중요: 가로폭을 강제로 제한하지 않음 */
+    max-width: none !important;
+    min-width: 0 !important;
 
-    min-width: 0;
-    min-height: 0;
+    max-height: 70px !important;
+    min-height: 0 !important;
 
-    max-height: 70px;
-    max-width: 31%;
+    display: block !important;
 
-    flex: 0 0 auto;
+    flex: 0 0 auto !important;
 
-    margin: 0;
+    margin: 0 !important;
+    padding: 0 !important;
 
     border: 2px solid #000000;
 
     background: #ffffff;
 
-    object-fit: contain;
+    /*
+        이미지 전체가 보이도록.
+        자르지 않음.
+    */
+    object-fit: contain !important;
     object-position: center center;
 }
 
@@ -765,8 +764,8 @@ button:disabled {
     }
 
     .news-image {
-        height: 65px;
-        max-height: 65px;
+        height: 65px !important;
+        max-height: 65px !important;
     }
 }
 
@@ -809,8 +808,8 @@ button:disabled {
     }
 
     .news-image {
-        height: 60px;
-        max-height: 60px;
+        height: 60px !important;
+        max-height: 60px !important;
     }
 }
 
@@ -852,8 +851,8 @@ button:disabled {
     }
 
     .news-image {
-        height: 55px;
-        max-height: 55px;
+        height: 55px !important;
+        max-height: 55px !important;
     }
 }
 
@@ -1068,16 +1067,17 @@ button:disabled {
         line-height: 1.8;
     }
 
-    /* 모바일 사진 */
     .news-images {
         margin-top: 14px;
         gap: 7px;
     }
 
     .news-image {
-        height: 52px;
-        max-height: 52px;
-        max-width: 48%;
+        width: auto !important;
+        height: 52px !important;
+        max-width: none !important;
+        max-height: 52px !important;
+        flex: 0 0 auto !important;
     }
 
     .delete-button {
@@ -1294,9 +1294,11 @@ button:disabled {
     }
 
     .news-image {
-        height: 48px;
-        max-height: 48px;
-        max-width: 48%;
+        width: auto !important;
+        height: 48px !important;
+        max-width: none !important;
+        max-height: 48px !important;
+        flex: 0 0 auto !important;
     }
 
     .login-info-box {
