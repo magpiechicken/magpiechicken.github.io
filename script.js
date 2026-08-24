@@ -6,6 +6,15 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_KrmPM2G4nuS1JXOAvnp-cA_Ik1nuYqS";
 
+const NEWS_IMAGE_BUCKET =
+    "news-images";
+
+const MAX_IMAGES =
+    5;
+
+const MAX_IMAGE_SIZE =
+    5 * 1024 * 1024;
+
 const supabaseClient =
     window.supabase.createClient(
         SUPABASE_URL,
@@ -16,89 +25,174 @@ let currentUser = null;
 let currentProfile = null;
 let isAdmin = false;
 let currentNewsId = null;
+let selectedImageFiles = [];
 
 const introScreen =
-    document.getElementById("screen-news-intro");
+    document.getElementById(
+        "screen-news-intro"
+    );
 
 const listScreen =
-    document.getElementById("screen-news-list");
+    document.getElementById(
+        "screen-news-list"
+    );
 
 const detailScreen =
-    document.getElementById("screen-news-detail");
+    document.getElementById(
+        "screen-news-detail"
+    );
 
 const writeScreen =
-    document.getElementById("screen-write");
+    document.getElementById(
+        "screen-write"
+    );
 
 const authScreen =
-    document.getElementById("screen-auth");
+    document.getElementById(
+        "screen-auth"
+    );
 
 const donationScreen =
-    document.getElementById("screen-donation");
+    document.getElementById(
+        "screen-donation"
+    );
 
 const newsMenu =
-    document.getElementById("menu-news");
+    document.getElementById(
+        "menu-news"
+    );
 
 const donationMenu =
-    document.getElementById("menu-donation");
+    document.getElementById(
+        "menu-donation"
+    );
 
 const accountButton =
-    document.getElementById("accountButton");
+    document.getElementById(
+        "accountButton"
+    );
 
 const loginInfoButton =
-    document.getElementById("loginInfoButton");
+    document.getElementById(
+        "loginInfoButton"
+    );
 
 const loginInfoModal =
-    document.getElementById("loginInfoModal");
+    document.getElementById(
+        "loginInfoModal"
+    );
 
 const closeLoginInfo =
-    document.getElementById("closeLoginInfo");
+    document.getElementById(
+        "closeLoginInfo"
+    );
 
 const loginInfoContent =
-    document.getElementById("loginInfoContent");
+    document.getElementById(
+        "loginInfoContent"
+    );
 
 const showWriteButton =
-    document.getElementById("show-write");
+    document.getElementById(
+        "show-write"
+    );
 
 const deleteNewsButton =
-    document.getElementById("delete-news");
+    document.getElementById(
+        "delete-news"
+    );
 
 const loginTab =
-    document.getElementById("login-tab");
+    document.getElementById(
+        "login-tab"
+    );
 
 const signupTab =
-    document.getElementById("signup-tab");
+    document.getElementById(
+        "signup-tab"
+    );
 
 const loginPanel =
-    document.getElementById("auth-login-panel");
+    document.getElementById(
+        "auth-login-panel"
+    );
 
 const signupPanel =
-    document.getElementById("auth-signup-panel");
+    document.getElementById(
+        "auth-signup-panel"
+    );
 
 const authMessage =
-    document.getElementById("auth-message");
+    document.getElementById(
+        "auth-message"
+    );
+
+const imageInput =
+    document.getElementById(
+        "input-images"
+    );
+
+const imagePreview =
+    document.getElementById(
+        "image-preview"
+    );
+
+const imageHelp =
+    document.getElementById(
+        "image-help"
+    );
 
 function hideAllScreens() {
-    introScreen.classList.remove("visible");
-    listScreen.classList.remove("visible");
-    detailScreen.classList.remove("visible");
-    writeScreen.classList.remove("visible");
-    authScreen.classList.remove("visible");
-    donationScreen.classList.remove("visible");
+    introScreen.classList.remove(
+        "visible"
+    );
+
+    listScreen.classList.remove(
+        "visible"
+    );
+
+    detailScreen.classList.remove(
+        "visible"
+    );
+
+    writeScreen.classList.remove(
+        "visible"
+    );
+
+    authScreen.classList.remove(
+        "visible"
+    );
+
+    donationScreen.classList.remove(
+        "visible"
+    );
 }
 
 function activateNewsMenu() {
-    newsMenu.classList.add("active");
-    donationMenu.classList.remove("active");
+    newsMenu.classList.add(
+        "active"
+    );
+
+    donationMenu.classList.remove(
+        "active"
+    );
 }
 
 function activateDonationMenu() {
-    donationMenu.classList.add("active");
-    newsMenu.classList.remove("active");
+    donationMenu.classList.add(
+        "active"
+    );
+
+    newsMenu.classList.remove(
+        "active"
+    );
 }
 
 function scrollTop() {
     const main =
-        document.querySelector(".main-content");
+        document.querySelector(
+            ".main-content"
+        );
 
     if (main) {
         main.scrollTop = 0;
@@ -107,10 +201,21 @@ function scrollTop() {
 
 function updateAuthUI() {
     if (!currentUser) {
-        accountButton.textContent = "로그인";
-        accountButton.classList.remove("logged-in");
-        showWriteButton.classList.add("hidden");
-        deleteNewsButton.classList.add("hidden");
+        accountButton.textContent =
+            "로그인";
+
+        accountButton.classList.remove(
+            "logged-in"
+        );
+
+        showWriteButton.classList.add(
+            "hidden"
+        );
+
+        deleteNewsButton.classList.add(
+            "hidden"
+        );
+
         return;
     }
 
@@ -123,13 +228,22 @@ function updateAuthUI() {
         accountButton.textContent =
             `${username} · 관리자`;
 
-        accountButton.classList.add("logged-in");
-        showWriteButton.classList.remove("hidden");
+        accountButton.classList.add(
+            "logged-in"
+        );
+
+        showWriteButton.classList.remove(
+            "hidden"
+        );
 
         if (currentNewsId !== null) {
-            deleteNewsButton.classList.remove("hidden");
+            deleteNewsButton.classList.remove(
+                "hidden"
+            );
         } else {
-            deleteNewsButton.classList.add("hidden");
+            deleteNewsButton.classList.add(
+                "hidden"
+            );
         }
 
         return;
@@ -138,32 +252,43 @@ function updateAuthUI() {
     accountButton.textContent =
         `${username} · 로그아웃`;
 
-    accountButton.classList.remove("logged-in");
-    showWriteButton.classList.add("hidden");
-    deleteNewsButton.classList.add("hidden");
+    accountButton.classList.remove(
+        "logged-in"
+    );
+
+    showWriteButton.classList.add(
+        "hidden"
+    );
+
+    deleteNewsButton.classList.add(
+        "hidden"
+    );
 }
 
 async function loadCurrentProfile() {
     if (!currentUser) {
         currentProfile = null;
         isAdmin = false;
+
         updateAuthUI();
+
         return;
     }
 
     const {
         data: profile,
         error
-    } = await supabaseClient
-        .from("profiles")
-        .select(
-            "id, username, can_manage_news"
-        )
-        .eq(
-            "id",
-            currentUser.id
-        )
-        .maybeSingle();
+    } =
+        await supabaseClient
+            .from("profiles")
+            .select(
+                "id, username, can_manage_news"
+            )
+            .eq(
+                "id",
+                currentUser.id
+            )
+            .maybeSingle();
 
     if (error) {
         console.error(
@@ -173,7 +298,9 @@ async function loadCurrentProfile() {
 
         currentProfile = null;
         isAdmin = false;
+
         updateAuthUI();
+
         return;
     }
 
@@ -190,7 +317,8 @@ async function refreshAuthState() {
     const {
         data,
         error
-    } = await supabaseClient.auth.getUser();
+    } =
+        await supabaseClient.auth.getUser();
 
     if (
         error ||
@@ -200,11 +328,14 @@ async function refreshAuthState() {
         currentUser = null;
         currentProfile = null;
         isAdmin = false;
+
         updateAuthUI();
+
         return;
     }
 
-    currentUser = data.user;
+    currentUser =
+        data.user;
 
     await loadCurrentProfile();
 }
@@ -212,7 +343,9 @@ async function refreshAuthState() {
 function openNewsIntro() {
     hideAllScreens();
 
-    introScreen.classList.add("visible");
+    introScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
@@ -226,7 +359,9 @@ function openNewsIntro() {
 async function openNewsList() {
     hideAllScreens();
 
-    listScreen.classList.add("visible");
+    listScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
@@ -241,7 +376,10 @@ async function openNewsList() {
 
 function openWriteScreen() {
     if (!currentUser) {
-        openAuthScreen("login");
+        openAuthScreen(
+            "login"
+        );
+
         return;
     }
 
@@ -249,12 +387,17 @@ function openWriteScreen() {
         alert(
             "관리자만 소식을 작성할 수 있습니다."
         );
+
         return;
     }
 
+    resetWriteForm();
+
     hideAllScreens();
 
-    writeScreen.classList.add("visible");
+    writeScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
@@ -264,7 +407,9 @@ function openWriteScreen() {
 function openDonation() {
     hideAllScreens();
 
-    donationScreen.classList.add("visible");
+    donationScreen.classList.add(
+        "visible"
+    );
 
     activateDonationMenu();
 
@@ -276,11 +421,15 @@ function openAuthScreen(
 ) {
     hideAllScreens();
 
-    authScreen.classList.add("visible");
+    authScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
     showAuthMode(mode);
+
+    authMessage.textContent = "";
 
     scrollTop();
 }
@@ -314,7 +463,10 @@ function showAuthMode(mode) {
 
 async function handleAccountButton() {
     if (!currentUser) {
-        openAuthScreen("login");
+        openAuthScreen(
+            "login"
+        );
+
         return;
     }
 
@@ -322,33 +474,36 @@ async function handleAccountButton() {
 }
 
 function openLoginInfo() {
-    const currentStatus = currentUser
-        ? `
-            <div class="login-info-status">
-                현재 상태: 로그인 상태
-                <br>
-                사용자:
-                ${escapeHTML(
-                    currentProfile?.username ||
-                    currentUser.email ||
-                    "회원"
-                )}
-                <br>
-                권한:
-                ${isAdmin ? "관리자" : "일반 회원"}
-            </div>
-        `
-        : `
-            <div class="login-info-status">
-                현재 상태: 로그아웃 상태
-            </div>
-        `;
+    const currentStatus =
+        currentUser
+            ? `
+                <div class="login-info-status">
+                    현재 상태: 로그인 상태
+                    <br>
+                    사용자:
+                    ${escapeHTML(
+                        currentProfile?.username ||
+                        currentUser.email ||
+                        "회원"
+                    )}
+                    <br>
+                    권한:
+                    ${isAdmin ? "관리자" : "일반 회원"}
+                </div>
+              `
+            : `
+                <div class="login-info-status">
+                    현재 상태: 로그아웃 상태
+                </div>
+              `;
 
     loginInfoContent.innerHTML = `
         ${currentStatus}
 
         <div class="login-info-section">
-            <h3>로그아웃 상태 · 장점</h3>
+            <h3>
+                로그아웃 상태 · 장점
+            </h3>
 
             <ul>
                 <li>
@@ -370,7 +525,9 @@ function openLoginInfo() {
         </div>
 
         <div class="login-info-section">
-            <h3>로그아웃 상태 · 단점</h3>
+            <h3>
+                로그아웃 상태 · 단점
+            </h3>
 
             <ul>
                 <li>
@@ -386,13 +543,15 @@ function openLoginInfo() {
                 </li>
 
                 <li>
-                    다른 회원과 구분되는 개인 설정을 사용할 수 없습니다.
+                    회원별 읽음 기록을 저장할 수 없습니다.
                 </li>
             </ul>
         </div>
 
         <div class="login-info-section">
-            <h3>로그인 상태 · 장점</h3>
+            <h3>
+                로그인 상태 · 장점
+            </h3>
 
             <ul>
                 <li>
@@ -414,7 +573,9 @@ function openLoginInfo() {
         </div>
 
         <div class="login-info-section">
-            <h3>로그인 상태 · 단점</h3>
+            <h3>
+                로그인 상태 · 단점
+            </h3>
 
             <ul>
                 <li>
@@ -446,26 +607,30 @@ function closeLoginInfoModal() {
 async function login() {
     const email =
         document
-            .getElementById("login-email")
+            .getElementById(
+                "login-email"
+            )
             .value
             .trim();
 
     const password =
-        document
-            .getElementById("login-password")
-            .value;
+        document.getElementById(
+            "login-password"
+        ).value;
 
     authMessage.textContent = "";
 
     if (!email) {
         authMessage.textContent =
             "이메일을 입력해주세요.";
+
         return;
     }
 
     if (!password) {
         authMessage.textContent =
             "비밀번호를 입력해주세요.";
+
         return;
     }
 
@@ -572,36 +737,42 @@ async function signup() {
     if (!username) {
         authMessage.textContent =
             "아이디를 입력해주세요.";
+
         return;
     }
 
     if (username.length < 2) {
         authMessage.textContent =
             "아이디는 2자 이상 입력해주세요.";
+
         return;
     }
 
     if (!email) {
         authMessage.textContent =
             "이메일을 입력해주세요.";
+
         return;
     }
 
     if (!password) {
         authMessage.textContent =
             "비밀번호를 입력해주세요.";
+
         return;
     }
 
     if (password.length < 6) {
         authMessage.textContent =
             "비밀번호는 6자 이상 입력해주세요.";
+
         return;
     }
 
     if (password !== passwordConfirm) {
         authMessage.textContent =
             "비밀번호가 일치하지 않습니다.";
+
         return;
     }
 
@@ -678,7 +849,9 @@ async function signup() {
             "login-email"
         ).value = email;
 
-        showAuthMode("login");
+        showAuthMode(
+            "login"
+        );
 
     } catch (error) {
         console.error(
@@ -700,13 +873,15 @@ async function signup() {
 async function logout() {
     const {
         error
-    } = await supabaseClient.auth.signOut();
+    } =
+        await supabaseClient.auth.signOut();
 
     if (error) {
         console.error(
             "로그아웃 오류:",
             error
         );
+
         return;
     }
 
@@ -728,7 +903,7 @@ async function getNews() {
         await supabaseClient
             .from("news")
             .select(
-                "id, author, title, content, created_at"
+                "id, author, title, content, created_at, image_urls"
             )
             .order(
                 "created_at",
@@ -849,7 +1024,9 @@ async function markNewsAsRead(
     }
 }
 
-function formatDate(value) {
+function formatDate(
+    value
+) {
     const date =
         new Date(value);
 
@@ -866,11 +1043,52 @@ function formatDate(value) {
         "." +
         String(
             date.getMonth() + 1
-        ).padStart(2, "0") +
+        ).padStart(
+            2,
+            "0"
+        ) +
         "." +
         String(
             date.getDate()
-        ).padStart(2, "0")
+        ).padStart(
+            2,
+            "0"
+        )
+    );
+}
+
+function getPublicImageUrl(
+    path
+) {
+    if (!path) {
+        return null;
+    }
+
+    if (
+        path.startsWith(
+            "http://"
+        ) ||
+        path.startsWith(
+            "https://"
+        )
+    ) {
+        return path;
+    }
+
+    const {
+        data
+    } =
+        supabaseClient.storage
+            .from(
+                NEWS_IMAGE_BUCKET
+            )
+            .getPublicUrl(
+                path
+            );
+
+    return (
+        data?.publicUrl ||
+        null
     );
 }
 
@@ -940,7 +1158,8 @@ async function renderNews() {
                     "button"
                 );
 
-            row.type = "button";
+            row.type =
+                "button";
 
             row.className =
                 isUnread
@@ -986,11 +1205,15 @@ async function renderNews() {
                 }
             );
 
-            list.appendChild(row);
+            list.appendChild(
+                row
+            );
         }
     );
 
-    container.appendChild(list);
+    container.appendChild(
+        list
+    );
 }
 
 async function openNewsDetail(
@@ -1003,7 +1226,7 @@ async function openNewsDetail(
         await supabaseClient
             .from("news")
             .select(
-                "id, author, title, content, created_at"
+                "id, author, title, content, created_at, image_urls"
             )
             .eq(
                 "id",
@@ -1012,6 +1235,11 @@ async function openNewsDetail(
             .single();
 
     if (error) {
+        console.error(
+            "상세 소식 조회 오류:",
+            error
+        );
+
         alert(
             "소식을 불러오지 못했습니다.\n" +
             error.message
@@ -1036,6 +1264,48 @@ async function openNewsDetail(
     );
 
     activateNewsMenu();
+
+    const imageUrls =
+        Array.isArray(
+            news.image_urls
+        )
+            ? news.image_urls
+            : [];
+
+    const imageHtml =
+        imageUrls.length > 0
+            ? `
+                <div class="news-images">
+                    ${
+                        imageUrls
+                            .map(
+                                function(path) {
+                                    const url =
+                                        getPublicImageUrl(
+                                            path
+                                        );
+
+                                    if (!url) {
+                                        return "";
+                                    }
+
+                                    return `
+                                        <img
+                                            class="news-image"
+                                            src="${escapeAttribute(
+                                                url
+                                            )}"
+                                            alt="소식 첨부 사진"
+                                            loading="lazy"
+                                        >
+                                    `;
+                                }
+                            )
+                            .join("")
+                    }
+                </div>
+              `
+            : "";
 
     document.getElementById(
         "news-detail-container"
@@ -1070,11 +1340,355 @@ async function openNewsDetail(
                 "<br>"
             )}
         </div>
+
+        ${imageHtml}
     `;
 
     updateAuthUI();
 
     scrollTop();
+}
+
+function resetWriteForm() {
+    const titleInput =
+        document.getElementById(
+            "input-title"
+        );
+
+    const contentInput =
+        document.getElementById(
+            "input-content"
+        );
+
+    if (titleInput) {
+        titleInput.value = "";
+    }
+
+    if (contentInput) {
+        contentInput.value = "";
+    }
+
+    if (imageInput) {
+        imageInput.value = "";
+    }
+
+    selectedImageFiles = [];
+
+    renderImagePreview();
+}
+
+function validateSelectedImages(
+    files
+) {
+    if (
+        files.length >
+        MAX_IMAGES
+    ) {
+        return {
+            valid: false,
+            message:
+                `사진은 최대 ${MAX_IMAGES}장까지 첨부할 수 있습니다.`
+        };
+    }
+
+    for (
+        const file of files
+    ) {
+        if (
+            !file.type.startsWith(
+                "image/"
+            )
+        ) {
+            return {
+                valid: false,
+                message:
+                    `"${file.name}"은(는) 이미지 파일이 아닙니다.`
+            };
+        }
+
+        if (
+            file.size >
+            MAX_IMAGE_SIZE
+        ) {
+            return {
+                valid: false,
+                message:
+                    `"${file.name}"의 크기가 5MB를 초과합니다.`
+            };
+        }
+    }
+
+    return {
+        valid: true,
+        message: ""
+    };
+}
+
+function handleImageSelection(
+    event
+) {
+    const files =
+        Array.from(
+            event.target.files || []
+        );
+
+    const validation =
+        validateSelectedImages(
+            files
+        );
+
+    if (!validation.valid) {
+        alert(
+            validation.message
+        );
+
+        event.target.value = "";
+
+        selectedImageFiles = [];
+
+        renderImagePreview();
+
+        return;
+    }
+
+    selectedImageFiles =
+        files;
+
+    renderImagePreview();
+}
+
+function renderImagePreview() {
+    if (!imagePreview) {
+        return;
+    }
+
+    imagePreview.innerHTML = "";
+
+    selectedImageFiles.forEach(
+        function(file) {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+            item.className =
+                "preview-item";
+
+            const img =
+                document.createElement(
+                    "img"
+                );
+
+            img.alt =
+                "선택한 사진 미리보기";
+
+            const name =
+                document.createElement(
+                    "div"
+                );
+
+            name.className =
+                "preview-name";
+
+            name.textContent =
+                file.name;
+
+            item.appendChild(
+                img
+            );
+
+            item.appendChild(
+                name
+            );
+
+            imagePreview.appendChild(
+                item
+            );
+
+            const reader =
+                new FileReader();
+
+            reader.onload =
+                function(e) {
+                    img.src =
+                        e.target.result;
+                };
+
+            reader.readAsDataURL(
+                file
+            );
+        }
+    );
+
+    if (imageHelp) {
+        if (
+            selectedImageFiles.length ===
+            0
+        ) {
+            imageHelp.textContent =
+                `최대 ${MAX_IMAGES}장 · 사진 1장당 최대 5MB`;
+        } else {
+            imageHelp.textContent =
+                `${selectedImageFiles.length}장 선택됨 · 최대 ${MAX_IMAGES}장`;
+        }
+    }
+}
+
+function createSafeFileName(
+    originalName
+) {
+    const extension =
+        originalName.includes(".")
+            ? originalName
+                .split(".")
+                .pop()
+                .toLowerCase()
+            : "jpg";
+
+    const random =
+        crypto?.randomUUID
+            ? crypto.randomUUID()
+            : `${Date.now()}_${Math.random()
+                  .toString(36)
+                  .slice(2)}`;
+
+    return `${random}.${extension}`;
+}
+
+async function uploadNewsImages() {
+    if (
+        selectedImageFiles.length ===
+        0
+    ) {
+        return {
+            success: true,
+            paths: []
+        };
+    }
+
+    if (!currentUser) {
+        return {
+            success: false,
+            paths: [],
+            error:
+                "로그인이 필요합니다."
+        };
+    }
+
+    const uploadedPaths = [];
+
+    try {
+        for (
+            const file
+            of selectedImageFiles
+        ) {
+
+            const fileName =
+                createSafeFileName(
+                    file.name
+                );
+
+            const filePath =
+                `${currentUser.id}/${fileName}`;
+
+            const {
+                error
+            } =
+                await supabaseClient.storage
+                    .from(
+                        NEWS_IMAGE_BUCKET
+                    )
+                    .upload(
+                        filePath,
+                        file,
+                        {
+                            cacheControl:
+                                "3600",
+
+                            upsert:
+                                false,
+
+                            contentType:
+                                file.type
+                        }
+                    );
+
+            if (error) {
+                console.error(
+                    "이미지 업로드 오류:",
+                    error
+                );
+
+                await deleteUploadedImages(
+                    uploadedPaths
+                );
+
+                return {
+                    success: false,
+                    paths: [],
+                    error:
+                        error.message
+                };
+            }
+
+            uploadedPaths.push(
+                filePath
+            );
+        }
+
+        return {
+            success: true,
+            paths:
+                uploadedPaths
+        };
+
+    } catch (error) {
+        console.error(
+            "이미지 업로드 예외:",
+            error
+        );
+
+        await deleteUploadedImages(
+            uploadedPaths
+        );
+
+        return {
+            success: false,
+            paths: [],
+            error:
+                error.message
+        };
+    }
+}
+
+async function deleteUploadedImages(
+    paths
+) {
+    if (
+        !paths ||
+        paths.length === 0
+    ) {
+        return;
+    }
+
+    const {
+        error
+    } =
+        await supabaseClient.storage
+            .from(
+                NEWS_IMAGE_BUCKET
+            )
+            .remove(
+                paths
+            );
+
+    if (error) {
+        console.error(
+            "업로드 이미지 정리 오류:",
+            error
+        );
+    }
 }
 
 async function saveNews() {
@@ -1083,7 +1697,9 @@ async function saveNews() {
             "로그인이 필요합니다."
         );
 
-        openAuthScreen("login");
+        openAuthScreen(
+            "login"
+        );
 
         return;
     }
@@ -1097,14 +1713,20 @@ async function saveNews() {
     }
 
     const title =
-        document.getElementById(
-            "input-title"
-        ).value.trim();
+        document
+            .getElementById(
+                "input-title"
+            )
+            .value
+            .trim();
 
     const content =
-        document.getElementById(
-            "input-content"
-        ).value.trim();
+        document
+            .getElementById(
+                "input-content"
+            )
+            .value
+            .trim();
 
     if (!title) {
         alert(
@@ -1122,105 +1744,200 @@ async function saveNews() {
         return;
     }
 
-    const {
-        data: userData,
-        error: userError
-    } =
-        await supabaseClient.auth
-            .getUser();
+    const validation =
+        validateSelectedImages(
+            selectedImageFiles
+        );
 
-    if (
-        userError ||
-        !userData ||
-        !userData.user
-    ) {
-        currentUser = null;
-        currentProfile = null;
-        isAdmin = false;
-
-        updateAuthUI();
-
+    if (!validation.valid) {
         alert(
-            "로그인이 필요합니다."
+            validation.message
         );
 
         return;
     }
 
-    const {
-        data: profile,
-        error: profileError
-    } =
-        await supabaseClient
-            .from("profiles")
-            .select(
-                "username, can_manage_news"
-            )
-            .eq(
-                "id",
-                userData.user.id
-            )
-            .maybeSingle();
-
-    if (profileError) {
-        alert(
-            "회원 정보 오류:\n" +
-            profileError.message
+    const saveButton =
+        document.getElementById(
+            "save-write"
         );
 
-        return;
-    }
+    saveButton.disabled = true;
+    saveButton.textContent =
+        "등록 중...";
 
-    if (
-        !profile ||
-        profile.can_manage_news !== true
-    ) {
-        alert(
-            "관리자 권한이 없습니다."
-        );
+    let uploadedPaths = [];
 
-        return;
-    }
+    try {
 
-    const {
-        error
-    } =
-        await supabaseClient
-            .from("news")
-            .insert({
-                author:
-                    profile.username,
+        const {
+            data: userData,
+            error: userError
+        } =
+            await supabaseClient.auth
+                .getUser();
 
-                title:
-                    title,
+        if (
+            userError ||
+            !userData ||
+            !userData.user
+        ) {
+            currentUser = null;
+            currentProfile = null;
+            isAdmin = false;
 
-                content:
-                    content
-            });
+            updateAuthUI();
 
-    if (error) {
+            alert(
+                "로그인이 필요합니다."
+            );
+
+            return;
+        }
+
+        const {
+            data: profile,
+            error: profileError
+        } =
+            await supabaseClient
+                .from("profiles")
+                .select(
+                    "username, can_manage_news"
+                )
+                .eq(
+                    "id",
+                    userData.user.id
+                )
+                .maybeSingle();
+
+        if (profileError) {
+            alert(
+                "회원 정보 오류:\n" +
+                profileError.message
+            );
+
+            return;
+        }
+
+        if (
+            !profile ||
+            profile.can_manage_news !== true
+        ) {
+            alert(
+                "관리자 권한이 없습니다."
+            );
+
+            return;
+        }
+
+        const uploadResult =
+            await uploadNewsImages();
+
+        if (!uploadResult.success) {
+            alert(
+                "사진 업로드 오류:\n" +
+                uploadResult.error
+            );
+
+            return;
+        }
+
+        uploadedPaths =
+            uploadResult.paths;
+
+        const {
+            data: insertedNews,
+            error: insertError
+        } =
+            await supabaseClient
+                .from("news")
+                .insert({
+                    author:
+                        profile.username,
+
+                    title:
+                        title,
+
+                    content:
+                        content,
+
+                    image_urls:
+                        uploadedPaths
+                })
+                .select(
+                    "id"
+                )
+                .single();
+
+        if (insertError) {
+            console.error(
+                "소식 등록 오류:",
+                insertError
+            );
+
+            if (
+                uploadedPaths.length >
+                0
+            ) {
+                await deleteUploadedImages(
+                    uploadedPaths
+                );
+            }
+
+            alert(
+                "소식 등록 오류:\n" +
+                insertError.message
+            );
+
+            return;
+        }
+
+        if (!insertedNews) {
+            if (
+                uploadedPaths.length >
+                0
+            ) {
+                await deleteUploadedImages(
+                    uploadedPaths
+                );
+            }
+
+            alert(
+                "소식 등록 결과를 확인하지 못했습니다."
+            );
+
+            return;
+        }
+
+        resetWriteForm();
+
+        await openNewsList();
+
+    } catch (error) {
         console.error(
-            "소식 등록 오류:",
+            "소식 등록 예외:",
             error
         );
 
+        if (
+            uploadedPaths.length >
+            0
+        ) {
+            await deleteUploadedImages(
+                uploadedPaths
+            );
+        }
+
         alert(
-            "소식 등록 오류:\n" +
+            "소식 등록 중 오류가 발생했습니다:\n" +
             error.message
         );
 
-        return;
+    } finally {
+        saveButton.disabled = false;
+        saveButton.textContent =
+            "소식 등록";
     }
-
-    document.getElementById(
-        "input-title"
-    ).value = "";
-
-    document.getElementById(
-        "input-content"
-    ).value = "";
-
-    await openNewsList();
 }
 
 async function deleteCurrentNews() {
@@ -1250,7 +1967,31 @@ async function deleteCurrentNews() {
     }
 
     const {
-        error
+        data: news,
+        error: newsError
+    } =
+        await supabaseClient
+            .from("news")
+            .select(
+                "id, image_urls"
+            )
+            .eq(
+                "id",
+                currentNewsId
+            )
+            .single();
+
+    if (newsError) {
+        alert(
+            "삭제할 소식을 불러오지 못했습니다.\n" +
+            newsError.message
+        );
+
+        return;
+    }
+
+    const {
+        error: deleteError
     } =
         await supabaseClient
             .from("news")
@@ -1260,18 +2001,34 @@ async function deleteCurrentNews() {
                 currentNewsId
             );
 
-    if (error) {
+    if (deleteError) {
         console.error(
             "소식 삭제 오류:",
-            error
+            deleteError
         );
 
         alert(
             "소식 삭제 오류:\n" +
-            error.message
+            deleteError.message
         );
 
         return;
+    }
+
+    const imagePaths =
+        Array.isArray(
+            news?.image_urls
+        )
+            ? news.image_urls
+            : [];
+
+    if (
+        imagePaths.length >
+        0
+    ) {
+        await deleteUploadedImages(
+            imagePaths
+        );
     }
 
     currentNewsId = null;
@@ -1279,7 +2036,9 @@ async function deleteCurrentNews() {
     await openNewsList();
 }
 
-function escapeHTML(value) {
+function escapeHTML(
+    value
+) {
     return String(value)
         .replace(
             /&/g,
@@ -1300,6 +2059,28 @@ function escapeHTML(value) {
         .replace(
             /'/g,
             "&#039;"
+        );
+}
+
+function escapeAttribute(
+    value
+) {
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
         );
 }
 
@@ -1414,14 +2195,18 @@ loginInfoModal.addEventListener(
 loginTab.addEventListener(
     "click",
     function() {
-        showAuthMode("login");
+        showAuthMode(
+            "login"
+        );
     }
 );
 
 signupTab.addEventListener(
     "click",
     function() {
-        showAuthMode("signup");
+        showAuthMode(
+            "signup"
+        );
     }
 );
 
@@ -1460,7 +2245,8 @@ document
         "keydown",
         function(event) {
             if (
-                event.key === "Enter"
+                event.key ===
+                "Enter"
             ) {
                 login();
             }
@@ -1475,12 +2261,20 @@ document
         "keydown",
         function(event) {
             if (
-                event.key === "Enter"
+                event.key ===
+                "Enter"
             ) {
                 signup();
             }
         }
     );
+
+if (imageInput) {
+    imageInput.addEventListener(
+        "change",
+        handleImageSelection
+    );
+}
 
 supabaseClient.auth.onAuthStateChange(
     async function(
@@ -1516,6 +2310,8 @@ async function initialize() {
     await refreshAuthState();
 
     updateAuthUI();
+
+    renderImagePreview();
 
     openNewsIntro();
 }
