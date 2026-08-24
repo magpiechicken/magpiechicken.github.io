@@ -392,44 +392,48 @@ button:disabled {
     word-break: break-word;
 }
 
-/* 사진 영역 */
+/* 사진 영역: 최대 2줄 */
 .news-images {
     width: 100%;
     margin-top: 35px;
-    padding: 14px;
+    padding: 12px;
 
-    display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: nowrap !important;
+    display: grid !important;
 
-    align-items: stretch;
-    justify-content: stretch;
+    /* 사진이 너무 작아지지 않도록 5개까지 1줄,
+       그보다 많으면 다음 줄로 넘어감 */
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(100px, 1fr)
+    );
+
+    grid-auto-rows: 100px;
 
     gap: 10px;
 
-    overflow: hidden !important;
+    overflow: hidden;
 
     background: #ffffff;
     border: 3px solid #000000;
 }
 
-/* 사진 개수에 따라 공간을 균등하게 나눔 */
+/* 사진 크기: 이전보다 약 1.3배 작게 */
 .news-image {
-    display: block !important;
+    width: 100% !important;
+    height: 100px !important;
 
-    width: 0 !important;
     min-width: 0 !important;
     max-width: none !important;
 
-    height: 120px !important;
-    min-height: 120px !important;
-    max-height: 120px !important;
+    min-height: 100px !important;
+    max-height: 100px !important;
 
-    flex: 1 1 0 !important;
+    display: block !important;
 
     margin: 0 !important;
 
     border: 2px solid #000000;
+
     background: #f5f5f5;
 
     object-fit: cover;
@@ -693,7 +697,6 @@ button:disabled {
 }
 
 @media (max-width: 1400px) {
-
     .title {
         font-size: 56px;
     }
@@ -707,10 +710,18 @@ button:disabled {
         font-size: 27px;
     }
 
+    .news-images {
+        grid-auto-rows: 90px;
+    }
+
+    .news-image {
+        height: 90px !important;
+        min-height: 90px !important;
+        max-height: 90px !important;
+    }
 }
 
 @media (max-width: 1100px) {
-
     .title {
         margin-left: 22px;
         font-size: 44px;
@@ -747,16 +758,25 @@ button:disabled {
         font-size: 13px;
     }
 
-    .news-image {
-        height: 100px !important;
-        min-height: 100px !important;
-        max-height: 100px !important;
+    .news-images {
+        grid-template-columns: repeat(
+            auto-fit,
+            minmax(80px, 1fr)
+        );
+
+        grid-auto-rows: 80px;
+        gap: 8px;
+        padding: 10px;
     }
 
+    .news-image {
+        height: 80px !important;
+        min-height: 80px !important;
+        max-height: 80px !important;
+    }
 }
 
 @media (max-width: 800px) {
-
     .title {
         margin-left: 15px;
         font-size: 30px;
@@ -791,11 +811,9 @@ button:disabled {
         padding: 0 10px;
         font-size: 14px;
     }
-
 }
 
 @media (max-width: 700px) {
-
     .top-bar {
         height: 72px;
         padding: 0 10px 0 12px;
@@ -1008,32 +1026,27 @@ button:disabled {
     }
 
     .news-images {
-        width: 100% !important;
-        margin-top: 20px !important;
-        padding: 8px !important;
+        margin-top: 20px;
+        padding: 7px;
 
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: nowrap !important;
+        grid-template-columns: repeat(
+            3,
+            minmax(0, 1fr)
+        );
 
-        align-items: stretch !important;
-        justify-content: stretch !important;
+        grid-auto-rows: 60px;
 
-        gap: 6px !important;
+        gap: 6px;
 
-        overflow: hidden !important;
+        border-width: 2px;
     }
 
     .news-image {
-        width: 0 !important;
-        min-width: 0 !important;
-        max-width: none !important;
+        height: 60px !important;
+        min-height: 60px !important;
+        max-height: 60px !important;
 
-        height: 70px !important;
-        min-height: 70px !important;
-        max-height: 70px !important;
-
-        flex: 1 1 0 !important;
+        border-width: 2px;
     }
 
     .delete-button {
@@ -1162,7 +1175,6 @@ button:disabled {
 }
 
 @media (max-width: 480px) {
-
     .top-bar {
         height: 62px;
         padding: 0 7px 0 8px;
@@ -1245,21 +1257,24 @@ button:disabled {
     }
 
     .news-images {
-        width: 100% !important;
-        gap: 4px !important;
-        padding: 6px !important;
+        margin-top: 18px;
+
+        grid-template-columns: repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+        grid-auto-rows: 50px;
+
+        gap: 5px;
+
+        padding: 6px;
     }
 
     .news-image {
-        width: 0 !important;
-        min-width: 0 !important;
-        max-width: none !important;
-
-        height: 55px !important;
-        min-height: 55px !important;
-        max-height: 55px !important;
-
-        flex: 1 1 0 !important;
+        height: 50px !important;
+        min-height: 50px !important;
+        max-height: 50px !important;
     }
 
     .login-info-box {
