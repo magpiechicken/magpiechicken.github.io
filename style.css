@@ -289,10 +289,15 @@ button:disabled {
     border: 3px solid #000000;
     cursor: pointer;
     text-align: left;
+    transition: 0.15s ease;
 }
 
 .news-row:hover {
     background: #fff4df;
+}
+
+.news-row.unread {
+    border-color: #e00000;
 }
 
 .news-author {
@@ -317,6 +322,14 @@ button:disabled {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.news-unread {
+    margin-left: 10px;
+    color: #e00000;
+    font-size: 16px;
+    font-weight: 800;
+    white-space: nowrap;
 }
 
 .news-date {
@@ -620,13 +633,6 @@ button:disabled {
 }
 
 @media (max-width: 700px) {
-    html,
-    body {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-    }
-
     .top-bar {
         height: 72px;
         padding-left: 12px;
@@ -670,18 +676,15 @@ button:disabled {
 
     .site-layout {
         height: calc(100vh - 74px);
-        display: flex;
     }
 
     .sidebar {
         width: 88px;
         flex: 0 0 88px;
-        height: 100%;
         border-right: 3px solid #000000;
     }
 
     .menu-item {
-        width: 100%;
         height: 58px;
         min-height: 58px;
         padding: 0 5px;
@@ -699,10 +702,8 @@ button:disabled {
     }
 
     .main-content {
-        flex: 1;
         width: calc(100% - 88px);
         min-width: 0;
-        height: 100%;
         padding: 18px 14px;
         overflow-y: auto;
     }
@@ -776,6 +777,11 @@ button:disabled {
         border-width: 2px;
     }
 
+    .news-row.unread {
+        border-width: 3px;
+        border-color: #e00000;
+    }
+
     .news-author {
         width: 86px;
         padding: 0 7px;
@@ -785,6 +791,11 @@ button:disabled {
     .news-title {
         padding: 0 7px;
         font-size: 15px;
+    }
+
+    .news-unread {
+        margin-left: 7px;
+        font-size: 10px;
     }
 
     .news-date {
@@ -988,6 +999,11 @@ button:disabled {
 
     .news-title {
         font-size: 13px;
+    }
+
+    .news-unread {
+        margin-left: 5px;
+        font-size: 9px;
     }
 
     .news-date {
