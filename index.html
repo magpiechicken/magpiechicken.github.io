@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=42">
+    <link rel="stylesheet" href="./style.css?v=50">
 </head>
 
 <body>
@@ -232,6 +232,30 @@
                     id="input-content"
                     placeholder="소식 내용을 입력하세요."
                 ></textarea>
+
+                <label for="input-images">
+                    사진 첨부
+                </label>
+
+                <input
+                    id="input-images"
+                    class="file-input"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                >
+
+                <p
+                    id="image-help"
+                    class="image-help"
+                >
+                    최대 5장 · 사진 1장당 최대 5MB
+                </p>
+
+                <div
+                    id="image-preview"
+                    class="image-preview"
+                ></div>
 
                 <div class="write-actions">
 
@@ -466,7 +490,7 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./script.js?v=42"></script>
+<script src="./script.js?v=50"></script>
 
 </body>
 </html>
