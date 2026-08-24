@@ -17,59 +17,53 @@ body {
     overflow: hidden;
 }
 
+button,
+input,
+textarea {
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
+}
 
-/* =========================================
-   상단
-========================================= */
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
 
 .top-bar {
     width: 100%;
     height: 11.111111vh;
-
     display: flex;
     align-items: center;
-
     background: #FF9400;
-
     padding-left: 30px;
-
     overflow: hidden;
 }
 
 .profile {
     width: min(120px, calc(11.111111vh - 20px));
     height: min(120px, calc(11.111111vh - 20px));
-
     flex: 0 0 min(120px, calc(11.111111vh - 20px));
-
     overflow: hidden;
-
     background: transparent;
 }
 
 .profile img {
     width: 100%;
     height: 100%;
-
     display: block;
-
     object-fit: cover;
 }
 
 .title {
     margin-left: 30px;
-
     font-size: 64px;
     font-weight: 700;
-
     line-height: 1;
-
     color: #ffffff;
-
     white-space: nowrap;
-
     -webkit-text-stroke: 2px #000000;
-
     text-shadow:
         -2px -2px 0 #000000,
          2px -2px 0 #000000,
@@ -77,29 +71,17 @@ body {
          2px  2px 0 #000000;
 }
 
-
-/* =========================================
-   관리자 버튼
-========================================= */
-
 .admin-button {
     margin-left: auto;
     margin-right: 30px;
-
     padding: 11px 18px;
-
     background: #ffffff;
-
     border: 3px solid #000000;
-
-    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
-
     font-size: 16px;
     font-weight: 700;
-
     color: #111111;
-
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .admin-button:hover {
@@ -111,46 +93,25 @@ body {
     color: #ffffff;
 }
 
-
-/* =========================================
-   헤더 선
-========================================= */
-
 .header-line {
     width: 100%;
     height: 3px;
-
     background: #000000;
 }
-
-
-/* =========================================
-   전체 구조
-========================================= */
 
 .site-layout {
     width: 100%;
     height: calc(100vh - 11.111111vh - 3px);
-
     display: flex;
 }
-
-
-/* =========================================
-   사이드바
-========================================= */
 
 .sidebar {
     width: 265px;
     height: 100%;
-
     flex: 0 0 265px;
-
     display: flex;
     flex-direction: column;
-
     background: #ffffff;
-
     border-right: 4px solid #000000;
 }
 
@@ -158,77 +119,46 @@ body {
     width: 100%;
     height: 82px;
     min-height: 82px;
-
     display: flex;
     align-items: center;
-
     gap: 10px;
-
     padding: 0 20px;
-
     background: #ffffff;
-
     border: none;
     border-bottom: 3px solid #000000;
-
-    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
-
     font-size: 30px;
     font-weight: 700;
-
     color: #111111;
-
     text-align: left;
-
     cursor: pointer;
 }
 
 .menu-item.active {
     background: #FF9400;
     color: #ffffff;
-
     -webkit-text-stroke: 1px #000000;
 }
 
 .menu-item.locked {
     background: #f5f5f5;
     color: #555555;
-
-    cursor: not-allowed;
 }
 
 .menu-item.upcoming {
     background: #eeeeee;
     color: #999999;
-
-    cursor: not-allowed;
 }
-
-
-/* =========================================
-   메인
-========================================= */
 
 .main-content {
     flex: 1;
-
     width: 100%;
     height: 100%;
-
     min-width: 0;
     min-height: 0;
-
     padding: 45px;
-
     overflow-y: auto;
-
     background: #ffffff;
 }
-
-
-/* =========================================
-   화면
-========================================= */
 
 .screen {
     display: none;
@@ -239,124 +169,74 @@ body {
     display: block;
 }
 
-
-/* =========================================
-   제목
-========================================= */
-
 .page-heading {
     margin: 0;
-
     font-size: 46px;
     font-weight: 700;
-
     line-height: 1.2;
 }
 
 .page-subtitle {
     margin: 12px 0 0;
-
     font-size: 20px;
     color: #666666;
 }
 
-
-/* =========================================
-   소개
-========================================= */
-
 .intro-box {
     width: 100%;
-
     margin-top: 35px;
     padding: 45px;
-
     background: #ffffff;
-
     border: 4px solid #000000;
 }
 
 .intro-box h2 {
     margin: 0 0 22px;
-
     font-size: 36px;
     font-weight: 700;
 }
 
 .intro-box p {
     margin: 0 0 35px;
-
     font-size: 22px;
     line-height: 1.6;
-
     color: #333333;
 }
 
-
-/* =========================================
-   버튼
-========================================= */
-
 .orange-button {
     padding: 16px 30px;
-
     background: #FF9400;
-
     border: 3px solid #000000;
-
-    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
-
     font-size: 21px;
     font-weight: 700;
-
     color: #ffffff;
-
     cursor: pointer;
 }
 
-.orange-button:hover {
+.orange-button:hover,
+.orange-small-button:hover {
     background: #e98900;
 }
 
 .orange-small-button {
     flex-shrink: 0;
-
     padding: 13px 22px;
-
     background: #FF9400;
-
     border: 3px solid #000000;
-
-    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
-
     font-size: 18px;
     font-weight: 700;
-
     color: #ffffff;
-
     cursor: pointer;
-}
-
-.orange-small-button:hover {
-    background: #e98900;
 }
 
 .white-button {
     margin-bottom: 30px;
-
     padding: 12px 20px;
-
     background: #ffffff;
-
     border: 3px solid #000000;
-
-    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
-
     font-size: 18px;
     font-weight: 700;
-
     color: #111111;
-
     cursor: pointer;
 }
 
@@ -364,80 +244,55 @@ body {
     background: #eeeeee;
 }
 
-
-/* =========================================
-   목록
-========================================= */
-
 .list-header {
     width: 100%;
-
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-
     gap: 30px;
-
     margin-bottom: 35px;
 }
 
 .empty-box {
     width: 100%;
-
     min-height: 330px;
-
     display: flex;
     flex-direction: column;
-
     align-items: center;
     justify-content: center;
-
     background: #ffffff;
-
     border: 4px solid #000000;
-
     text-align: center;
 }
 
 .empty-title {
     font-size: 34px;
     font-weight: 700;
-
     color: #555555;
 }
 
 .empty-description {
     margin-top: 10px;
-
     font-size: 18px;
-
     color: #999999;
 }
 
 .news-list {
     width: 100%;
-
     display: flex;
     flex-direction: column;
-
     gap: 14px;
 }
 
 .news-row {
     width: 100%;
     min-height: 88px;
-
     display: flex;
     align-items: center;
-
     padding: 0;
-
     background: #ffffff;
-
     border: 3px solid #000000;
-
     cursor: pointer;
-
     text-align: left;
 }
 
@@ -447,16 +302,11 @@ body {
 
 .news-author {
     width: 200px;
-
     flex-shrink: 0;
-
     padding: 0 20px;
-
     font-size: 17px;
     font-weight: 700;
-
     color: #666666;
-
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -464,16 +314,11 @@ body {
 
 .news-title {
     flex: 1;
-
     min-width: 0;
-
     padding: 0 20px;
-
     font-size: 25px;
     font-weight: 700;
-
     color: #111111;
-
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -481,102 +326,65 @@ body {
 
 .news-date {
     width: 130px;
-
     flex-shrink: 0;
-
     padding: 0 20px;
-
     font-size: 16px;
-
     color: #777777;
-
     text-align: right;
-
     white-space: nowrap;
 }
 
-
-/* =========================================
-   상세
-========================================= */
-
 .detail-box {
     width: 100%;
-
     padding: 50px;
-
     background: #ffffff;
-
     border: 4px solid #000000;
 }
 
 .detail-author {
     margin-bottom: 12px;
-
     font-size: 20px;
     font-weight: 700;
-
     color: #555555;
 }
 
 .detail-title-line {
     width: 100%;
-
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-
     gap: 30px;
-
     margin-bottom: 35px;
 }
 
 .detail-title {
     margin: 0;
-
     font-size: 48px;
     font-weight: 700;
-
     line-height: 1.25;
 }
 
 .detail-date {
     flex-shrink: 0;
-
     font-size: 18px;
-
     color: #777777;
 }
 
 .detail-content {
     font-size: 24px;
-
     line-height: 1.9;
-
     color: #333333;
+    word-break: break-word;
 }
-
-
-/* =========================================
-   삭제
-========================================= */
 
 .delete-button {
     margin-top: 20px;
-
     padding: 12px 22px;
-
     background: #ffffff;
-
     border: 3px solid #cc0000;
-
-    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
-
     font-size: 18px;
     font-weight: 700;
-
     color: #cc0000;
-
     cursor: pointer;
 }
 
@@ -584,120 +392,107 @@ body {
     background: #fff0f0;
 }
 
-
-/* =========================================
-   작성
-========================================= */
-
 .write-box {
     width: 100%;
-
     padding: 40px;
-
     background: #ffffff;
-
     border: 4px solid #000000;
 }
 
 .write-box h1 {
     margin: 0 0 35px;
-
     font-size: 42px;
 }
 
 .write-box label,
-.login-box label {
+.auth-box label {
     display: block;
-
     margin-bottom: 10px;
-
     font-size: 19px;
     font-weight: 700;
 }
 
 .write-box input,
 .write-box textarea,
-.login-box input {
+.auth-box input {
     width: 100%;
-
     margin-bottom: 25px;
-
     padding: 15px;
-
     background: #ffffff;
-
     border: 3px solid #000000;
-
-    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
-
     font-size: 19px;
-
     outline: none;
 }
 
 .write-box textarea {
     min-height: 260px;
-
     resize: vertical;
-
     line-height: 1.6;
 }
 
 .write-actions {
     display: flex;
-
     justify-content: flex-end;
-
     gap: 12px;
 }
 
-
-/* =========================================
-   관리자 로그인
-========================================= */
-
-.login-box {
+.auth-box {
     width: min(520px, 100%);
-
     margin: 50px auto;
-
-    padding: 45px;
-
+    padding: 0;
     background: #ffffff;
-
     border: 4px solid #000000;
 }
 
-.login-box h1 {
-    margin: 0 0 12px;
+.auth-tabs {
+    display: flex;
+    width: 100%;
+    border-bottom: 3px solid #000000;
+}
 
+.auth-tab {
+    flex: 1;
+    padding: 16px 10px;
+    background: #ffffff;
+    border: none;
+    border-right: 3px solid #000000;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.auth-tab:last-child {
+    border-right: none;
+}
+
+.auth-tab.active {
+    background: #FF9400;
+    color: #ffffff;
+    -webkit-text-stroke: 0.5px #000000;
+}
+
+.auth-panel {
+    padding: 40px;
+}
+
+.auth-panel h1 {
+    margin: 0 0 12px;
     font-size: 38px;
 }
 
-.login-description {
+.auth-description {
     margin: 0 0 35px;
-
     font-size: 18px;
-
     color: #666666;
 }
 
 .login-button {
     width: 100%;
-
     padding: 15px;
-
     background: #FF9400;
-
     border: 3px solid #000000;
-
-    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
-
     font-size: 20px;
     font-weight: 700;
-
     color: #ffffff;
-
     cursor: pointer;
 }
 
@@ -706,23 +501,14 @@ body {
 }
 
 .login-cancel-button {
-    width: 100%;
-
-    margin-top: 12px;
-
+    width: calc(100% - 80px);
+    margin: 0 40px 40px;
     padding: 13px;
-
     background: #ffffff;
-
     border: 3px solid #000000;
-
-    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
-
     font-size: 18px;
     font-weight: 700;
-
     color: #111111;
-
     cursor: pointer;
 }
 
@@ -732,28 +518,17 @@ body {
 
 .login-error {
     min-height: 24px;
-
-    margin: 15px 0 0;
-
+    margin: 0 40px 20px;
     color: #cc0000;
-
     font-size: 16px;
     font-weight: 700;
+    line-height: 1.5;
+    word-break: break-word;
 }
-
-
-/* =========================================
-   숨김
-========================================= */
 
 .hidden {
     display: none !important;
 }
-
-
-/* =========================================
-   반응형
-========================================= */
 
 @media (max-width: 1400px) {
 
@@ -846,17 +621,14 @@ body {
     .admin-button {
         margin-left: 10px;
         margin-right: 10px;
-
         padding: 8px 10px;
-
         font-size: 13px;
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
 }
-/* ==================================================
-   모바일 전용
-   700px 이하부터 모바일 레이아웃
-================================================== */
 
 @media (max-width: 700px) {
 
@@ -864,571 +636,365 @@ body {
     body {
         width: 100%;
         height: 100%;
-
         overflow: hidden;
     }
 
-
-    /* =========================
-       상단 헤더
-    ========================= */
-
     .top-bar {
         height: 72px;
-
         padding-left: 12px;
         padding-right: 10px;
     }
 
-
     .profile {
         width: 48px;
         height: 48px;
-
         flex: 0 0 48px;
     }
 
-
     .title {
         margin-left: 12px;
-
         font-size: 26px;
-
         line-height: 1;
-
         -webkit-text-stroke: 1px #000000;
-
         text-shadow:
             -1px -1px 0 #000000,
              1px -1px 0 #000000,
             -1px  1px 0 #000000,
              1px  1px 0 #000000;
-
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
-
-    /* 관리자 버튼 */
-
     .admin-button {
         margin-left: 8px;
         margin-right: 0;
-
         padding: 7px 9px;
-
         font-size: 11px;
-
         border-width: 2px;
-
         flex-shrink: 0;
+        max-width: 120px;
     }
-
-
-    /* =========================
-       헤더 선
-    ========================= */
 
     .header-line {
         height: 2px;
     }
 
-
-    /* =========================
-       전체 레이아웃
-    ========================= */
-
     .site-layout {
         height: calc(100vh - 74px);
-
-        display: flex;
     }
-
-
-    /* =========================
-       모바일 사이드바
-    ========================= */
 
     .sidebar {
         width: 88px;
-
         flex: 0 0 88px;
-
         height: 100%;
-
         border-right: 3px solid #000000;
     }
-
 
     .menu-item {
         width: 100%;
         height: 58px;
         min-height: 58px;
-
         padding: 0 5px;
-
         justify-content: center;
-
         font-size: 15px;
-
         line-height: 1.2;
-
         text-align: center;
-
         border-bottom: 2px solid #000000;
     }
 
-
-    /* 잠금 메뉴 */
-
     .menu-item.locked {
         font-size: 13px;
-
         flex-direction: column;
-
         gap: 2px;
     }
 
-
-    /* =========================
-       메인 영역
-    ========================= */
-
     .main-content {
         flex: 1;
-
         width: calc(100% - 88px);
-
         min-width: 0;
-
         height: 100%;
-
         padding: 18px 14px;
-
         overflow-y: auto;
     }
-
-
-    /* =========================
-       제목
-    ========================= */
 
     .page-heading {
         font-size: 28px;
     }
 
-
     .page-subtitle {
         margin-top: 7px;
-
         font-size: 13px;
-
         line-height: 1.5;
     }
 
-
-    /* =========================
-       처음 소식 박스
-    ========================= */
-
     .intro-box {
         margin-top: 18px;
-
         padding: 20px;
-
         border-width: 2px;
     }
-
 
     .intro-box h2 {
         margin-bottom: 12px;
-
         font-size: 22px;
-
         line-height: 1.35;
     }
 
-
     .intro-box p {
         margin-bottom: 20px;
-
         font-size: 14px;
-
         line-height: 1.6;
     }
 
-
-    /* =========================
-       자세히 보기 버튼
-    ========================= */
-
     .orange-button {
         width: 100%;
-
         padding: 11px 10px;
-
         border-width: 2px;
-
         font-size: 15px;
     }
 
-
-    /* =========================
-       목록 상단
-    ========================= */
-
     .list-header {
         margin-bottom: 18px;
-
         gap: 10px;
     }
 
-
     .orange-small-button {
         padding: 9px 12px;
-
         border-width: 2px;
-
         font-size: 13px;
     }
 
-
-    /* =========================
-       소식 없음
-    ========================= */
-
     .empty-box {
         min-height: 220px;
-
         border-width: 2px;
     }
-
 
     .empty-title {
         font-size: 24px;
     }
 
-
     .empty-description {
         margin-top: 7px;
-
         font-size: 13px;
     }
-
-
-    /* =========================
-       소식 목록
-    ========================= */
 
     .news-list {
         gap: 9px;
     }
 
-
     .news-row {
         min-height: 64px;
-
         border-width: 2px;
     }
-
 
     .news-author {
         width: 86px;
-
         padding: 0 7px;
-
         font-size: 11px;
     }
 
-
     .news-title {
         padding: 0 7px;
-
         font-size: 15px;
     }
 
-
     .news-date {
         width: 74px;
-
         padding: 0 6px;
-
         font-size: 10px;
     }
 
-
-    /* =========================
-       상세 페이지
-    ========================= */
-
     .white-button {
         margin-bottom: 16px;
-
         padding: 8px 12px;
-
         border-width: 2px;
-
         font-size: 13px;
     }
-
 
     .detail-box {
         padding: 20px;
-
         border-width: 2px;
     }
 
-
     .detail-author {
         margin-bottom: 8px;
-
         font-size: 13px;
     }
 
-
     .detail-title-line {
         gap: 6px;
-
         margin-bottom: 20px;
-
         flex-direction: column;
-
         align-items: flex-start;
     }
 
-
     .detail-title {
         font-size: 27px;
-
         line-height: 1.35;
     }
-
 
     .detail-date {
         font-size: 12px;
     }
 
-
     .detail-content {
         font-size: 15px;
-
         line-height: 1.8;
     }
 
-
-    /* =========================
-       삭제 버튼
-    ========================= */
-
     .delete-button {
         margin-top: 12px;
-
         padding: 9px 14px;
-
         border-width: 2px;
-
         font-size: 13px;
     }
 
-
-    /* =========================
-       작성 화면
-    ========================= */
-
     .write-box {
         padding: 20px;
-
         border-width: 2px;
     }
-
 
     .write-box h1 {
         margin-bottom: 22px;
-
         font-size: 27px;
     }
 
-
-    .write-box label {
+    .write-box label,
+    .auth-box label {
         margin-bottom: 7px;
-
         font-size: 14px;
     }
-
 
     .write-box input,
-    .write-box textarea {
+    .write-box textarea,
+    .auth-box input {
         margin-bottom: 17px;
-
         padding: 10px;
-
         border-width: 2px;
-
         font-size: 14px;
     }
-
 
     .write-box textarea {
         min-height: 180px;
     }
 
-
     .write-actions {
         gap: 8px;
     }
 
-
-    /* =========================
-       관리자 로그인
-    ========================= */
-
-    .login-box {
-        width: 100%;
-
+    .auth-box {
         margin: 20px auto;
-
-        padding: 22px;
-
         border-width: 2px;
     }
 
+    .auth-tabs {
+        border-bottom-width: 2px;
+    }
 
-    .login-box h1 {
+    .auth-tab {
+        padding: 11px 8px;
+        border-right-width: 2px;
+        font-size: 14px;
+    }
+
+    .auth-panel {
+        padding: 22px;
+    }
+
+    .auth-panel h1 {
         margin-bottom: 8px;
-
         font-size: 26px;
     }
 
-
-    .login-description {
+    .auth-description {
         margin-bottom: 22px;
-
         font-size: 13px;
     }
 
-
-    .login-box label {
-        font-size: 14px;
-    }
-
-
-    .login-box input {
-        margin-bottom: 17px;
-
-        padding: 10px;
-
-        border-width: 2px;
-
-        font-size: 14px;
-    }
-
-
-    .login-button,
-    .login-cancel-button {
+    .login-button {
         padding: 11px;
-
         border-width: 2px;
-
         font-size: 15px;
     }
 
+    .login-cancel-button {
+        width: calc(100% - 44px);
+        margin: 0 22px 22px;
+        padding: 11px;
+        border-width: 2px;
+        font-size: 15px;
+    }
 
     .login-error {
+        margin: 0 22px 15px;
         font-size: 12px;
     }
 
 }
 
-
-/* ==================================================
-   아주 작은 휴대폰
-   480px 이하
-================================================== */
-
 @media (max-width: 480px) {
 
     .top-bar {
         height: 62px;
-
         padding-left: 8px;
         padding-right: 7px;
     }
 
-
     .profile {
         width: 40px;
         height: 40px;
-
         flex-basis: 40px;
     }
 
-
     .title {
         margin-left: 8px;
-
         font-size: 21px;
     }
 
-
     .admin-button {
         padding: 6px 7px;
-
         font-size: 10px;
+        max-width: 90px;
     }
-
 
     .site-layout {
         height: calc(100vh - 64px);
     }
 
-
     .sidebar {
         width: 72px;
-
         flex-basis: 72px;
     }
 
-
     .main-content {
         width: calc(100% - 72px);
-
         padding: 14px 10px;
     }
-
 
     .menu-item {
         height: 52px;
         min-height: 52px;
-
         font-size: 13px;
     }
-
 
     .menu-item.locked {
         font-size: 11px;
     }
 
-
     .page-heading {
         font-size: 24px;
     }
 
-
     .news-author {
         width: 70px;
-
         font-size: 10px;
     }
-
 
     .news-title {
         font-size: 13px;
     }
 
-
     .news-date {
         width: 65px;
-
         font-size: 9px;
     }
 
