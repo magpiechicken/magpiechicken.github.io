@@ -418,7 +418,6 @@ button:disabled {
 
 /* =========================
    사진
-   핵심 수정 부분
 ========================= */
 
 .news-images {
@@ -432,7 +431,7 @@ button:disabled {
     align-items: flex-start;
     justify-content: flex-start;
 
-    gap: 12px;
+    gap: 14px;
 
     background: transparent;
     border: none;
@@ -441,16 +440,14 @@ button:disabled {
 }
 
 .news-image {
-    /* 사진 자체의 실제 비율을 유지 */
     width: auto !important;
-    height: 70px !important;
+    height: 126px !important;
 
-    /* 가장 중요: 가로폭을 강제로 제한하지 않음 */
-    max-width: none !important;
     min-width: 0 !important;
-
-    max-height: 70px !important;
     min-height: 0 !important;
+
+    max-width: none !important;
+    max-height: 126px !important;
 
     display: block !important;
 
@@ -463,10 +460,6 @@ button:disabled {
 
     background: #ffffff;
 
-    /*
-        이미지 전체가 보이도록.
-        자르지 않음.
-    */
     object-fit: contain !important;
     object-position: center center;
 }
@@ -749,7 +742,6 @@ button:disabled {
 ========================= */
 
 @media (max-width: 1400px) {
-
     .title {
         font-size: 56px;
     }
@@ -764,13 +756,12 @@ button:disabled {
     }
 
     .news-image {
-        height: 65px !important;
-        max-height: 65px !important;
+        height: 117px !important;
+        max-height: 117px !important;
     }
 }
 
 @media (max-width: 1100px) {
-
     .title {
         margin-left: 22px;
         font-size: 44px;
@@ -808,13 +799,12 @@ button:disabled {
     }
 
     .news-image {
-        height: 60px !important;
-        max-height: 60px !important;
+        height: 108px !important;
+        max-height: 108px !important;
     }
 }
 
 @media (max-width: 800px) {
-
     .title {
         margin-left: 15px;
         font-size: 30px;
@@ -851,13 +841,12 @@ button:disabled {
     }
 
     .news-image {
-        height: 55px !important;
-        max-height: 55px !important;
+        height: 99px !important;
+        max-height: 99px !important;
     }
 }
 
 @media (max-width: 700px) {
-
     .top-bar {
         height: 72px;
         padding: 0 10px 0 12px;
@@ -1074,9 +1063,9 @@ button:disabled {
 
     .news-image {
         width: auto !important;
-        height: 52px !important;
+        height: 94px !important;
         max-width: none !important;
-        max-height: 52px !important;
+        max-height: 94px !important;
         flex: 0 0 auto !important;
     }
 
@@ -1206,7 +1195,6 @@ button:disabled {
 }
 
 @media (max-width: 480px) {
-
     .top-bar {
         height: 62px;
         padding: 0 7px 0 8px;
@@ -1295,9 +1283,9 @@ button:disabled {
 
     .news-image {
         width: auto !important;
-        height: 48px !important;
+        height: 86px !important;
         max-width: none !important;
-        max-height: 48px !important;
+        max-height: 86px !important;
         flex: 0 0 auto !important;
     }
 
