@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=41">
+    <link rel="stylesheet" href="./style.css?v=42">
 </head>
 
 <body>
@@ -19,13 +19,25 @@
         까치치킨사장님 공식 홈페이지
     </div>
 
-    <button
-        id="accountButton"
-        class="admin-button"
-        type="button"
-    >
-        로그인
-    </button>
+    <div class="header-actions">
+
+        <button
+            id="loginInfoButton"
+            class="info-button"
+            type="button"
+        >
+            로그인 정보
+        </button>
+
+        <button
+            id="accountButton"
+            class="admin-button"
+            type="button"
+        >
+            로그인
+        </button>
+
+    </div>
 
 </header>
 
@@ -422,8 +434,39 @@
 
 </div>
 
+
+<div
+    id="loginInfoModal"
+    class="login-info-modal hidden"
+>
+
+    <div class="login-info-box">
+
+        <button
+            id="closeLoginInfo"
+            class="login-info-close"
+            type="button"
+            aria-label="닫기"
+        >
+            ×
+        </button>
+
+        <h2>
+            로그인 정보
+        </h2>
+
+        <div
+            id="loginInfoContent"
+            class="login-info-content"
+        ></div>
+
+    </div>
+
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./script.js?v=41"></script>
+<script src="./script.js?v=42"></script>
 
 </body>
 </html>
