@@ -349,6 +349,7 @@ button:disabled {
     white-space: nowrap;
 }
 
+/* 글 부분 */
 .detail-box {
     width: 100%;
     padding: 50px;
@@ -392,60 +393,52 @@ button:disabled {
     word-break: break-word;
 }
 
-/* 사진 영역 */
+/* 글 테두리 바깥의 사진 영역 */
 .news-images {
     width: 100%;
-    margin-top: 35px;
-    padding: 12px;
+    margin-top: 20px;
+    padding: 0;
 
     display: grid;
 
     grid-template-columns:
-        repeat(5, minmax(0, 1fr));
+        repeat(3, minmax(0, 1fr));
 
-    align-items: center;
+    gap: 12px;
 
-    gap: 10px;
-
-    background: #ffffff;
-    border: 3px solid #000000;
+    background: transparent;
 }
 
-/*
-    사진은 잘라내지 않는다.
-
-    원본 비율을 그대로 유지하면서
-    사진 전체가 보이도록 한다.
-
-    사진마다 같은 칸을 사용하고,
-    실제 이미지 높이는 자동으로 결정한다.
-*/
 .news-image {
-    width: 100% !important;
-    height: auto !important;
+    width: 100%;
+    max-width: 100%;
 
-    min-width: 0 !important;
-    max-width: 100% !important;
+    /*
+        그림처럼 사진은 작은 카드형.
+        이전보다 약 1.3배 작게.
+    */
+    max-height: 85px;
 
-    min-height: 0 !important;
-    max-height: 110px !important;
+    height: auto;
 
-    display: block !important;
+    min-width: 0;
+    min-height: 0;
 
-    margin: 0 auto !important;
+    display: block;
+
+    padding: 0;
 
     border: 2px solid #000000;
 
-    background: #f5f5f5;
+    background: #ffffff;
 
-    object-fit: contain !important;
+    /*
+        사진 절대 자르지 않음.
+        원본 비율 유지.
+    */
+    object-fit: contain;
     object-position: center center;
 }
-
-/*
-    6장 이상이면 두 번째 줄로 넘어간다.
-    사진은 그대로 잘리지 않는다.
-*/
 
 .delete-button {
     margin-top: 20px;
@@ -705,38 +698,9 @@ button:disabled {
     display: none !important;
 }
 
-@media (max-width: 1400px) {
-
-    .title {
-        font-size: 56px;
-    }
-
-    .sidebar {
-        width: 230px;
-        flex-basis: 230px;
-    }
-
-    .menu-item {
-        font-size: 27px;
-    }
-
-    .news-images {
-        grid-template-columns:
-            repeat(5, minmax(0, 1fr));
-
-        gap: 8px;
-        padding: 10px;
-    }
-
-    .news-image {
-        max-height: 90px !important;
-    }
-}
-
 @media (max-width: 1100px) {
 
     .title {
-        margin-left: 22px;
         font-size: 44px;
     }
 
@@ -771,16 +735,8 @@ button:disabled {
         font-size: 13px;
     }
 
-    .news-images {
-        grid-template-columns:
-            repeat(4, minmax(0, 1fr));
-
-        gap: 7px;
-        padding: 9px;
-    }
-
     .news-image {
-        max-height: 80px !important;
+        max-height: 75px;
     }
 }
 
@@ -838,8 +794,6 @@ button:disabled {
     .title {
         margin-left: 12px;
         font-size: 27px;
-        white-space: nowrap;
-        text-shadow: 1px 1px 0 #000000;
         flex-shrink: 0;
     }
 
@@ -901,7 +855,6 @@ button:disabled {
     .main-content {
         width: calc(100% - 88px);
         padding: 18px 14px;
-        overflow-y: auto;
     }
 
     .page-heading {
@@ -911,7 +864,6 @@ button:disabled {
     .page-subtitle {
         margin-top: 7px;
         font-size: 13px;
-        line-height: 1.5;
     }
 
     .intro-box {
@@ -921,14 +873,11 @@ button:disabled {
     }
 
     .intro-box h2 {
-        margin-bottom: 12px;
         font-size: 22px;
     }
 
     .intro-box p {
-        margin-bottom: 20px;
         font-size: 14px;
-        line-height: 1.6;
     }
 
     .orange-button {
@@ -973,7 +922,6 @@ button:disabled {
 
     .news-row.unread {
         border-width: 3px;
-        border-color: #e00000;
     }
 
     .news-author {
@@ -1036,36 +984,14 @@ button:disabled {
     }
 
     .news-images {
-        width: 100% !important;
-        margin-top: 20px !important;
-        padding: 8px !important;
-
+        margin-top: 14px;
         grid-template-columns:
-            repeat(3, minmax(0, 1fr)) !important;
-
-        gap: 7px !important;
-
-        align-items: center !important;
+            repeat(3, minmax(0, 1fr));
+        gap: 7px;
     }
 
     .news-image {
-        width: 100% !important;
-        height: auto !important;
-
-        max-width: 100% !important;
-        max-height: 65px !important;
-
-        min-width: 0 !important;
-        min-height: 0 !important;
-
-        object-fit: contain !important;
-    }
-
-    .delete-button {
-        margin-top: 12px;
-        padding: 9px 14px;
-        border-width: 2px;
-        font-size: 13px;
+        max-height: 62px;
     }
 
     .write-box {
@@ -1074,20 +1000,17 @@ button:disabled {
     }
 
     .write-box h1 {
-        margin-bottom: 22px;
         font-size: 27px;
     }
 
     .write-box label,
     .auth-box label {
-        margin-bottom: 7px;
         font-size: 14px;
     }
 
     .write-box input,
     .write-box textarea,
     .auth-box input {
-        margin-bottom: 17px;
         padding: 10px;
         border-width: 2px;
         font-size: 14px;
@@ -1102,7 +1025,6 @@ button:disabled {
     }
 
     .image-help {
-        margin: -8px 0 15px;
         font-size: 11px;
     }
 
@@ -1127,7 +1049,6 @@ button:disabled {
 
     .auth-tab {
         padding: 11px 8px;
-        border-right-width: 2px;
         font-size: 14px;
     }
 
@@ -1136,12 +1057,10 @@ button:disabled {
     }
 
     .auth-panel h1 {
-        margin-bottom: 8px;
         font-size: 26px;
     }
 
     .auth-description {
-        margin-bottom: 22px;
         font-size: 13px;
     }
 
@@ -1154,7 +1073,6 @@ button:disabled {
     .login-cancel-button {
         width: calc(100% - 44px);
         margin: 0 22px 22px;
-        padding: 11px;
         border-width: 2px;
         font-size: 15px;
     }
@@ -1170,19 +1088,16 @@ button:disabled {
 
     .login-info-box {
         width: 100%;
-        max-height: calc(100vh - 24px);
         padding: 24px;
         border-width: 2px;
     }
 
     .login-info-box h2 {
-        margin-bottom: 20px;
         font-size: 24px;
     }
 
     .login-info-content {
         font-size: 13px;
-        line-height: 1.7;
     }
 }
 
@@ -1260,7 +1175,6 @@ button:disabled {
     }
 
     .news-unread {
-        margin-left: 5px;
         font-size: 9px;
     }
 
@@ -1270,27 +1184,13 @@ button:disabled {
     }
 
     .news-images {
-        width: 100% !important;
-        margin-top: 18px !important;
-        padding: 6px !important;
-
         grid-template-columns:
-            repeat(2, minmax(0, 1fr)) !important;
-
-        gap: 5px !important;
+            repeat(2, minmax(0, 1fr));
+        gap: 6px;
     }
 
     .news-image {
-        width: 100% !important;
-        height: auto !important;
-
-        max-width: 100% !important;
-        max-height: 55px !important;
-
-        min-width: 0 !important;
-        min-height: 0 !important;
-
-        object-fit: contain !important;
+        max-height: 55px;
     }
 
     .login-info-box {
