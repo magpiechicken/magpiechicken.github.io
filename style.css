@@ -441,13 +441,13 @@ button:disabled {
 
 .news-image {
     width: auto !important;
-    height: 126px !important;
+    height: 175px !important;
 
     min-width: 0 !important;
     min-height: 0 !important;
 
     max-width: none !important;
-    max-height: 126px !important;
+    max-height: 175px !important;
 
     display: block !important;
 
@@ -742,6 +742,7 @@ button:disabled {
 ========================= */
 
 @media (max-width: 1400px) {
+
     .title {
         font-size: 56px;
     }
@@ -756,12 +757,13 @@ button:disabled {
     }
 
     .news-image {
-        height: 117px !important;
-        max-height: 117px !important;
+        height: 165px !important;
+        max-height: 165px !important;
     }
 }
 
 @media (max-width: 1100px) {
+
     .title {
         margin-left: 22px;
         font-size: 44px;
@@ -799,12 +801,13 @@ button:disabled {
     }
 
     .news-image {
-        height: 108px !important;
-        max-height: 108px !important;
+        height: 150px !important;
+        max-height: 150px !important;
     }
 }
 
 @media (max-width: 800px) {
+
     .title {
         margin-left: 15px;
         font-size: 30px;
@@ -841,12 +844,13 @@ button:disabled {
     }
 
     .news-image {
-        height: 99px !important;
-        max-height: 99px !important;
+        height: 140px !important;
+        max-height: 140px !important;
     }
 }
 
 @media (max-width: 700px) {
+
     .top-bar {
         height: 72px;
         padding: 0 10px 0 12px;
@@ -1063,9 +1067,9 @@ button:disabled {
 
     .news-image {
         width: auto !important;
-        height: 94px !important;
+        height: 125px !important;
         max-width: none !important;
-        max-height: 94px !important;
+        max-height: 125px !important;
         flex: 0 0 auto !important;
     }
 
@@ -1195,6 +1199,7 @@ button:disabled {
 }
 
 @media (max-width: 480px) {
+
     .top-bar {
         height: 62px;
         padding: 0 7px 0 8px;
@@ -1283,9 +1288,9 @@ button:disabled {
 
     .news-image {
         width: auto !important;
-        height: 86px !important;
+        height: 105px !important;
         max-width: none !important;
-        max-height: 86px !important;
+        max-height: 105px !important;
         flex: 0 0 auto !important;
     }
 
