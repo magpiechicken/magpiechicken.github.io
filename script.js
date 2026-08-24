@@ -93,6 +93,9 @@ const imagePreview =
 const imageHelp =
     document.getElementById("image-help");
 
+const detailImages =
+    document.getElementById("news-detail-images");
+
 function hideAllScreens() {
     introScreen.classList.remove("visible");
     listScreen.classList.remove("visible");
@@ -123,11 +126,20 @@ function scrollTop() {
 
 function updateAuthUI() {
     if (!currentUser) {
-        accountButton.textContent = "로그인";
-        accountButton.classList.remove("logged-in");
+        accountButton.textContent =
+            "로그인";
 
-        showWriteButton.classList.add("hidden");
-        deleteNewsButton.classList.add("hidden");
+        accountButton.classList.remove(
+            "logged-in"
+        );
+
+        showWriteButton.classList.add(
+            "hidden"
+        );
+
+        deleteNewsButton.classList.add(
+            "hidden"
+        );
 
         return;
     }
@@ -141,14 +153,22 @@ function updateAuthUI() {
         accountButton.textContent =
             `${username} · 관리자`;
 
-        accountButton.classList.add("logged-in");
+        accountButton.classList.add(
+            "logged-in"
+        );
 
-        showWriteButton.classList.remove("hidden");
+        showWriteButton.classList.remove(
+            "hidden"
+        );
 
         if (currentNewsId !== null) {
-            deleteNewsButton.classList.remove("hidden");
+            deleteNewsButton.classList.remove(
+                "hidden"
+            );
         } else {
-            deleteNewsButton.classList.add("hidden");
+            deleteNewsButton.classList.add(
+                "hidden"
+            );
         }
 
         return;
@@ -157,10 +177,17 @@ function updateAuthUI() {
     accountButton.textContent =
         `${username} · 로그아웃`;
 
-    accountButton.classList.remove("logged-in");
+    accountButton.classList.remove(
+        "logged-in"
+    );
 
-    showWriteButton.classList.add("hidden");
-    deleteNewsButton.classList.add("hidden");
+    showWriteButton.classList.add(
+        "hidden"
+    );
+
+    deleteNewsButton.classList.add(
+        "hidden"
+    );
 }
 
 async function loadCurrentProfile() {
@@ -194,11 +221,14 @@ async function loadCurrentProfile() {
 
         currentProfile = null;
         isAdmin = false;
+
         updateAuthUI();
+
         return;
     }
 
-    currentProfile = profile || null;
+    currentProfile =
+        profile || null;
 
     isAdmin =
         profile?.can_manage_news === true;
@@ -223,10 +253,12 @@ async function refreshAuthState() {
         isAdmin = false;
 
         updateAuthUI();
+
         return;
     }
 
-    currentUser = data.user;
+    currentUser =
+        data.user;
 
     await loadCurrentProfile();
 }
@@ -234,11 +266,19 @@ async function refreshAuthState() {
 function openNewsIntro() {
     hideAllScreens();
 
-    introScreen.classList.add("visible");
+    introScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
     currentNewsId = null;
+
+    detailImages.classList.add(
+        "hidden"
+    );
+
+    detailImages.innerHTML = "";
 
     updateAuthUI();
 
@@ -248,7 +288,9 @@ function openNewsIntro() {
 async function openNewsList() {
     hideAllScreens();
 
-    listScreen.classList.add("visible");
+    listScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
@@ -271,6 +313,7 @@ function openWriteScreen() {
         alert(
             "관리자만 소식을 작성할 수 있습니다."
         );
+
         return;
     }
 
@@ -278,7 +321,9 @@ function openWriteScreen() {
 
     hideAllScreens();
 
-    writeScreen.classList.add("visible");
+    writeScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
@@ -288,17 +333,23 @@ function openWriteScreen() {
 function openDonation() {
     hideAllScreens();
 
-    donationScreen.classList.add("visible");
+    donationScreen.classList.add(
+        "visible"
+    );
 
     activateDonationMenu();
 
     scrollTop();
 }
 
-function openAuthScreen(mode = "login") {
+function openAuthScreen(
+    mode = "login"
+) {
     hideAllScreens();
 
-    authScreen.classList.add("visible");
+    authScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
@@ -412,17 +463,23 @@ function openLoginInfo() {
         </div>
     `;
 
-    loginInfoModal.classList.remove("hidden");
+    loginInfoModal.classList.remove(
+        "hidden"
+    );
 }
 
 function closeLoginInfoModal() {
-    loginInfoModal.classList.add("hidden");
+    loginInfoModal.classList.add(
+        "hidden"
+    );
 }
 
 async function login() {
     const email =
         document
-            .getElementById("login-email")
+            .getElementById(
+                "login-email"
+            )
             .value
             .trim();
 
@@ -436,12 +493,14 @@ async function login() {
     if (!email) {
         authMessage.textContent =
             "이메일을 입력해주세요.";
+
         return;
     }
 
     if (!password) {
         authMessage.textContent =
             "비밀번호를 입력해주세요.";
+
         return;
     }
 
@@ -477,7 +536,8 @@ async function login() {
             return;
         }
 
-        currentUser = data.user;
+        currentUser =
+            data.user;
 
         await loadCurrentProfile();
 
@@ -510,20 +570,25 @@ async function login() {
 
     } finally {
         loginButton.disabled = false;
-        loginButton.textContent = "로그인";
+        loginButton.textContent =
+            "로그인";
     }
 }
 
 async function signup() {
     const username =
         document
-            .getElementById("signup-username")
+            .getElementById(
+                "signup-username"
+            )
             .value
             .trim();
 
     const email =
         document
-            .getElementById("signup-email")
+            .getElementById(
+                "signup-email"
+            )
             .value
             .trim();
 
@@ -542,36 +607,42 @@ async function signup() {
     if (!username) {
         authMessage.textContent =
             "아이디를 입력해주세요.";
+
         return;
     }
 
     if (username.length < 2) {
         authMessage.textContent =
             "아이디는 2자 이상 입력해주세요.";
+
         return;
     }
 
     if (!email) {
         authMessage.textContent =
             "이메일을 입력해주세요.";
+
         return;
     }
 
     if (!password) {
         authMessage.textContent =
             "비밀번호를 입력해주세요.";
+
         return;
     }
 
     if (password.length < 6) {
         authMessage.textContent =
             "비밀번호는 6자 이상 입력해주세요.";
+
         return;
     }
 
     if (password !== passwordConfirm) {
         authMessage.textContent =
             "비밀번호가 일치하지 않습니다.";
+
         return;
     }
 
@@ -616,7 +687,8 @@ async function signup() {
             data.user &&
             data.session
         ) {
-            currentUser = data.user;
+            currentUser =
+                data.user;
 
             await loadCurrentProfile();
 
@@ -661,7 +733,8 @@ async function signup() {
 
     } finally {
         signupButton.disabled = false;
-        signupButton.textContent = "회원가입";
+        signupButton.textContent =
+            "회원가입";
     }
 }
 
@@ -676,6 +749,7 @@ async function logout() {
             "로그아웃 오류:",
             error
         );
+
         return;
     }
 
@@ -723,7 +797,9 @@ async function getNews() {
     return data || [];
 }
 
-async function getReadNewsIds(newsList) {
+async function getReadNewsIds(
+    newsList
+) {
     if (
         !currentUser ||
         !newsList ||
@@ -735,7 +811,9 @@ async function getReadNewsIds(newsList) {
     const newsIds =
         newsList.map(
             function(news) {
-                return String(news.id);
+                return String(
+                    news.id
+                );
             }
         );
 
@@ -745,7 +823,9 @@ async function getReadNewsIds(newsList) {
     } =
         await supabaseClient
             .from("news_reads")
-            .select("news_id")
+            .select(
+                "news_id"
+            )
             .eq(
                 "user_id",
                 currentUser.id
@@ -775,7 +855,9 @@ async function getReadNewsIds(newsList) {
     );
 }
 
-async function markNewsAsRead(newsId) {
+async function markNewsAsRead(
+    newsId
+) {
     if (!currentUser) {
         return;
     }
@@ -835,7 +917,9 @@ function formatDate(value) {
     );
 }
 
-function getPublicImageUrl(path) {
+function getPublicImageUrl(
+    path
+) {
     if (!path) {
         return null;
     }
@@ -854,7 +938,9 @@ function getPublicImageUrl(path) {
             .from(
                 NEWS_IMAGE_BUCKET
             )
-            .getPublicUrl(path);
+            .getPublicUrl(
+                path
+            );
 
     return data?.publicUrl || null;
 }
@@ -911,6 +997,7 @@ async function renderNews() {
 
     newsList.forEach(
         function(news) {
+
             const newsKey =
                 String(news.id);
 
@@ -925,7 +1012,8 @@ async function renderNews() {
                     "button"
                 );
 
-            row.type = "button";
+            row.type =
+                "button";
 
             row.className =
                 isUnread
@@ -978,7 +1066,9 @@ async function renderNews() {
     container.appendChild(list);
 }
 
-async function openNewsDetail(newsId) {
+async function openNewsDetail(
+    newsId
+) {
     const {
         data: news,
         error
@@ -1025,6 +1115,13 @@ async function openNewsDetail(newsId) {
 
     activateNewsMenu();
 
+    /*
+        사진을 기존 article 내부가 아니라
+        별도 영역에 넣는다.
+    */
+
+    detailImages.innerHTML = "";
+
     const imageUrls =
         Array.isArray(
             news.image_urls
@@ -1032,43 +1129,55 @@ async function openNewsDetail(newsId) {
             ? news.image_urls
             : [];
 
-    let imageHtml = "";
+    let validImageCount = 0;
 
-    if (imageUrls.length > 0) {
-        const imageElements =
-            imageUrls
-                .map(
-                    function(path) {
-                        const url =
-                            getPublicImageUrl(
-                                path
-                            );
+    imageUrls.forEach(
+        function(path) {
 
-                        if (!url) {
-                            return "";
-                        }
+            const url =
+                getPublicImageUrl(
+                    path
+                );
 
-                        return `
-                            <img
-                                class="news-image"
-                                src="${escapeAttribute(
-                                    url
-                                )}"
-                                alt="소식 첨부 사진"
-                                loading="lazy"
-                            >
-                        `;
-                    }
-                )
-                .join("");
+            if (!url) {
+                return;
+            }
 
-        if (imageElements) {
-            imageHtml = `
-                <div class="news-images">
-                    ${imageElements}
-                </div>
-            `;
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+            image.className =
+                "news-image";
+
+            image.src =
+                url;
+
+            image.alt =
+                "소식 첨부 사진";
+
+            image.loading =
+                "lazy";
+
+            detailImages.appendChild(
+                image
+            );
+
+            validImageCount++;
         }
+    );
+
+    if (
+        validImageCount > 0
+    ) {
+        detailImages.classList.remove(
+            "hidden"
+        );
+    } else {
+        detailImages.classList.add(
+            "hidden"
+        );
     }
 
     document.getElementById(
@@ -1104,8 +1213,6 @@ async function openNewsDetail(newsId) {
                 "<br>"
             )}
         </div>
-
-        ${imageHtml}
     `;
 
     updateAuthUI();
@@ -1141,9 +1248,12 @@ function resetWriteForm() {
     renderImagePreview();
 }
 
-function validateSelectedImages(files) {
+function validateSelectedImages(
+    files
+) {
     if (
-        files.length > MAX_IMAGES
+        files.length >
+        MAX_IMAGES
     ) {
         return {
             valid: false,
@@ -1152,7 +1262,9 @@ function validateSelectedImages(files) {
         };
     }
 
-    for (const file of files) {
+    for (
+        const file of files
+    ) {
         if (
             !file.type.startsWith(
                 "image/"
@@ -1183,7 +1295,9 @@ function validateSelectedImages(files) {
     };
 }
 
-function handleImageSelection(event) {
+function handleImageSelection(
+    event
+) {
     const files =
         Array.from(
             event.target.files || []
@@ -1208,7 +1322,8 @@ function handleImageSelection(event) {
         return;
     }
 
-    selectedImageFiles = files;
+    selectedImageFiles =
+        files;
 
     renderImagePreview();
 }
@@ -1281,7 +1396,7 @@ function renderImagePreview() {
         imageHelp.textContent =
             selectedImageFiles.length > 0
                 ? `${selectedImageFiles.length}장 선택됨 · 최대 ${MAX_IMAGES}장`
-                : `최대 ${MAX_IMAGES}장 · 사진 1장당 최대 5MB`;
+                : `사진을 선택하면 아래에 미리보기가 표시됩니다. 최대 ${MAX_IMAGES}장 · 사진 1장당 최대 5MB`;
     }
 }
 
@@ -1305,87 +1420,6 @@ function createSafeFileName(
                   .slice(2)}`;
 
     return `${random}.${extension}`;
-}
-
-async function uploadNewsImages(files) {
-    if (
-        !files ||
-        files.length === 0
-    ) {
-        return {
-            success: true,
-            paths: []
-        };
-    }
-
-    if (!currentUser) {
-        return {
-            success: false,
-            paths: [],
-            error:
-                "로그인이 필요합니다."
-        };
-    }
-
-    const uploadedPaths = [];
-
-    for (const file of files) {
-        const fileName =
-            createSafeFileName(
-                file.name
-            );
-
-        const filePath =
-            `${currentUser.id}/${fileName}`;
-
-        const {
-            error
-        } =
-            await supabaseClient.storage
-                .from(
-                    NEWS_IMAGE_BUCKET
-                )
-                .upload(
-                    filePath,
-                    file,
-                    {
-                        cacheControl: "3600",
-                        upsert: false,
-                        contentType: file.type
-                    }
-                );
-
-        if (error) {
-            console.error(
-                "이미지 업로드 오류:",
-                error
-            );
-
-            if (
-                uploadedPaths.length > 0
-            ) {
-                await deleteUploadedImages(
-                    uploadedPaths
-                );
-            }
-
-            return {
-                success: false,
-                paths: [],
-                error:
-                    error.message
-            };
-        }
-
-        uploadedPaths.push(
-            filePath
-        );
-    }
-
-    return {
-        success: true,
-        paths: uploadedPaths
-    };
 }
 
 async function deleteUploadedImages(
@@ -1456,6 +1490,7 @@ async function saveNews() {
         alert(
             "제목을 입력해주세요."
         );
+
         return;
     }
 
@@ -1463,6 +1498,7 @@ async function saveNews() {
         alert(
             "내용을 입력해주세요."
         );
+
         return;
     }
 
@@ -1482,6 +1518,7 @@ async function saveNews() {
         alert(
             validation.message
         );
+
         return;
     }
 
@@ -1492,11 +1529,12 @@ async function saveNews() {
 
     saveButton.disabled = true;
     saveButton.textContent =
-        "사진 업로드 중...";
+        "등록 중...";
 
     let uploadedPaths = [];
 
     try {
+
         const {
             data: userData,
             error: userError
@@ -1509,12 +1547,6 @@ async function saveNews() {
             !userData ||
             !userData.user
         ) {
-            currentUser = null;
-            currentProfile = null;
-            isAdmin = false;
-
-            updateAuthUI();
-
             alert(
                 "로그인이 필요합니다."
             );
@@ -1557,11 +1589,6 @@ async function saveNews() {
             return;
         }
 
-        saveButton.textContent =
-            files.length > 0
-                ? `사진 업로드 중... 0/${files.length}`
-                : "소식 등록 중...";
-
         for (
             let i = 0;
             i < files.length;
@@ -1589,25 +1616,22 @@ async function saveNews() {
                         filePath,
                         file,
                         {
-                            cacheControl: "3600",
-                            upsert: false,
-                            contentType: file.type
+                            cacheControl:
+                                "3600",
+
+                            upsert:
+                                false,
+
+                            contentType:
+                                file.type
                         }
                     );
 
             if (uploadError) {
-                console.error(
-                    "이미지 업로드 오류:",
-                    uploadError
-                );
 
-                if (
-                    uploadedPaths.length > 0
-                ) {
-                    await deleteUploadedImages(
-                        uploadedPaths
-                    );
-                }
+                await deleteUploadedImages(
+                    uploadedPaths
+                );
 
                 alert(
                     "사진 업로드 오류:\n" +
@@ -1629,7 +1653,6 @@ async function saveNews() {
             "소식 등록 중...";
 
         const {
-            data: insertedNews,
             error: insertError
         } =
             await supabaseClient
@@ -1646,25 +1669,13 @@ async function saveNews() {
 
                     image_urls:
                         uploadedPaths
-                })
-                .select(
-                    "id, image_urls"
-                )
-                .single();
+                });
 
         if (insertError) {
-            console.error(
-                "소식 등록 오류:",
-                insertError
-            );
 
-            if (
-                uploadedPaths.length > 0
-            ) {
-                await deleteUploadedImages(
-                    uploadedPaths
-                );
-            }
+            await deleteUploadedImages(
+                uploadedPaths
+            );
 
             alert(
                 "소식 등록 오류:\n" +
@@ -1674,28 +1685,20 @@ async function saveNews() {
             return;
         }
 
-        console.log(
-            "등록된 소식:",
-            insertedNews
-        );
-
         resetWriteForm();
 
         await openNewsList();
 
     } catch (error) {
+
         console.error(
             "소식 등록 예외:",
             error
         );
 
-        if (
-            uploadedPaths.length > 0
-        ) {
-            await deleteUploadedImages(
-                uploadedPaths
-            );
-        }
+        await deleteUploadedImages(
+            uploadedPaths
+        );
 
         alert(
             "소식 등록 중 오류가 발생했습니다:\n" +
@@ -1771,11 +1774,6 @@ async function deleteCurrentNews() {
             );
 
     if (deleteError) {
-        console.error(
-            "소식 삭제 오류:",
-            deleteError
-        );
-
         alert(
             "소식 삭제 오류:\n" +
             deleteError.message
@@ -1825,26 +1823,6 @@ function escapeHTML(value) {
         .replace(
             /'/g,
             "&#039;"
-        );
-}
-
-function escapeAttribute(value) {
-    return String(value)
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
         );
 }
 
@@ -1947,12 +1925,14 @@ closeLoginInfo.addEventListener(
 loginInfoModal.addEventListener(
     "click",
     function(event) {
+
         if (
             event.target ===
             loginInfoModal
         ) {
             closeLoginInfoModal();
         }
+
     }
 );
 
@@ -2004,12 +1984,14 @@ document
     .addEventListener(
         "keydown",
         function(event) {
+
             if (
                 event.key ===
                 "Enter"
             ) {
                 login();
             }
+
         }
     );
 
@@ -2020,20 +2002,24 @@ document
     .addEventListener(
         "keydown",
         function(event) {
+
             if (
                 event.key ===
                 "Enter"
             ) {
                 signup();
             }
+
         }
     );
 
 if (imageInput) {
+
     imageInput.addEventListener(
         "change",
         handleImageSelection
     );
+
 }
 
 supabaseClient.auth.onAuthStateChange(
@@ -2041,10 +2027,12 @@ supabaseClient.auth.onAuthStateChange(
         event,
         session
     ) {
+
         if (
             event ===
             "SIGNED_OUT"
         ) {
+
             currentUser = null;
             currentProfile = null;
             isAdmin = false;
@@ -2058,15 +2046,19 @@ supabaseClient.auth.onAuthStateChange(
             session &&
             session.user
         ) {
+
             currentUser =
                 session.user;
 
             await loadCurrentProfile();
+
         }
+
     }
 );
 
 async function initialize() {
+
     await refreshAuthState();
 
     updateAuthUI();
@@ -2074,6 +2066,7 @@ async function initialize() {
     renderImagePreview();
 
     openNewsIntro();
+
 }
 
 initialize();
