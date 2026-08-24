@@ -31,10 +31,6 @@ button:disabled {
     cursor: not-allowed;
 }
 
-/* =========================
-   상단
-========================= */
-
 .top-bar {
     width: 100%;
     height: 11.111111vh;
@@ -112,10 +108,6 @@ button:disabled {
     background: #000000;
 }
 
-/* =========================
-   전체 레이아웃
-========================= */
-
 .site-layout {
     width: 100%;
     height: calc(100vh - 11.111111vh - 3px);
@@ -175,10 +167,6 @@ button:disabled {
     background: #ffffff;
 }
 
-/* =========================
-   화면
-========================= */
-
 .screen {
     display: none;
     width: 100%;
@@ -200,10 +188,6 @@ button:disabled {
     font-size: 20px;
     color: #666666;
 }
-
-/* =========================
-   소개
-========================= */
 
 .intro-box {
     width: 100%;
@@ -261,10 +245,6 @@ button:disabled {
 .white-button:hover {
     background: #eeeeee;
 }
-
-/* =========================
-   목록
-========================= */
 
 .list-header {
     width: 100%;
@@ -369,10 +349,6 @@ button:disabled {
     white-space: nowrap;
 }
 
-/* =========================
-   상세 글
-========================= */
-
 .detail-box {
     width: 100%;
     padding: 50px;
@@ -416,57 +392,36 @@ button:disabled {
     word-break: break-word;
 }
 
-/* =========================
-   사진
-========================= */
-
 .news-images {
     width: 100%;
     margin-top: 20px;
-
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-
     align-items: flex-start;
     justify-content: flex-start;
-
     gap: 14px;
-
     background: transparent;
     border: none;
-
     line-height: 0;
 }
 
 .news-image {
     width: auto !important;
     height: 175px !important;
-
     min-width: 0 !important;
     min-height: 0 !important;
-
     max-width: none !important;
     max-height: 175px !important;
-
     display: block !important;
-
     flex: 0 0 auto !important;
-
     margin: 0 !important;
     padding: 0 !important;
-
     border: 2px solid #000000;
-
     background: #ffffff;
-
     object-fit: contain !important;
     object-position: center center;
 }
-
-/* =========================
-   삭제
-========================= */
 
 .delete-button {
     margin-top: 20px;
@@ -481,10 +436,6 @@ button:disabled {
 .delete-button:hover {
     background: #fff0f0;
 }
-
-/* =========================
-   작성
-========================= */
 
 .write-box {
     width: 100%;
@@ -568,10 +519,6 @@ button:disabled {
     justify-content: flex-end;
     gap: 12px;
 }
-
-/* =========================
-   인증
-========================= */
 
 .auth-box {
     width: min(520px, 100%);
@@ -660,10 +607,6 @@ button:disabled {
     word-break: break-word;
 }
 
-/* =========================
-   로그인 정보
-========================= */
-
 .login-info-modal {
     position: fixed;
     inset: 0;
@@ -731,6 +674,149 @@ button:disabled {
 
 .login-info-section li {
     margin-bottom: 5px;
+}
+
+/* =========================
+   좋아요 / 댓글
+========================= */
+
+.news-interactions {
+    width: 100%;
+    margin-top: 28px;
+}
+
+.reaction-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid #000000;
+}
+
+.like-button {
+    padding: 11px 18px;
+    background: #ffffff;
+    border: 3px solid #000000;
+    color: #111111;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.like-button:hover {
+    background: #fff4df;
+}
+
+.like-button.liked {
+    background: #ffe8e8;
+    border-color: #d00000;
+    color: #d00000;
+}
+
+.like-button:disabled {
+    opacity: 0.65;
+}
+
+.comment-count {
+    font-size: 17px;
+    font-weight: 700;
+    color: #555555;
+}
+
+.comments-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-item {
+    position: relative;
+    padding: 18px 4px;
+    border-bottom: 1px solid #cccccc;
+}
+
+.comment-top {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.comment-author {
+    font-size: 17px;
+    color: #111111;
+}
+
+.comment-date {
+    font-size: 13px;
+    color: #888888;
+}
+
+.comment-content {
+    margin-top: 8px;
+    padding-right: 50px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #333333;
+    word-break: break-word;
+}
+
+.comment-delete-button {
+    position: absolute;
+    top: 16px;
+    right: 0;
+    padding: 5px 9px;
+    background: #ffffff;
+    border: 1px solid #999999;
+    color: #666666;
+    font-size: 12px;
+}
+
+.comment-delete-button:hover {
+    border-color: #cc0000;
+    color: #cc0000;
+}
+
+.comment-form {
+    margin-top: 18px;
+}
+
+.comment-form textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 13px;
+    background: #ffffff;
+    border: 3px solid #000000;
+    font-size: 16px;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+}
+
+.comment-form-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.comment-length {
+    font-size: 12px;
+    color: #888888;
+}
+
+.comment-login-notice,
+.comments-login-box,
+.comments-empty,
+.comments-loading,
+.comments-error {
+    padding: 18px 4px;
+    color: #777777;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.comments-error {
+    color: #cc0000;
 }
 
 .hidden {
@@ -1045,10 +1131,6 @@ button:disabled {
         line-height: 1.8;
     }
 
-    /*
-      모바일 사진은 현재 괜찮다고 했으므로
-      기존 크기 유지
-    */
     .news-images {
         margin-top: 14px;
         gap: 7px;
@@ -1060,6 +1142,63 @@ button:disabled {
         max-width: none !important;
         max-height: 125px !important;
         flex: 0 0 auto !important;
+    }
+
+    .news-interactions {
+        margin-top: 20px;
+    }
+
+    .reaction-bar {
+        gap: 8px;
+        padding-bottom: 12px;
+    }
+
+    .like-button {
+        padding: 8px 12px;
+        border-width: 2px;
+        font-size: 13px;
+    }
+
+    .comment-count {
+        font-size: 12px;
+    }
+
+    .comment-item {
+        padding: 13px 2px;
+    }
+
+    .comment-author {
+        font-size: 13px;
+    }
+
+    .comment-date {
+        font-size: 10px;
+    }
+
+    .comment-content {
+        padding-right: 45px;
+        font-size: 13px;
+        line-height: 1.65;
+    }
+
+    .comment-delete-button {
+        top: 11px;
+        font-size: 10px;
+    }
+
+    .comment-form textarea {
+        min-height: 85px;
+        padding: 10px;
+        border-width: 2px;
+        font-size: 13px;
+    }
+
+    .comment-form-bottom {
+        gap: 8px;
+    }
+
+    .comment-length {
+        font-size: 10px;
     }
 
     .delete-button {
@@ -1296,12 +1435,7 @@ button:disabled {
     }
 }
 
-/* ==========================================================
-   최종 강제 적용
-   PC/컴퓨터에서만 사진 크기를 확실하게 175px로 고정
-   위의 다른 규칙보다 마지막에 적용됨
-========================================================== */
-
+/* PC 사진 크기 최종 강제 */
 @media (min-width: 701px) {
 
     .news-images {
@@ -1316,15 +1450,11 @@ button:disabled {
     .news-image {
         width: auto !important;
         height: 175px !important;
-
         min-width: 0 !important;
         min-height: 0 !important;
-
         max-width: none !important;
         max-height: 175px !important;
-
         flex: 0 0 auto !important;
-
         object-fit: contain !important;
     }
 }
