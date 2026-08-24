@@ -935,7 +935,7 @@ button:disabled {
 
     .title {
         margin-left: 12px;
-        font-size: 27px;
+        font-size: 20px;
         white-space: nowrap;
         flex-shrink: 0;
     }
