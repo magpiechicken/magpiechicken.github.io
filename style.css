@@ -349,7 +349,10 @@ button:disabled {
     white-space: nowrap;
 }
 
-/* 글 부분 */
+/* =========================
+   소식 상세 - 글
+========================= */
+
 .detail-box {
     width: 100%;
     padding: 50px;
@@ -393,52 +396,55 @@ button:disabled {
     word-break: break-word;
 }
 
-/* 글 테두리 바깥의 사진 영역 */
+/* =========================
+   소식 상세 - 사진
+   사진 자체 크기에 맞춰 배치
+========================= */
+
 .news-images {
     width: 100%;
     margin-top: 20px;
-    padding: 0;
 
-    display: grid;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
 
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+    align-items: flex-start;
+    justify-content: flex-start;
 
     gap: 12px;
 
     background: transparent;
+    border: none;
 }
 
 .news-image {
-    width: 100%;
-    max-width: 100%;
+    display: block;
 
-    /*
-        그림처럼 사진은 작은 카드형.
-        이전보다 약 1.3배 작게.
-    */
-    max-height: 85px;
-
+    width: auto;
     height: auto;
+
+    max-width: 31%;
+    max-height: 85px;
 
     min-width: 0;
     min-height: 0;
 
-    display: block;
-
-    padding: 0;
+    margin: 0;
 
     border: 2px solid #000000;
 
     background: #ffffff;
 
-    /*
-        사진 절대 자르지 않음.
-        원본 비율 유지.
-    */
     object-fit: contain;
     object-position: center center;
+
+    flex: 0 0 auto;
 }
+
+/* =========================
+   삭제
+========================= */
 
 .delete-button {
     margin-top: 20px;
@@ -453,6 +459,10 @@ button:disabled {
 .delete-button:hover {
     background: #fff0f0;
 }
+
+/* =========================
+   작성
+========================= */
 
 .write-box {
     width: 100%;
@@ -504,8 +514,7 @@ button:disabled {
 
 .image-preview {
     display: grid;
-    grid-template-columns:
-        repeat(auto-fill, minmax(130px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
     gap: 12px;
     margin-bottom: 25px;
 }
@@ -537,6 +546,10 @@ button:disabled {
     justify-content: flex-end;
     gap: 12px;
 }
+
+/* =========================
+   로그인 / 회원가입
+========================= */
 
 .auth-box {
     width: min(520px, 100%);
@@ -625,6 +638,10 @@ button:disabled {
     word-break: break-word;
 }
 
+/* =========================
+   로그인 정보
+========================= */
+
 .login-info-modal {
     position: fixed;
     inset: 0;
@@ -698,9 +715,35 @@ button:disabled {
     display: none !important;
 }
 
+/* =========================
+   반응형
+========================= */
+
+@media (max-width: 1400px) {
+
+    .title {
+        font-size: 56px;
+    }
+
+    .sidebar {
+        width: 230px;
+        flex-basis: 230px;
+    }
+
+    .menu-item {
+        font-size: 27px;
+    }
+
+    .news-image {
+        max-width: 31%;
+        max-height: 80px;
+    }
+}
+
 @media (max-width: 1100px) {
 
     .title {
+        margin-left: 22px;
         font-size: 44px;
     }
 
@@ -736,6 +779,7 @@ button:disabled {
     }
 
     .news-image {
+        max-width: 31%;
         max-height: 75px;
     }
 }
@@ -776,6 +820,11 @@ button:disabled {
         padding: 0 10px;
         font-size: 14px;
     }
+
+    .news-image {
+        max-width: 31%;
+        max-height: 70px;
+    }
 }
 
 @media (max-width: 700px) {
@@ -794,6 +843,7 @@ button:disabled {
     .title {
         margin-left: 12px;
         font-size: 27px;
+        white-space: nowrap;
         flex-shrink: 0;
     }
 
@@ -855,6 +905,7 @@ button:disabled {
     .main-content {
         width: calc(100% - 88px);
         padding: 18px 14px;
+        overflow-y: auto;
     }
 
     .page-heading {
@@ -864,6 +915,7 @@ button:disabled {
     .page-subtitle {
         margin-top: 7px;
         font-size: 13px;
+        line-height: 1.5;
     }
 
     .intro-box {
@@ -873,11 +925,14 @@ button:disabled {
     }
 
     .intro-box h2 {
+        margin-bottom: 12px;
         font-size: 22px;
     }
 
     .intro-box p {
+        margin-bottom: 20px;
         font-size: 14px;
+        line-height: 1.6;
     }
 
     .orange-button {
@@ -922,6 +977,7 @@ button:disabled {
 
     .news-row.unread {
         border-width: 3px;
+        border-color: #e00000;
     }
 
     .news-author {
@@ -983,15 +1039,34 @@ button:disabled {
         line-height: 1.8;
     }
 
+    /*
+      모바일에서도 사진은
+      실제 크기 기준으로 배치.
+    */
     .news-images {
+        width: 100%;
         margin-top: 14px;
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr));
+
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
         gap: 7px;
+
+        background: transparent;
+        border: none;
     }
 
     .news-image {
+        max-width: 31%;
         max-height: 62px;
+    }
+
+    .delete-button {
+        margin-top: 12px;
+        padding: 9px 14px;
+        border-width: 2px;
+        font-size: 13px;
     }
 
     .write-box {
@@ -1000,17 +1075,20 @@ button:disabled {
     }
 
     .write-box h1 {
+        margin-bottom: 22px;
         font-size: 27px;
     }
 
     .write-box label,
     .auth-box label {
+        margin-bottom: 7px;
         font-size: 14px;
     }
 
     .write-box input,
     .write-box textarea,
     .auth-box input {
+        margin-bottom: 17px;
         padding: 10px;
         border-width: 2px;
         font-size: 14px;
@@ -1025,6 +1103,7 @@ button:disabled {
     }
 
     .image-help {
+        margin: -8px 0 15px;
         font-size: 11px;
     }
 
@@ -1049,6 +1128,7 @@ button:disabled {
 
     .auth-tab {
         padding: 11px 8px;
+        border-right-width: 2px;
         font-size: 14px;
     }
 
@@ -1057,10 +1137,12 @@ button:disabled {
     }
 
     .auth-panel h1 {
+        margin-bottom: 8px;
         font-size: 26px;
     }
 
     .auth-description {
+        margin-bottom: 22px;
         font-size: 13px;
     }
 
@@ -1073,6 +1155,7 @@ button:disabled {
     .login-cancel-button {
         width: calc(100% - 44px);
         margin: 0 22px 22px;
+        padding: 11px;
         border-width: 2px;
         font-size: 15px;
     }
@@ -1088,16 +1171,19 @@ button:disabled {
 
     .login-info-box {
         width: 100%;
+        max-height: calc(100vh - 24px);
         padding: 24px;
         border-width: 2px;
     }
 
     .login-info-box h2 {
+        margin-bottom: 20px;
         font-size: 24px;
     }
 
     .login-info-content {
         font-size: 13px;
+        line-height: 1.7;
     }
 }
 
@@ -1175,6 +1261,7 @@ button:disabled {
     }
 
     .news-unread {
+        margin-left: 5px;
         font-size: 9px;
     }
 
@@ -1184,12 +1271,12 @@ button:disabled {
     }
 
     .news-images {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-        gap: 6px;
+        gap: 5px;
+        margin-top: 12px;
     }
 
     .news-image {
+        max-width: 48%;
         max-height: 55px;
     }
 
