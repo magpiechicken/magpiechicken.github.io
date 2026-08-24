@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=51">
+    <link rel="stylesheet" href="./style.css?v=60">
 </head>
 
 <body>
@@ -184,10 +184,17 @@
                 ← 소식 목록
             </button>
 
+            <!-- 글 부분만 테두리 -->
             <article
                 id="news-detail-container"
                 class="detail-box"
             ></article>
+
+            <!-- 사진은 테두리 바깥 -->
+            <div
+                id="news-detail-images"
+                class="news-images hidden"
+            ></div>
 
             <button
                 id="delete-news"
@@ -219,7 +226,6 @@
                     소식 작성
                 </h1>
 
-
                 <label for="input-title">
                     제목
                 </label>
@@ -231,7 +237,6 @@
                     autocomplete="off"
                 >
 
-
                 <label for="input-content">
                     내용
                 </label>
@@ -240,7 +245,6 @@
                     id="input-content"
                     placeholder="소식 내용을 입력하세요."
                 ></textarea>
-
 
                 <label for="input-images">
                     사진 첨부
@@ -266,7 +270,6 @@
                     id="image-preview"
                     class="image-preview"
                 ></div>
-
 
                 <div class="write-actions">
 
@@ -334,7 +337,6 @@
                         가입한 계정으로 로그인하세요.
                     </p>
 
-
                     <label for="login-email">
                         이메일
                     </label>
@@ -346,7 +348,6 @@
                         autocomplete="email"
                     >
 
-
                     <label for="login-password">
                         비밀번호
                     </label>
@@ -357,7 +358,6 @@
                         placeholder="비밀번호"
                         autocomplete="current-password"
                     >
-
 
                     <button
                         id="login-submit"
@@ -383,7 +383,6 @@
                         계정을 만들어주세요.
                     </p>
 
-
                     <label for="signup-username">
                         아이디
                     </label>
@@ -396,7 +395,6 @@
                         maxlength="30"
                     >
 
-
                     <label for="signup-email">
                         이메일
                     </label>
@@ -407,7 +405,6 @@
                         placeholder="이메일"
                         autocomplete="email"
                     >
-
 
                     <label for="signup-password">
                         비밀번호
@@ -420,7 +417,6 @@
                         autocomplete="new-password"
                     >
 
-
                     <label for="signup-password-confirm">
                         비밀번호 확인
                     </label>
@@ -432,7 +428,6 @@
                         autocomplete="new-password"
                     >
 
-
                     <button
                         id="signup-submit"
                         class="login-button"
@@ -443,12 +438,10 @@
 
                 </div>
 
-
                 <p
                     id="auth-message"
                     class="login-error"
                 ></p>
-
 
                 <button
                     id="auth-cancel"
@@ -510,7 +503,7 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./script.js?v=51"></script>
+<script src="./script.js?v=60"></script>
 
 </body>
 </html>
