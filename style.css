@@ -392,41 +392,40 @@ button:disabled {
     word-break: break-word;
 }
 
-/* 사진 영역: 최대 2줄 */
+/* 사진 영역 */
 .news-images {
     width: 100%;
     margin-top: 35px;
     padding: 12px;
 
-    display: grid !important;
+    display: grid;
 
-    /* 사진이 너무 작아지지 않도록 5개까지 1줄,
-       그보다 많으면 다음 줄로 넘어감 */
-    grid-template-columns: repeat(
-        auto-fit,
-        minmax(100px, 1fr)
-    );
-
-    grid-auto-rows: 100px;
+    /*
+      최대 5개까지 한 줄.
+      6개 이상이면 두 번째 줄로 내려감.
+    */
+    grid-template-columns: repeat(5, minmax(0, 1fr));
 
     gap: 10px;
-
-    overflow: hidden;
 
     background: #ffffff;
     border: 3px solid #000000;
 }
 
-/* 사진 크기: 이전보다 약 1.3배 작게 */
+/*
+  사진은 자르지 않음.
+  같은 박스 크기를 사용하고,
+  object-fit: contain으로 원본 비율을 유지.
+*/
 .news-image {
     width: 100% !important;
-    height: 100px !important;
+    height: 90px !important;
 
     min-width: 0 !important;
     max-width: none !important;
 
-    min-height: 100px !important;
-    max-height: 100px !important;
+    min-height: 90px !important;
+    max-height: 90px !important;
 
     display: block !important;
 
@@ -436,7 +435,7 @@ button:disabled {
 
     background: #f5f5f5;
 
-    object-fit: cover;
+    object-fit: contain !important;
 }
 
 .delete-button {
@@ -711,13 +710,15 @@ button:disabled {
     }
 
     .news-images {
-        grid-auto-rows: 90px;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 8px;
+        padding: 10px;
     }
 
     .news-image {
-        height: 90px !important;
-        min-height: 90px !important;
-        max-height: 90px !important;
+        height: 80px !important;
+        min-height: 80px !important;
+        max-height: 80px !important;
     }
 }
 
@@ -759,20 +760,15 @@ button:disabled {
     }
 
     .news-images {
-        grid-template-columns: repeat(
-            auto-fit,
-            minmax(80px, 1fr)
-        );
-
-        grid-auto-rows: 80px;
-        gap: 8px;
-        padding: 10px;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 7px;
+        padding: 9px;
     }
 
     .news-image {
-        height: 80px !important;
-        min-height: 80px !important;
-        max-height: 80px !important;
+        height: 70px !important;
+        min-height: 70px !important;
+        max-height: 70px !important;
     }
 }
 
@@ -1025,28 +1021,35 @@ button:disabled {
         line-height: 1.8;
     }
 
+    /* 모바일: 한 줄 최대 3장, 많으면 두 번째 줄 */
     .news-images {
-        margin-top: 20px;
-        padding: 7px;
+        width: 100% !important;
+        margin-top: 20px !important;
+        padding: 7px !important;
 
-        grid-template-columns: repeat(
-            3,
-            minmax(0, 1fr)
-        );
+        display: grid !important;
 
-        grid-auto-rows: 60px;
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr)) !important;
 
-        gap: 6px;
+        gap: 6px !important;
 
-        border-width: 2px;
+        overflow: hidden !important;
     }
 
     .news-image {
-        height: 60px !important;
-        min-height: 60px !important;
-        max-height: 60px !important;
+        width: 100% !important;
 
-        border-width: 2px;
+        height: 65px !important;
+        min-height: 65px !important;
+        max-height: 65px !important;
+
+        min-width: 0 !important;
+        max-width: none !important;
+
+        object-fit: contain !important;
+
+        border-width: 2px !important;
     }
 
     .delete-button {
@@ -1256,25 +1259,20 @@ button:disabled {
         font-size: 9px;
     }
 
+    /* 아주 작은 화면: 한 줄 2장, 최대 2줄 */
     .news-images {
-        margin-top: 18px;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
 
-        grid-template-columns: repeat(
-            3,
-            minmax(0, 1fr)
-        );
+        gap: 5px !important;
 
-        grid-auto-rows: 50px;
-
-        gap: 5px;
-
-        padding: 6px;
+        padding: 6px !important;
     }
 
     .news-image {
-        height: 50px !important;
-        min-height: 50px !important;
-        max-height: 50px !important;
+        height: 58px !important;
+        min-height: 58px !important;
+        max-height: 58px !important;
     }
 
     .login-info-box {
