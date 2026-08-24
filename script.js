@@ -95,11 +95,20 @@ function scrollTop() {
 
 function updateAuthUI() {
     if (!currentUser) {
-        accountButton.textContent = "로그인";
-        accountButton.classList.remove("logged-in");
+        accountButton.textContent =
+            "로그인";
 
-        showWriteButton.classList.add("hidden");
-        deleteNewsButton.classList.add("hidden");
+        accountButton.classList.remove(
+            "logged-in"
+        );
+
+        showWriteButton.classList.add(
+            "hidden"
+        );
+
+        deleteNewsButton.classList.add(
+            "hidden"
+        );
 
         return;
     }
@@ -112,20 +121,36 @@ function updateAuthUI() {
     if (isAdmin) {
         accountButton.textContent =
             `${username} · 관리자`;
-        accountButton.classList.add("logged-in");
 
-        showWriteButton.classList.remove("hidden");
+        accountButton.classList.add(
+            "logged-in"
+        );
+
+        showWriteButton.classList.remove(
+            "hidden"
+        );
 
         if (currentNewsId !== null) {
-            deleteNewsButton.classList.remove("hidden");
+            deleteNewsButton.classList.remove(
+                "hidden"
+            );
         }
+
     } else {
         accountButton.textContent =
             `${username} · 로그아웃`;
-        accountButton.classList.remove("logged-in");
 
-        showWriteButton.classList.add("hidden");
-        deleteNewsButton.classList.add("hidden");
+        accountButton.classList.remove(
+            "logged-in"
+        );
+
+        showWriteButton.classList.add(
+            "hidden"
+        );
+
+        deleteNewsButton.classList.add(
+            "hidden"
+        );
     }
 }
 
@@ -135,6 +160,7 @@ async function loadCurrentProfile() {
         isAdmin = false;
 
         updateAuthUI();
+
         return;
     }
 
@@ -166,7 +192,8 @@ async function loadCurrentProfile() {
         return;
     }
 
-    currentProfile = profile || null;
+    currentProfile =
+        profile || null;
 
     isAdmin =
         profile?.can_manage_news === true;
@@ -194,7 +221,8 @@ async function refreshAuthState() {
         return;
     }
 
-    currentUser = data.user;
+    currentUser =
+        data.user;
 
     await loadCurrentProfile();
 }
@@ -202,7 +230,9 @@ async function refreshAuthState() {
 function openNewsIntro() {
     hideAllScreens();
 
-    introScreen.classList.add("visible");
+    introScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
@@ -216,7 +246,9 @@ function openNewsIntro() {
 async function openNewsList() {
     hideAllScreens();
 
-    listScreen.classList.add("visible");
+    listScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
@@ -232,7 +264,6 @@ async function openNewsList() {
 function openWriteScreen() {
     if (!currentUser) {
         openAuthScreen("login");
-
         return;
     }
 
@@ -246,7 +277,9 @@ function openWriteScreen() {
 
     hideAllScreens();
 
-    writeScreen.classList.add("visible");
+    writeScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
@@ -256,7 +289,9 @@ function openWriteScreen() {
 function openDonation() {
     hideAllScreens();
 
-    donationScreen.classList.add("visible");
+    donationScreen.classList.add(
+        "visible"
+    );
 
     activateDonationMenu();
 
@@ -266,7 +301,9 @@ function openDonation() {
 function openAuthScreen(mode = "login") {
     hideAllScreens();
 
-    authScreen.classList.add("visible");
+    authScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
@@ -278,27 +315,27 @@ function openAuthScreen(mode = "login") {
 }
 
 function showAuthMode(mode) {
-    const loginMode =
+    const isLogin =
         mode === "login";
 
     loginTab.classList.toggle(
         "active",
-        loginMode
+        isLogin
     );
 
     signupTab.classList.toggle(
         "active",
-        !loginMode
+        !isLogin
     );
 
     loginPanel.classList.toggle(
         "hidden",
-        !loginMode
+        !isLogin
     );
 
     signupPanel.classList.toggle(
         "hidden",
-        loginMode
+        isLogin
     );
 
     authMessage.textContent = "";
@@ -315,9 +352,12 @@ async function handleAccountButton() {
 
 async function login() {
     const email =
-        document.getElementById(
-            "login-email"
-        ).value.trim();
+        document
+            .getElementById(
+                "login-email"
+            )
+            .value
+            .trim();
 
     const password =
         document.getElementById(
@@ -346,17 +386,19 @@ async function login() {
         );
 
     loginButton.disabled = true;
-    loginButton.textContent = "로그인 중...";
+    loginButton.textContent =
+        "로그인 중...";
 
     try {
         const {
             data,
             error
-        } = await supabaseClient.auth
-            .signInWithPassword({
-                email,
-                password
-            });
+        } =
+            await supabaseClient.auth
+                .signInWithPassword({
+                    email,
+                    password
+                });
 
         if (error) {
             console.error(
@@ -376,7 +418,8 @@ async function login() {
         await loadCurrentProfile();
 
         if (!currentProfile) {
-            await supabaseClient.auth.signOut();
+            await supabaseClient.auth
+                .signOut();
 
             currentUser = null;
             isAdmin = false;
@@ -384,7 +427,7 @@ async function login() {
             updateAuthUI();
 
             authMessage.textContent =
-                "로그인은 성공했지만 회원 정보를 불러오지 못했습니다.";
+                "로그인은 성공했지만 회원 정보를 찾지 못했습니다.";
 
             return;
         }
@@ -403,20 +446,27 @@ async function login() {
 
     } finally {
         loginButton.disabled = false;
-        loginButton.textContent = "로그인";
+        loginButton.textContent =
+            "로그인";
     }
 }
 
 async function signup() {
     const username =
-        document.getElementById(
-            "signup-username"
-        ).value.trim();
+        document
+            .getElementById(
+                "signup-username"
+            )
+            .value
+            .trim();
 
     const email =
-        document.getElementById(
-            "signup-email"
-        ).value.trim();
+        document
+            .getElementById(
+                "signup-email"
+            )
+            .value
+            .trim();
 
     const password =
         document.getElementById(
@@ -485,16 +535,17 @@ async function signup() {
         const {
             data,
             error
-        } = await supabaseClient.auth
-            .signUp({
-                email,
-                password,
-                options: {
-                    data: {
-                        username
+        } =
+            await supabaseClient.auth
+                .signUp({
+                    email,
+                    password,
+                    options: {
+                        data: {
+                            username
+                        }
                     }
-                }
-            });
+                });
 
         if (error) {
             console.error(
@@ -518,7 +569,8 @@ async function signup() {
             await loadCurrentProfile();
 
             if (!currentProfile) {
-                await supabaseClient.auth.signOut();
+                await supabaseClient.auth
+                    .signOut();
 
                 currentUser = null;
                 isAdmin = false;
@@ -526,7 +578,7 @@ async function signup() {
                 updateAuthUI();
 
                 authMessage.textContent =
-                    "가입은 되었지만 회원 정보를 생성하지 못했습니다.";
+                    "가입은 되었지만 회원 정보를 만들지 못했습니다.";
 
                 return;
             }
@@ -537,7 +589,7 @@ async function signup() {
         }
 
         authMessage.textContent =
-            "회원가입이 완료되었습니다. 이메일 인증이 필요한 경우 메일을 확인한 뒤 로그인해주세요.";
+            "회원가입이 완료되었습니다. 이메일 인증이 필요한 경우 이메일을 확인한 뒤 로그인해주세요.";
 
         document.getElementById(
             "login-email"
@@ -619,6 +671,85 @@ async function getNews() {
     return data || [];
 }
 
+async function getReadNewsIds(newsList) {
+    if (
+        !currentUser ||
+        !newsList ||
+        newsList.length === 0
+    ) {
+        return new Set();
+    }
+
+    const newsIds =
+        newsList.map(
+            function(news) {
+                return String(news.id);
+            }
+        );
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("news_reads")
+        .select("news_id")
+        .eq(
+            "user_id",
+            currentUser.id
+        )
+        .in(
+            "news_id",
+            newsIds
+        );
+
+    if (error) {
+        console.error(
+            "읽음 상태 조회 오류:",
+            error
+        );
+
+        return new Set();
+    }
+
+    return new Set(
+        (data || []).map(
+            function(row) {
+                return String(
+                    row.news_id
+                );
+            }
+        )
+    );
+}
+
+async function markNewsAsRead(newsId) {
+    if (!currentUser) {
+        return;
+    }
+
+    const {
+        error
+    } = await supabaseClient
+        .from("news_reads")
+        .insert({
+            user_id:
+                currentUser.id,
+            news_id:
+                String(newsId),
+            read_at:
+                new Date().toISOString()
+        }, {
+            ignoreDuplicates: true
+        });
+
+    if (error) {
+        console.error(
+            "읽음 처리 오류:",
+            error
+        );
+    }
+}
+
 function formatDate(value) {
     const date =
         new Date(value);
@@ -667,6 +798,7 @@ async function renderNews() {
                 <div class="empty-title">
                     소식 없음
                 </div>
+
                 <div class="empty-description">
                     현재 등록된 소식이 없습니다.
                 </div>
@@ -676,43 +808,83 @@ async function renderNews() {
         return;
     }
 
+    const readNewsIds =
+        await getReadNewsIds(
+            newsList
+        );
+
     container.innerHTML = "";
 
     const list =
-        document.createElement("div");
-
-    list.className = "news-list";
-
-    newsList.forEach(function(news) {
-        const row =
-            document.createElement("button");
-
-        row.type = "button";
-        row.className = "news-row";
-
-        row.innerHTML = `
-            <span class="news-author">
-                (${escapeHTML(news.author)})
-            </span>
-
-            <span class="news-title">
-                ${escapeHTML(news.title)}
-            </span>
-
-            <span class="news-date">
-                ${formatDate(news.created_at)}
-            </span>
-        `;
-
-        row.addEventListener(
-            "click",
-            function() {
-                openNewsDetail(news.id);
-            }
+        document.createElement(
+            "div"
         );
 
-        list.appendChild(row);
-    });
+    list.className =
+        "news-list";
+
+    newsList.forEach(
+        function(news) {
+            const newsKey =
+                String(news.id);
+
+            const isUnread =
+                currentUser
+                &&
+                !readNewsIds.has(
+                    newsKey
+                );
+
+            const row =
+                document.createElement(
+                    "button"
+                );
+
+            row.type = "button";
+
+            row.className =
+                isUnread
+                    ? "news-row unread"
+                    : "news-row";
+
+            row.innerHTML = `
+                <span class="news-author">
+                    (${escapeHTML(news.author)})
+                </span>
+
+                <span class="news-title">
+                    ${escapeHTML(news.title)}
+
+                    ${
+                        isUnread
+                            ? `
+                                <span class="news-unread">
+                                    (안읽은 소식)
+                                </span>
+                              `
+                            : ""
+                    }
+                </span>
+
+                <span class="news-date">
+                    ${formatDate(
+                        news.created_at
+                    )}
+                </span>
+            `;
+
+            row.addEventListener(
+                "click",
+                function() {
+                    openNewsDetail(
+                        news.id
+                    );
+                }
+            );
+
+            list.appendChild(row);
+        }
+    );
 
     container.appendChild(list);
 }
@@ -741,12 +913,20 @@ async function openNewsDetail(newsId) {
         return;
     }
 
+    if (currentUser) {
+        await markNewsAsRead(
+            news.id
+        );
+    }
+
     currentNewsId =
         news.id;
 
     hideAllScreens();
 
-    detailScreen.classList.add("visible");
+    detailScreen.classList.add(
+        "visible"
+    );
 
     activateNewsMenu();
 
@@ -760,11 +940,15 @@ async function openNewsDetail(newsId) {
         <div class="detail-title-line">
 
             <h1 class="detail-title">
-                ${escapeHTML(news.title)}
+                ${escapeHTML(
+                    news.title
+                )}
             </h1>
 
             <span class="detail-date">
-                ${formatDate(news.created_at)}
+                ${formatDate(
+                    news.created_at
+                )}
             </span>
 
         </div>
@@ -832,7 +1016,8 @@ async function saveNews() {
     const {
         data: userData,
         error: userError
-    } = await supabaseClient.auth.getUser();
+    } = await supabaseClient.auth
+        .getUser();
 
     if (
         userError ||
@@ -893,10 +1078,8 @@ async function saveNews() {
         .insert({
             author:
                 profile.username,
-
             title:
                 title,
-
             content:
                 content
         });
@@ -976,7 +1159,8 @@ async function deleteCurrentNews() {
         return;
     }
 
-    currentNewsId = null;
+    currentNewsId =
+        null;
 
     await openNewsList();
 }
@@ -1175,9 +1359,13 @@ document
     );
 
 supabaseClient.auth.onAuthStateChange(
-    async function(event, session) {
+    async function(
+        event,
+        session
+    ) {
         if (
-            event === "SIGNED_OUT"
+            event ===
+            "SIGNED_OUT"
         ) {
             currentUser = null;
             currentProfile = null;
