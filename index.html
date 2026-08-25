@@ -67,7 +67,8 @@
         </button>
 
         <button
-            class="menu-item locked"
+            id="menu-advanced-news"
+            class="menu-item locked admin-only-menu"
             type="button"
             disabled
         >
@@ -75,7 +76,8 @@
         </button>
 
         <button
-            class="menu-item locked"
+            id="menu-video-preview"
+            class="menu-item locked admin-only-menu"
             type="button"
             disabled
         >
@@ -194,9 +196,6 @@
                 class="news-images hidden"
             ></div>
 
-
-            <!-- 좋아요 / 댓글 -->
-
             <section
                 id="news-interactions"
                 class="news-interactions"
@@ -224,12 +223,10 @@
 
                 </div>
 
-
                 <div
                     id="comments-container"
                     class="comments-container"
                 ></div>
-
 
                 <div
                     id="comment-login-notice"
@@ -237,7 +234,6 @@
                 >
                     로그인하면 좋아요와 댓글을 사용할 수 있습니다.
                 </div>
-
 
                 <div
                     id="comment-form"
@@ -272,7 +268,6 @@
                 </div>
 
             </section>
-
 
             <button
                 id="delete-news"
@@ -401,7 +396,6 @@
 
                 </div>
 
-
                 <div
                     id="auth-login-panel"
                     class="auth-panel"
@@ -446,7 +440,6 @@
                     </button>
 
                 </div>
-
 
                 <div
                     id="auth-signup-panel"
@@ -542,6 +535,54 @@
             <h1 class="page-heading">
                 후원
             </h1>
+
+        </section>
+
+
+        <section
+            id="screen-advanced-news"
+            class="screen"
+        >
+
+            <h1 class="page-heading">
+                고급소식
+            </h1>
+
+            <div class="intro-box">
+
+                <h2>
+                    관리자 전용 고급소식
+                </h2>
+
+                <p>
+                    관리자만 확인할 수 있는 고급소식 공간입니다.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section
+            id="screen-video-preview"
+            class="screen"
+        >
+
+            <h1 class="page-heading">
+                영상미리보기
+            </h1>
+
+            <div class="intro-box">
+
+                <h2>
+                    관리자 전용 영상미리보기
+                </h2>
+
+                <p>
+                    관리자만 확인할 수 있는 영상미리보기 공간입니다.
+                </p>
+
+            </div>
 
         </section>
 
