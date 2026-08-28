@@ -1531,3 +1531,76 @@ button:disabled {
         object-fit: contain !important;
     }
 }
+
+/* =========================
+   조회수 / 목록 통계 / 수정
+========================= */
+
+.news-stats {
+    display: block;
+    margin-top: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #888888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.detail-stats {
+    margin: -18px 0 28px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #777777;
+}
+
+.edit-news-button {
+    margin-top: 20px;
+    margin-right: 8px;
+    padding: 12px 22px;
+    background: #FF9400;
+    border: 3px solid #000000;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.edit-news-button:hover {
+    background: #e98900;
+}
+
+@media (max-width: 700px) {
+
+    .news-stats {
+        margin-top: 3px;
+        font-size: 9px;
+    }
+
+    .detail-stats {
+        margin: -10px 0 18px;
+        font-size: 11px;
+    }
+
+    .edit-news-button {
+        margin-top: 12px;
+        margin-right: 5px;
+        padding: 9px 14px;
+        border-width: 2px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .news-stats {
+        font-size: 8px;
+    }
+
+    .detail-stats {
+        font-size: 10px;
+    }
+
+    .edit-news-button {
+        font-size: 12px;
+    }
+}
