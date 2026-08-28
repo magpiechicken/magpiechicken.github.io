@@ -1238,11 +1238,6 @@ async function renderNews() {
             newsList
         );
 
-    const interactionCounts =
-        await getNewsInteractionCounts(
-            newsList
-        );
-
     container.innerHTML = "";
 
     const list =
@@ -1305,11 +1300,6 @@ async function renderNews() {
                     ${formatDate(
                         news.created_at
                     )}
-                    <span class="news-meta">
-                        조회 ${Number(news.view_count || 0)}
-                        · ♥ ${(interactionCounts.get(String(news.id)) || { likes: 0 }).likes}
-                        · 💬 ${(interactionCounts.get(String(news.id)) || { comments: 0 }).comments}
-                    </span>
                 </span>
             `;
 
