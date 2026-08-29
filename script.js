@@ -1296,11 +1296,6 @@ async function renderNews() {
                     }
                 </span>
 
-                <span class="news-date">
-                    ${formatDate(
-                        news.created_at
-                    )}
-                </span>
             `;
 
             row.addEventListener(
