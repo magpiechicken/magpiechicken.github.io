@@ -1,20 +1,30 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-        <style>
-.header-image-bg {
-    background-image: url("./airplane1.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    <style>
+/* 상단 배너: 컴퓨터는 airplane1.png, 모바일은 airplane.png */
+.top-bar {
+    background-color: transparent !important;
+    background-image: url("./airplane1.png") !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+    background-size: cover !important;
+}
+
+.top-bar .profile,
+.top-bar .title {
+    display: none !important;
 }
 
 @media (max-width: 700px) {
-    .header-image-bg {
-        background-image: url("./airplane.png");
+    .top-bar {
+        background-image: url("./airplane.png") !important;
+        background-size: cover !important;
+        background-position: center center !important;
     }
 }
 
+/* 로그인창 축소 */
 .auth-box {
     width: 350px !important;
     max-width: calc(100% - 30px) !important;
@@ -28,7 +38,7 @@
         margin: 20px auto !important;
     }
 }
-</style>
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
@@ -39,8 +49,20 @@
 
 <body>
 
-<header class="top-bar header-image-bg">
-<div class="header-actions">
+<header class="top-bar">
+
+    <div class="profile">
+        <img
+            src="./profile.png"
+            alt="까치치킨사장님"
+        >
+    </div>
+
+    <div class="title">
+        까치치킨사장님 공식 홈페이지
+    </div>
+
+    <div class="header-actions">
 
         <button
             id="loginInfoButton"
