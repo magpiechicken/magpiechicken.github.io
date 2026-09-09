@@ -1,7 +1,20 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <style>
+        <style>
+.header-image-bg {
+    background-image: url("./airplane1.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+@media (max-width: 700px) {
+    .header-image-bg {
+        background-image: url("./airplane.png");
+    }
+}
+
 .auth-box {
     width: 350px !important;
     max-width: calc(100% - 30px) !important;
@@ -20,20 +33,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
     <link rel="stylesheet" href="./style.css?v=62">
-    <style>
-.top-bar {
-    background: url("./airplane.png") center center / cover no-repeat !important;
-}
-</style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
      crossorigin="anonymous"></script>
 </head>
 
 <body>
 
-<header class="top-bar">
-
-    <div class="header-actions">
+<header class="top-bar header-image-bg">
+<div class="header-actions">
 
         <button
             id="loginInfoButton"
