@@ -689,17 +689,36 @@ async function login() {
             );
 
             if (
-                error.message &&
-                /email.*(not confirmed|unconfirmed)|confirm.*email/i.test(
-                    error.message
+                typeof error.message === "string" &&
+                (
+                    error.message.toLowerCase().includes("email not confirmed") ||
+                    error.message.includes("Email not confirmed")
                 )
             ) {
                 authMessage.textContent =
-                    "이메일 인증이 완료되지 않았습니다. 이메일의 인증 링크를 먼저 눌러주세요.";
+                    "이메일 인증이 완료되지 않았습니다. 받은 인증 메일을 확인해주세요.";
             } else {
                 authMessage.textContent =
                     error.message;
             }
+
+            return;
+        }
+
+        if (
+            data.user &&
+            !data.user.email_confirmed_at
+        ) {
+            await supabaseClient.auth.signOut();
+
+            currentUser = null;
+            currentProfile = null;
+            isAdmin = false;
+
+            updateAuthUI();
+
+            authMessage.textContent =
+                "이메일 인증이 완료되지 않았습니다. 받은 인증 메일을 확인해주세요.";
 
             return;
         }
@@ -833,12 +852,11 @@ async function signup() {
                     email,
                     password,
                     options: {
+                        emailRedirectTo:
+                            "https://magpiechicken.github.io/",
                         data: {
                             username
-                        },
-                        emailRedirectTo:
-                            window.location.origin +
-                            window.location.pathname
+                        }
                     }
                 });
 
@@ -854,37 +872,36 @@ async function signup() {
             return;
         }
 
-        if (
-            data.user &&
-            data.session
-        ) {
-            currentUser =
-                data.user;
+        /*
+         * 이메일 인증을 반드시 거치도록 합니다.
+         * Confirm sign up이 켜져 있으면 일반적으로
+         * data.session은 null로 반환됩니다.
+         * 혹시 세션이 함께 내려오더라도 여기서는
+         * 자동 로그인하지 않고 이메일 인증을 안내합니다.
+         */
+        if (data.user) {
+            await supabaseClient.auth.signOut();
 
-            await loadCurrentProfile();
+            currentUser = null;
+            currentProfile = null;
+            isAdmin = false;
 
-            if (!currentProfile) {
-                await supabaseClient.auth.signOut();
+            updateAuthUI();
 
-                currentUser = null;
-                currentProfile = null;
-                isAdmin = false;
+            document.getElementById(
+                "login-email"
+            ).value = email;
 
-                updateAuthUI();
+            showAuthMode("login");
 
-                authMessage.textContent =
-                    "가입은 되었지만 회원 정보를 만들지 못했습니다.";
-
-                return;
-            }
-
-            await openNewsList();
+            authMessage.textContent =
+                "회원가입이 완료되었습니다. 이메일을 확인해주세요.";
 
             return;
         }
 
         authMessage.textContent =
-            "회원가입이 완료되었습니다. 이메일로 인증 링크를 보내드렸습니다. 이메일 인증을 완료한 뒤 로그인해주세요.";
+            "회원가입에 성공했습니다. 이메일을 확인해주세요.";
 
         document.getElementById(
             "login-email"
