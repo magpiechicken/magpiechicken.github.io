@@ -688,8 +688,18 @@ async function login() {
                 error
             );
 
-            authMessage.textContent =
-                error.message;
+            if (
+                error.message &&
+                /email.*(not confirmed|unconfirmed)|confirm.*email/i.test(
+                    error.message
+                )
+            ) {
+                authMessage.textContent =
+                    "이메일 인증이 완료되지 않았습니다. 이메일의 인증 링크를 먼저 눌러주세요.";
+            } else {
+                authMessage.textContent =
+                    error.message;
+            }
 
             return;
         }
@@ -825,7 +835,10 @@ async function signup() {
                     options: {
                         data: {
                             username
-                        }
+                        },
+                        emailRedirectTo:
+                            window.location.origin +
+                            window.location.pathname
                     }
                 });
 
@@ -871,7 +884,7 @@ async function signup() {
         }
 
         authMessage.textContent =
-            "회원가입이 완료되었습니다. 이메일 인증이 필요한 경우 이메일을 확인한 뒤 로그인해주세요.";
+            "회원가입이 완료되었습니다. 이메일로 인증 링크를 보내드렸습니다. 이메일 인증을 완료한 뒤 로그인해주세요.";
 
         document.getElementById(
             "login-email"
