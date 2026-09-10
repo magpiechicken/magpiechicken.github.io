@@ -1,4 +1,5 @@
 * {
+    box-sizing: border-box;* {
     box-sizing: border-box;
 }
 
@@ -1605,3 +1606,117 @@ button:disabled {
     }
 }
  
+/* ==========================================================
+   PC 로그인 / 회원가입 가로형 배치
+   PC에서는 입력칸을 2열로 배치하여 아래쪽이 잘리지 않도록 함
+   모바일에서는 기존처럼 세로형으로 유지
+========================================================== */
+@media (min-width: 701px) {
+    .auth-box {
+        width: min(820px, calc(100vw - 120px)) !important;
+        max-width: none !important;
+        margin: 30px auto !important;
+    }
+
+    /* 로그인 */
+    #auth-login-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-areas:
+            "title title"
+            "desc desc"
+            "email-label password-label"
+            "email password"
+            "submit submit";
+        column-gap: 24px;
+        align-items: start;
+    }
+
+    #auth-login-panel h1 {
+        grid-area: title;
+    }
+
+    #auth-login-panel .auth-description {
+        grid-area: desc;
+    }
+
+    #auth-login-panel label[for="login-email"] {
+        grid-area: email-label;
+    }
+
+    #auth-login-panel #login-email {
+        grid-area: email;
+    }
+
+    #auth-login-panel label[for="login-password"] {
+        grid-area: password-label;
+    }
+
+    #auth-login-panel #login-password {
+        grid-area: password;
+    }
+
+    #auth-login-panel #login-submit {
+        grid-area: submit;
+    }
+
+    /* 회원가입 */
+    #auth-signup-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-areas:
+            "title title"
+            "desc desc"
+            "username-label email-label"
+            "username email"
+            "password-label confirm-label"
+            "password confirm"
+            "submit submit";
+        column-gap: 24px;
+        align-items: start;
+    }
+
+    #auth-signup-panel h1 {
+        grid-area: title;
+    }
+
+    #auth-signup-panel .auth-description {
+        grid-area: desc;
+    }
+
+    #auth-signup-panel label[for="signup-username"] {
+        grid-area: username-label;
+    }
+
+    #auth-signup-panel #signup-username {
+        grid-area: username;
+    }
+
+    #auth-signup-panel label[for="signup-email"] {
+        grid-area: email-label;
+    }
+
+    #auth-signup-panel #signup-email {
+        grid-area: email;
+    }
+
+    #auth-signup-panel label[for="signup-password"] {
+        grid-area: password-label;
+    }
+
+    #auth-signup-panel #signup-password {
+        grid-area: password;
+    }
+
+    #auth-signup-panel label[for="signup-password-confirm"] {
+        grid-area: confirm-label;
+    }
+
+    #auth-signup-panel #signup-password-confirm {
+        grid-area: confirm;
+    }
+
+    #auth-signup-panel #signup-submit {
+        grid-area: submit;
+    }
+}
