@@ -2916,44 +2916,70 @@ accountButton.addEventListener(
 );
 
 
+/* 인증 탭 클릭을 직접/위임 방식 둘 다 연결해서
+   브라우저나 CSS 변경으로 클릭이 막히는 상황을 최소화한다. */
 if (loginTab) {
-    loginTab.addEventListener(
-        "click",
-        function(event) {
-            event.preventDefault();
-            showAuthMode("login");
-        }
-    );
+    loginTab.type = "button";
+    loginTab.onclick = function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        showAuthMode("login");
+    };
 }
 
 if (signupTab) {
-    signupTab.addEventListener(
-        "click",
-        function(event) {
-            event.preventDefault();
-            showAuthMode("signup");
-        }
-    );
+    signupTab.type = "button";
+    signupTab.onclick = function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        showAuthMode("signup");
+    };
 }
+
+/* 혹시 다른 요소가 버튼 위에 생겨도 탭 전환이 동작하도록 위임 처리 */
+document.addEventListener(
+    "click",
+    function(event) {
+        const target = event.target.closest(
+            "#signup-tab, #login-tab"
+        );
+
+        if (!target) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        if (target.id === "signup-tab") {
+            showAuthMode("signup");
+        } else {
+            showAuthMode("login");
+        }
+    },
+    true
+);
 
 const loginSubmitButton =
     document.getElementById("login-submit");
 
 if (loginSubmitButton) {
-    loginSubmitButton.addEventListener(
-        "click",
-        login
-    );
+    loginSubmitButton.type = "button";
+    loginSubmitButton.onclick = function(event) {
+        event.preventDefault();
+        login();
+    };
 }
 
 const signupSubmitButton =
     document.getElementById("signup-submit");
 
 if (signupSubmitButton) {
-    signupSubmitButton.addEventListener(
-        "click",
-        signup
-    );
+    signupSubmitButton.type = "button";
+    signupSubmitButton.onclick = function(event) {
+        event.preventDefault();
+        signup();
+    };
 }
 
 document
