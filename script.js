@@ -24,6 +24,8 @@ let isAdmin = false;
 let currentNewsId = null;
 let selectedImageFiles = [];
 let editingNewsId = null;
+let currentNewsAdvanced = false;
+let writingAdvanced = false;
 
 const introScreen =
     document.getElementById("screen-news-intro");
@@ -78,6 +80,9 @@ const loginInfoContent =
 
 const showWriteButton =
     document.getElementById("show-write");
+
+const showAdvancedWriteButton =
+    document.getElementById("show-advanced-write");
 
 const deleteNewsButton =
     document.getElementById("delete-news");
@@ -233,6 +238,12 @@ function updateAuthUI() {
             "hidden"
         );
 
+        if (showAdvancedWriteButton) {
+            showAdvancedWriteButton.classList.add(
+                "hidden"
+            );
+        }
+
         deleteNewsButton.classList.add(
             "hidden"
         );
@@ -257,6 +268,12 @@ function updateAuthUI() {
             "hidden"
         );
 
+        if (showAdvancedWriteButton) {
+            showAdvancedWriteButton.classList.remove(
+                "hidden"
+            );
+        }
+
         if (currentNewsId !== null) {
             deleteNewsButton.classList.remove(
                 "hidden"
@@ -280,6 +297,12 @@ function updateAuthUI() {
     showWriteButton.classList.add(
         "hidden"
     );
+
+    if (showAdvancedWriteButton) {
+        showAdvancedWriteButton.classList.add(
+            "hidden"
+        );
+    }
 
     deleteNewsButton.classList.add(
         "hidden"
@@ -369,6 +392,8 @@ function openNewsIntro() {
     activateNewsMenu();
 
     currentNewsId = null;
+    currentNewsAdvanced = false;
+    writingAdvanced = false;
 
     detailImages.classList.add(
         "hidden"
@@ -391,9 +416,7 @@ function openNewsIntro() {
     }
 
     updateCommentLength();
-
     updateAuthUI();
-
     scrollTop();
 }
 
@@ -407,15 +430,16 @@ async function openNewsList() {
     activateNewsMenu();
 
     currentNewsId = null;
+    currentNewsAdvanced = false;
+    writingAdvanced = false;
 
     updateAuthUI();
-
     scrollTop();
 
-    await renderNews();
+    await renderNews(false);
 }
 
-function openWriteScreen() {
+function openWriteScreen(advanced = false) {
     if (!currentUser) {
         openAuthScreen("login");
         return;
@@ -425,11 +449,12 @@ function openWriteScreen() {
         alert(
             "관리자만 소식을 작성할 수 있습니다."
         );
-
         return;
     }
 
+    writingAdvanced = advanced === true;
     resetWriteForm();
+    writingAdvanced = advanced === true;
 
     hideAllScreens();
 
@@ -437,9 +462,65 @@ function openWriteScreen() {
         "visible"
     );
 
-    activateNewsMenu();
+    if (writingAdvanced) {
+        activateAdvancedNewsMenu();
+    } else {
+        activateNewsMenu();
+    }
+
+    const heading =
+        writeScreen.querySelector(
+            ".write-box h1"
+        );
+
+    if (heading) {
+        heading.textContent =
+            writingAdvanced
+                ? "고급소식 작성"
+                : "소식 작성";
+    }
+
+    const saveButton =
+        document.getElementById(
+            "save-write"
+        );
+
+    if (saveButton) {
+        saveButton.textContent =
+            writingAdvanced
+                ? "고급소식 등록"
+                : "소식 등록";
+    }
 
     scrollTop();
+}
+
+async function openAdvancedNews() {
+    if (!currentUser) {
+        alert("고급소식은 관리자만 이용할 수 있습니다.");
+        openAuthScreen("login");
+        return;
+    }
+
+    if (!isAdmin) {
+        alert("고급소식은 관리자만 이용할 수 있습니다.");
+        return;
+    }
+
+    hideAllScreens();
+    advancedNewsScreen.classList.add(
+        "visible"
+    );
+    activateAdvancedNewsMenu();
+
+    currentNewsId = null;
+    currentNewsAdvanced = true;
+    writingAdvanced = false;
+
+    updateAuthUI();
+    scrollTop();
+
+    await renderNews(true, "advanced-news-list-container");
 }
 
 function openDonation() {
@@ -450,29 +531,6 @@ function openDonation() {
     );
 
     activateDonationMenu();
-
-    scrollTop();
-}
-
-function openAdvancedNews() {
-    if (!currentUser) {
-        alert("고급소식은 관리자만 이용할 수 있습니다.");
-        openAuthScreen("login");
-        return;
-    }
-
-    if (!isAdmin) {
-        alert("고급소식은 관리자만 이용할 수 있습니다.");
-        return;
-    }
-
-    hideAllScreens();
-
-    advancedNewsScreen.classList.add(
-        "visible"
-    );
-
-    activateAdvancedNewsMenu();
 
     scrollTop();
 }
@@ -688,37 +746,8 @@ async function login() {
                 error
             );
 
-            if (
-                typeof error.message === "string" &&
-                (
-                    error.message.toLowerCase().includes("email not confirmed") ||
-                    error.message.includes("Email not confirmed")
-                )
-            ) {
-                authMessage.textContent =
-                    "이메일 인증이 완료되지 않았습니다. 받은 인증 메일을 확인해주세요.";
-            } else {
-                authMessage.textContent =
-                    error.message;
-            }
-
-            return;
-        }
-
-        if (
-            data.user &&
-            !data.user.email_confirmed_at
-        ) {
-            await supabaseClient.auth.signOut();
-
-            currentUser = null;
-            currentProfile = null;
-            isAdmin = false;
-
-            updateAuthUI();
-
             authMessage.textContent =
-                "이메일 인증이 완료되지 않았습니다. 받은 인증 메일을 확인해주세요.";
+                error.message;
 
             return;
         }
@@ -852,8 +881,6 @@ async function signup() {
                     email,
                     password,
                     options: {
-                        emailRedirectTo:
-                            "https://magpiechicken.github.io/",
                         data: {
                             username
                         }
@@ -872,36 +899,37 @@ async function signup() {
             return;
         }
 
-        /*
-         * 이메일 인증을 반드시 거치도록 합니다.
-         * Confirm sign up이 켜져 있으면 일반적으로
-         * data.session은 null로 반환됩니다.
-         * 혹시 세션이 함께 내려오더라도 여기서는
-         * 자동 로그인하지 않고 이메일 인증을 안내합니다.
-         */
-        if (data.user) {
-            await supabaseClient.auth.signOut();
+        if (
+            data.user &&
+            data.session
+        ) {
+            currentUser =
+                data.user;
 
-            currentUser = null;
-            currentProfile = null;
-            isAdmin = false;
+            await loadCurrentProfile();
 
-            updateAuthUI();
+            if (!currentProfile) {
+                await supabaseClient.auth.signOut();
 
-            document.getElementById(
-                "login-email"
-            ).value = email;
+                currentUser = null;
+                currentProfile = null;
+                isAdmin = false;
 
-            showAuthMode("login");
+                updateAuthUI();
 
-            authMessage.textContent =
-                "회원가입이 완료되었습니다. 이메일을 확인해주세요.";
+                authMessage.textContent =
+                    "가입은 되었지만 회원 정보를 만들지 못했습니다.";
+
+                return;
+            }
+
+            await openNewsList();
 
             return;
         }
 
         authMessage.textContent =
-            "회원가입에 성공했습니다. 이메일을 확인해주세요.";
+            "회원가입이 완료되었습니다. 이메일 인증이 필요한 경우 이메일을 확인한 뒤 로그인해주세요.";
 
         document.getElementById(
             "login-email"
@@ -951,7 +979,7 @@ async function logout() {
     openNewsIntro();
 }
 
-async function getNews() {
+async function getNews(isAdvanced = false) {
     const {
         data,
         error
@@ -959,7 +987,11 @@ async function getNews() {
         await supabaseClient
             .from("news")
             .select(
-                "id, author, title, content, created_at, image_urls, view_count"
+                "id, author, title, content, created_at, image_urls, view_count, is_advanced"
+            )
+            .eq(
+                "is_advanced",
+                isAdvanced === true
             )
             .order(
                 "created_at",
@@ -1228,11 +1260,15 @@ function getPublicImageUrl(
     return data?.publicUrl || null;
 }
 
-async function renderNews() {
+async function renderNews(isAdvanced = false, containerId = "news-list-container") {
     const container =
         document.getElementById(
-            "news-list-container"
+            containerId
         );
+
+    if (!container) {
+        return;
+    }
 
     container.innerHTML = `
         <div class="empty-box">
@@ -1243,19 +1279,17 @@ async function renderNews() {
     `;
 
     const newsList =
-        await getNews();
+        await getNews(isAdvanced);
 
-    if (
-        newsList.length === 0
-    ) {
+    if (newsList.length === 0) {
         container.innerHTML = `
             <div class="empty-box">
                 <div class="empty-title">
-                    소식 없음
+                    ${isAdvanced ? "고급소식 없음" : "소식 없음"}
                 </div>
 
                 <div class="empty-description">
-                    현재 등록된 소식이 없습니다.
+                    현재 등록된 ${isAdvanced ? "고급소식" : "소식"}이 없습니다.
                 </div>
             </div>
         `;
@@ -1280,7 +1314,6 @@ async function renderNews() {
 
     newsList.forEach(
         function(news) {
-
             const newsKey =
                 String(news.id);
 
@@ -1295,9 +1328,7 @@ async function renderNews() {
                     "button"
                 );
 
-            row.type =
-                "button";
-
+            row.type = "button";
             row.className =
                 isUnread
                     ? "news-row unread"
@@ -1325,12 +1356,12 @@ async function renderNews() {
                             : ""
                     }
                 </span>
-
             `;
 
             row.addEventListener(
                 "click",
                 function() {
+                    currentNewsAdvanced = isAdvanced;
                     openNewsDetail(
                         news.id
                     );
@@ -1355,7 +1386,7 @@ async function openNewsDetail(
         await supabaseClient
             .from("news")
             .select(
-                "id, author, title, content, created_at, image_urls, view_count"
+                "id, author, title, content, created_at, image_urls, view_count, is_advanced"
             )
             .eq(
                 "id",
@@ -1394,6 +1425,9 @@ async function openNewsDetail(
 
     currentNewsId =
         news.id;
+
+    currentNewsAdvanced =
+        news.is_advanced === true;
 
     hideAllScreens();
 
@@ -2187,7 +2221,9 @@ function resetWriteForm() {
 
     if (heading) {
         heading.textContent =
-            "소식 작성";
+            writingAdvanced
+                ? "고급소식 작성"
+                : "소식 작성";
     }
 
     const saveButton =
@@ -2197,7 +2233,9 @@ function resetWriteForm() {
 
     if (saveButton) {
         saveButton.textContent =
-            "소식 등록";
+            writingAdvanced
+                ? "고급소식 등록"
+                : "소식 등록";
     }
 }
 
@@ -2414,6 +2452,12 @@ function openEditScreen(
     editingNewsId =
         news.id;
 
+    writingAdvanced =
+        news.is_advanced === true;
+
+    currentNewsAdvanced =
+        writingAdvanced;
+
     document.getElementById(
         "input-title"
     ).value =
@@ -2437,7 +2481,11 @@ function openEditScreen(
         "visible"
     );
 
-    activateNewsMenu();
+    if (writingAdvanced) {
+        activateAdvancedNewsMenu();
+    } else {
+        activateNewsMenu();
+    }
 
     const heading =
         writeScreen.querySelector(
@@ -2446,7 +2494,9 @@ function openEditScreen(
 
     if (heading) {
         heading.textContent =
-            "소식 수정";
+            writingAdvanced
+                ? "고급소식 수정"
+                : "소식 수정";
     }
 
     const saveButton =
@@ -2456,7 +2506,9 @@ function openEditScreen(
 
     if (saveButton) {
         saveButton.textContent =
-            "수정 저장";
+            writingAdvanced
+                ? "고급소식 수정 저장"
+                : "수정 저장";
     }
 
     scrollTop();
@@ -2464,6 +2516,7 @@ function openEditScreen(
 
 function closeEditMode() {
     editingNewsId = null;
+    writingAdvanced = false;
 
     const heading =
         writeScreen.querySelector(
@@ -2575,7 +2628,8 @@ async function saveNews() {
                     .from("news")
                     .update({
                         title: title,
-                        content: content
+                        content: content,
+                        is_advanced: writingAdvanced === true
                     })
                     .eq(
                         "id",
@@ -2590,7 +2644,9 @@ async function saveNews() {
                 editingNewsId;
 
             editingNewsId = null;
+            currentNewsAdvanced = writingAdvanced === true;
             resetWriteForm();
+            writingAdvanced = currentNewsAdvanced;
 
             await openNewsDetail(
                 editedId,
@@ -2759,7 +2815,10 @@ async function saveNews() {
                         content,
 
                     image_urls:
-                        uploadedPaths
+                        uploadedPaths,
+
+                    is_advanced:
+                        writingAdvanced === true
                 });
 
         if (insertError) {
@@ -2776,9 +2835,17 @@ async function saveNews() {
             return;
         }
 
-        resetWriteForm();
+        const savedAsAdvanced =
+            writingAdvanced === true;
 
-        await openNewsList();
+        resetWriteForm();
+        writingAdvanced = savedAsAdvanced;
+
+        if (savedAsAdvanced) {
+            await openAdvancedNews();
+        } else {
+            await openNewsList();
+        }
 
     } catch (error) {
 
@@ -2888,9 +2955,17 @@ async function deleteCurrentNews() {
         );
     }
 
-    currentNewsId = null;
+    const deletedFromAdvanced =
+        currentNewsAdvanced;
 
-    await openNewsList();
+    currentNewsId = null;
+    currentNewsAdvanced = deletedFromAdvanced;
+
+    if (deletedFromAdvanced) {
+        await openAdvancedNews();
+    } else {
+        await openNewsList();
+    }
 }
 
 function escapeHTML(value) {
@@ -2935,13 +3010,28 @@ document
         openWriteScreen
     );
 
+if (showAdvancedWriteButton) {
+    showAdvancedWriteButton.addEventListener(
+        "click",
+        function() {
+            openWriteScreen(true);
+        }
+    );
+}
+
 document
     .getElementById(
         "back-to-list"
     )
     .addEventListener(
         "click",
-        openNewsList
+        function() {
+            if (currentNewsAdvanced) {
+                openAdvancedNews();
+            } else {
+                openNewsList();
+            }
+        }
     );
 
 document
@@ -2950,7 +3040,13 @@ document
     )
     .addEventListener(
         "click",
-        openNewsList
+        function() {
+            if (writingAdvanced) {
+                openAdvancedNews();
+            } else {
+                openNewsList();
+            }
+        }
     );
 
 document
@@ -2959,7 +3055,13 @@ document
     )
     .addEventListener(
         "click",
-        openNewsList
+        function() {
+            if (writingAdvanced) {
+                openAdvancedNews();
+            } else {
+                openNewsList();
+            }
+        }
     );
 
 document
