@@ -660,7 +660,6 @@ button:disabled {
     word-break: break-word;
 }
 
-
 /* =========================
    좋아요 / 댓글
 ========================= */
@@ -1235,27 +1234,6 @@ button:disabled {
         margin: 0 22px 15px;
         font-size: 12px;
     }
-
-    .login-info-modal {
-        padding: 12px;
-    }
-
-    .login-info-box {
-        width: 100%;
-        max-height: calc(100vh - 24px);
-        padding: 24px;
-        border-width: 2px;
-    }
-
-    .login-info-box h2 {
-        margin-bottom: 20px;
-        font-size: 24px;
-    }
-
-    .login-info-content {
-        font-size: 13px;
-        line-height: 1.7;
-    }
 }
 
 @media (max-width: 700px) {
@@ -1414,17 +1392,6 @@ button:disabled {
         flex: 0 0 auto !important;
     }
 
-    .login-info-box {
-        padding: 20px;
-    }
-
-    .login-info-box h2 {
-        font-size: 21px;
-    }
-
-    .login-info-content {
-        font-size: 12px;
-    }
 }
 
 /* ==========================================================
@@ -1530,5 +1497,45 @@ button:disabled {
 
     .edit-news-button {
         font-size: 12px;
+    }
+}
+
+/* =========================
+   인증 UI 안정화
+========================= */
+.auth-box {
+    position: relative;
+    z-index: 1;
+}
+
+.auth-tabs {
+    position: relative;
+    z-index: 2;
+}
+
+.auth-tab {
+    position: relative;
+    z-index: 3;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+@media (min-width: 701px) {
+    .auth-tabs {
+        display: flex;
+    }
+
+    .auth-tab {
+        flex: 1 1 0;
+    }
+}
+
+@media (max-width: 700px) {
+    .auth-tabs {
+        display: flex;
+    }
+
+    .auth-tab {
+        flex: 1 1 0;
     }
 }
