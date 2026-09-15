@@ -799,14 +799,30 @@ async function signup() {
         }
 
         authMessage.textContent =
-            "회원가입이 완료되었습니다. 이메일로 받은 인증 링크를 눌러 인증해주세요.";
+            "이메일을 확인해주세요. 인증 메일을 보냈습니다.";
+        authMessage.style.display = "block";
+        authMessage.style.visibility = "visible";
+        authMessage.style.opacity = "1";
+
+        const signupDescription =
+            signupPanel?.querySelector(".auth-description");
+
+        if (signupDescription) {
+            signupDescription.textContent =
+                "이메일을 확인해주세요. 받은 인증 메일의 링크를 눌러 인증을 완료해주세요.";
+        }
 
         document.getElementById(
             "login-email"
         ).value = email;
 
-        /* 회원가입 패널을 그대로 유지해서 메시지가 보이게 합니다. */
+        /* 회원가입 패널을 그대로 유지해서 안내문이 즉시 보이게 합니다. */
         showAuthMode("signup");
+
+        /* 화면에서 안내문이 안 보이는 경우에도 확실히 알 수 있게 합니다. */
+        setTimeout(function() {
+            alert("이메일을 확인해주세요. 인증 메일의 링크를 눌러 인증을 완료해주세요.");
+        }, 50);
 
     } catch (error) {
         console.error(
@@ -2916,70 +2932,44 @@ accountButton.addEventListener(
 );
 
 
-/* 인증 탭 클릭을 직접/위임 방식 둘 다 연결해서
-   브라우저나 CSS 변경으로 클릭이 막히는 상황을 최소화한다. */
 if (loginTab) {
-    loginTab.type = "button";
-    loginTab.onclick = function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        showAuthMode("login");
-    };
+    loginTab.addEventListener(
+        "click",
+        function(event) {
+            event.preventDefault();
+            showAuthMode("login");
+        }
+    );
 }
 
 if (signupTab) {
-    signupTab.type = "button";
-    signupTab.onclick = function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        showAuthMode("signup");
-    };
-}
-
-/* 혹시 다른 요소가 버튼 위에 생겨도 탭 전환이 동작하도록 위임 처리 */
-document.addEventListener(
-    "click",
-    function(event) {
-        const target = event.target.closest(
-            "#signup-tab, #login-tab"
-        );
-
-        if (!target) {
-            return;
-        }
-
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (target.id === "signup-tab") {
+    signupTab.addEventListener(
+        "click",
+        function(event) {
+            event.preventDefault();
             showAuthMode("signup");
-        } else {
-            showAuthMode("login");
         }
-    },
-    true
-);
+    );
+}
 
 const loginSubmitButton =
     document.getElementById("login-submit");
 
 if (loginSubmitButton) {
-    loginSubmitButton.type = "button";
-    loginSubmitButton.onclick = function(event) {
-        event.preventDefault();
-        login();
-    };
+    loginSubmitButton.addEventListener(
+        "click",
+        login
+    );
 }
 
 const signupSubmitButton =
     document.getElementById("signup-submit");
 
 if (signupSubmitButton) {
-    signupSubmitButton.type = "button";
-    signupSubmitButton.onclick = function(event) {
-        event.preventDefault();
-        signup();
-    };
+    signupSubmitButton.addEventListener(
+        "click",
+        signup
+    );
 }
 
 document
