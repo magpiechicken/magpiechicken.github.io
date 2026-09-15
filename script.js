@@ -6,6 +6,9 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_KrmPM2G4nuS1JXOAvnp-cA_Ik1nuYqS";
 
+const SITE_URL =
+    "https://magpiechicken.github.io/";
+
 const NEWS_IMAGE_BUCKET =
     "news-images";
 
@@ -63,7 +66,6 @@ const videoPreviewMenu =
 
 const accountButton =
     document.getElementById("accountButton");
-
 
 const showWriteButton =
     document.getElementById("show-write");
@@ -543,7 +545,6 @@ async function handleAccountButton() {
     await logout();
 }
 
-
 async function login() {
     const email =
         document
@@ -600,8 +601,20 @@ async function login() {
                 error
             );
 
-            authMessage.textContent =
-                error.message;
+            const message =
+                String(error.message || "");
+
+            if (
+                /email not confirmed/i.test(message) ||
+                /email.*confirm/i.test(message)
+            ) {
+                authMessage.textContent =
+                    "이메일 인증이 아직 완료되지 않았습니다. 받은 이메일의 인증 링크를 먼저 눌러주세요.";
+            } else {
+                authMessage.textContent =
+                    error.message ||
+                    "로그인에 실패했습니다.";
+            }
 
             return;
         }
@@ -735,6 +748,7 @@ async function signup() {
                     email,
                     password,
                     options: {
+                        emailRedirectTo: SITE_URL,
                         data: {
                             username
                         }
@@ -753,43 +767,46 @@ async function signup() {
             return;
         }
 
-        if (
-            data.user &&
-            data.session
-        ) {
-            currentUser =
-                data.user;
+        /*
+           Confirm Email이 켜져 있으면 정상적으로는 session이 없습니다.
+           인증 메일을 확인하기 전에는 사이트에 로그인시키지 않습니다.
+        */
+        if (data.user && data.session) {
+            const confirmed =
+                !!data.user.email_confirmed_at;
 
-            await loadCurrentProfile();
+            if (confirmed) {
+                currentUser = data.user;
+                await loadCurrentProfile();
 
-            if (!currentProfile) {
-                await supabaseClient.auth.signOut();
+                if (!currentProfile) {
+                    await supabaseClient.auth.signOut();
+                    currentUser = null;
+                    currentProfile = null;
+                    isAdmin = false;
+                    updateAuthUI();
 
-                currentUser = null;
-                currentProfile = null;
-                isAdmin = false;
+                    authMessage.textContent =
+                        "가입은 되었지만 회원 정보를 만들지 못했습니다.";
+                    return;
+                }
 
-                updateAuthUI();
-
-                authMessage.textContent =
-                    "가입은 되었지만 회원 정보를 만들지 못했습니다.";
-
+                await openNewsList();
                 return;
             }
 
-            await openNewsList();
-
-            return;
+            await supabaseClient.auth.signOut();
         }
 
         authMessage.textContent =
-            "회원가입이 완료되었습니다. 이메일 인증이 필요한 경우 이메일을 확인한 뒤 로그인해주세요.";
+            "회원가입이 완료되었습니다. 이메일로 받은 인증 링크를 눌러 인증해주세요.";
 
         document.getElementById(
             "login-email"
         ).value = email;
 
-        showAuthMode("login");
+        /* 회원가입 패널을 그대로 유지해서 메시지가 보이게 합니다. */
+        showAuthMode("signup");
 
     } catch (error) {
         console.error(
@@ -1389,9 +1406,12 @@ async function openNewsDetail(
         </div>
     `;
 
-    document
-        .getElementById("edit-news-button")
-        ?.remove();
+    const oldEditButton =
+        document.getElementById("edit-news-button");
+
+    if (oldEditButton) {
+        oldEditButton.remove();
+    }
 
     if (isAdmin) {
         const editButton =
@@ -2895,61 +2915,46 @@ accountButton.addEventListener(
     handleAccountButton
 );
 
-loginInfoButton.addEventListener(
-    "click",
-    openLoginInfo
-);
 
-closeLoginInfo.addEventListener(
-    "click",
-    closeLoginInfoModal
-);
-
-loginInfoModal.addEventListener(
-    "click",
-    function(event) {
-
-        if (
-            event.target ===
-            loginInfoModal
-        ) {
-            closeLoginInfoModal();
+if (loginTab) {
+    loginTab.addEventListener(
+        "click",
+        function(event) {
+            event.preventDefault();
+            showAuthMode("login");
         }
+    );
+}
 
-    }
-);
+if (signupTab) {
+    signupTab.addEventListener(
+        "click",
+        function(event) {
+            event.preventDefault();
+            showAuthMode("signup");
+        }
+    );
+}
 
-loginTab.addEventListener(
-    "click",
-    function() {
-        showAuthMode("login");
-    }
-);
+const loginSubmitButton =
+    document.getElementById("login-submit");
 
-signupTab.addEventListener(
-    "click",
-    function() {
-        showAuthMode("signup");
-    }
-);
-
-document
-    .getElementById(
-        "login-submit"
-    )
-    .addEventListener(
+if (loginSubmitButton) {
+    loginSubmitButton.addEventListener(
         "click",
         login
     );
+}
 
-document
-    .getElementById(
-        "signup-submit"
-    )
-    .addEventListener(
+const signupSubmitButton =
+    document.getElementById("signup-submit");
+
+if (signupSubmitButton) {
+    signupSubmitButton.addEventListener(
         "click",
         signup
     );
+}
 
 document
     .getElementById(
