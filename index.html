@@ -24,23 +24,6 @@
     }
 }
 
-/* PC / 노트북 / 태블릿 배너 자동 비율 */
-@media (min-width: 701px) {
-    .top-bar {
-        height: calc(100vw * 102 / 1907) !important;
-        min-height: 55px !important;
-        max-height: 102px !important;
-        background-color: transparent !important;
-        background-image: url("./airplane1.png") !important;
-        background-repeat: no-repeat !important;
-        background-position: center center !important;
-        background-size: 100% 100% !important;
-    }
-    .site-layout {
-        height: calc(100vh - (100vw * 102 / 1907) - 3px) !important;
-    }
-}
-
 /* 로그인창 축소 */
 .auth-box {
     width: 350px !important;
@@ -68,17 +51,19 @@
 
 <header class="top-bar">
 
-    <div class="header-actions">
-
-        <button
-            id="loginInfoButton"
-            class="info-button"
-            type="button"
+    <div class="profile">
+        <img
+            src="./profile.png"
+            alt="까치치킨사장님"
         >
-            로그인 정보
-        </button>
+    </div>
 
-        <button
+    <div class="title">
+        까치치킨사장님 공식 홈페이지
+    </div>
+
+    <div class="header-actions">
+<button
             id="accountButton"
             class="admin-button"
             type="button"
@@ -590,33 +575,21 @@
             class="screen"
         >
 
-            <div class="list-header">
+            <h1 class="page-heading">
+                고급소식
+            </h1>
 
-                <div>
+            <div class="intro-box">
 
-                    <h1 class="page-heading">
-                        고급소식
-                    </h1>
+                <h2>
+                    멤버십 유저 전용 고급소식
+                </h2>
 
-                    <p class="page-subtitle">
-                        관리자 전용 고급소식입니다. 일반 소식과 별도로 관리됩니다.
-                    </p>
-
-                </div>
-
-                <button
-                    id="show-advanced-write"
-                    class="orange-small-button hidden"
-                    type="button"
-                >
-                    + 고급소식 작성
-                </button>
+                <p>
+                    멤버십 유저만 확인할 수 있는 고급소식 공간입니다.
+                </p>
 
             </div>
-
-            <div
-                id="advanced-news-list-container"
-            ></div>
 
         </section>
 
@@ -647,35 +620,6 @@
     </main>
 
 </div>
-
-
-<div
-    id="loginInfoModal"
-    class="login-info-modal hidden"
->
-
-    <div class="login-info-box">
-
-        <button
-            id="closeLoginInfo"
-            class="login-info-close"
-            type="button"
-            aria-label="닫기"
-        >
-            ×
-        </button>
-
-        <h2>
-            로그인 정보
-        </h2>
-
-        <div
-            id="loginInfoContent"
-            class="login-info-content"
-        ></div>
-
-    </div>
-
 </div>
 
 
