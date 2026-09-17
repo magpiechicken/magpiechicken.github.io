@@ -2,27 +2,6 @@
 <html lang="ko">
 <head>
     <style>
-/* 왼쪽 메뉴: 멤버십 전용 구분선 */
-.menu-membership-divider {
-    width: 100%;
-    padding: 10px 8px 8px;
-    border-top: 1.5px solid #000000;
-    background: #ffffff;
-    color: #777777;
-    font-size: 12px;
-    font-weight: 700;
-    text-align: center;
-}
-
-@media (max-width: 700px) {
-    .menu-membership-divider {
-        padding: 7px 3px 5px;
-        border-top-width: 1px;
-        font-size: 9px;
-        line-height: 1.2;
-    }
-}
-
 /* 상단 배너: 컴퓨터는 airplane1.png, 모바일은 airplane.png */
 .top-bar {
     background-color: transparent !important;
@@ -84,13 +63,14 @@
     </div>
 
     <div class="header-actions">
-        <button
+<button
             id="accountButton"
             class="admin-button"
             type="button"
         >
             로그인
         </button>
+
     </div>
 
 </header>
@@ -119,10 +99,11 @@
 
         <button
             id="menu-admin-community"
-            class="menu-item"
+            class="menu-item locked admin-only-menu"
             type="button"
+            disabled
         >
-            관리자 커뮤니티
+            관리자 커뮤니티 🔒
         </button>
 
         <button
@@ -148,7 +129,7 @@
 
         <button
             id="menu-advanced-news"
-            class="menu-item locked membership-menu"
+            class="menu-item locked admin-only-menu"
             type="button"
             disabled
         >
@@ -235,7 +216,7 @@
                 class="white-button"
                 type="button"
             >
-                ← 소식 목록
+                ← 목록
             </button>
 
             <article
@@ -341,7 +322,7 @@
                 class="white-button"
                 type="button"
             >
-                ← 소식 목록
+                ← 목록
             </button>
 
             <div class="write-box">
@@ -588,6 +569,26 @@
         </section>
 
         <section
+            id="screen-admin-community"
+            class="screen"
+        >
+
+            <h1 class="page-heading">
+                관리자 커뮤니티
+            </h1>
+
+            <div class="intro-box">
+                <h2>
+                    관리자 전용 공간
+                </h2>
+                <p>
+                    관리자 커뮤니티 기능은 준비 중입니다.
+                </p>
+            </div>
+
+        </section>
+
+        <section
             id="screen-advanced-news"
             class="screen"
         >
@@ -636,9 +637,10 @@
     </main>
 
 </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./script.js?v=62"></script>
+<script src="./script.js?v=63"></script>
 
 </body>
 </html>
