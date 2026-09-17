@@ -1,5 +1,7 @@
 "use strict";
 
+// Updated: category menus, admin-only video preview, intro-first navigation, comment usernames
+
 const SUPABASE_URL =
     "https://kxrjevmxayolcqcgmixz.supabase.co";
 
@@ -223,9 +225,15 @@ function updateAdminOnlyMenus() {
     }
 
     if (videoPreviewMenu) {
-        videoPreviewMenu.disabled = true;
-        videoPreviewMenu.classList.add("locked");
-        videoPreviewMenu.textContent = "영상미리보기 🔒";
+        if (isAdmin) {
+            videoPreviewMenu.disabled = false;
+            videoPreviewMenu.classList.remove("locked");
+            videoPreviewMenu.textContent = "영상미리보기";
+        } else {
+            videoPreviewMenu.disabled = true;
+            videoPreviewMenu.classList.add("locked");
+            videoPreviewMenu.textContent = "영상미리보기 🔒";
+        }
     }
 }
 
@@ -488,7 +496,13 @@ function openAdminCommunity() {
 
 function openVideoPreview() {
     if (!currentUser) {
+        alert("영상미리보기는 관리자만 이용할 수 있습니다.");
         openAuthScreen("login");
+        return;
+    }
+
+    if (!isAdmin) {
+        alert("영상미리보기는 관리자만 이용할 수 있습니다.");
         return;
     }
 
@@ -528,17 +542,6 @@ function openDonation() {
     hideAllScreens();
     donationScreen.classList.add("visible");
     activateDonationMenu();
-    scrollTop();
-}
-
-function openAuthScreen(
-    mode = "login"
-) {
-    hideAllScreens();
-    authScreen.classList.add("visible");
-    activateNewsMenu();
-    showAuthMode(mode);
-    authMessage.textContent = "";
     scrollTop();
 }
 
@@ -678,7 +681,7 @@ async function login() {
             return;
         }
 
-        await openNewsList();
+        await openNewsIntro();
 
     } catch (error) {
         console.error(
@@ -829,7 +832,7 @@ async function signup() {
                 return;
             }
 
-            await openNewsList();
+            await openNewsIntro();
 
             return;
         }
@@ -1768,16 +1771,13 @@ async function loadComments(newsId) {
         const {
             data: profiles,
             error: profileError
-        } =
-            await supabaseClient
-                .from("profiles")
-                .select(
-                    "id, username"
-                )
-                .in(
-                    "id",
-                    userIds
-                );
+        } = await supabaseClient
+            .rpc(
+                "get_comment_profiles",
+                {
+                    p_user_ids: userIds
+                }
+            );
 
         if (!profileError) {
             profileMap =
@@ -1791,10 +1791,39 @@ async function loadComments(newsId) {
                 );
         } else {
             console.error(
-                "댓글 작성자 조회 오류:",
+                "댓글 작성자 조회 RPC 오류:",
                 profileError
             );
+
+            /*
+             * RPC가 아직 만들어지지 않은 경우를 대비한 기존 방식 fallback.
+             * RLS 때문에 다른 회원의 닉네임을 읽을 수 없다면 '회원'으로 보일 수 있다.
+             */
+            const fallback =
+                await supabaseClient
+                    .from("profiles")
+                    .select("id, username")
+                    .in("id", userIds);
+
+            if (!fallback.error) {
+                profileMap =
+                    new Map(
+                        (fallback.data || []).map(
+                            profile => [
+                                String(profile.id),
+                                profile.username
+                            ]
+                        )
+                    );
+            }
         }
+    }
+
+    if (currentUser && currentProfile?.username) {
+        profileMap.set(
+            String(currentUser.id),
+            currentProfile.username
+        );
     }
 
     list.forEach(
