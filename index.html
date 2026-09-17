@@ -2,6 +2,27 @@
 <html lang="ko">
 <head>
     <style>
+/* 왼쪽 메뉴: 멤버십 전용 구분선 */
+.menu-membership-divider {
+    width: 100%;
+    padding: 10px 8px 8px;
+    border-top: 1.5px solid #000000;
+    background: #ffffff;
+    color: #777777;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+    .menu-membership-divider {
+        padding: 7px 3px 5px;
+        border-top-width: 1px;
+        font-size: 9px;
+        line-height: 1.2;
+    }
+}
+
 /* 상단 배너: 컴퓨터는 airplane1.png, 모바일은 airplane.png */
 .top-bar {
     background-color: transparent !important;
@@ -63,14 +84,13 @@
     </div>
 
     <div class="header-actions">
-<button
+        <button
             id="accountButton"
             class="admin-button"
             type="button"
         >
             로그인
         </button>
-
     </div>
 
 </header>
@@ -90,6 +110,22 @@
         </button>
 
         <button
+            id="menu-sports-news"
+            class="menu-item"
+            type="button"
+        >
+            스포츠소식
+        </button>
+
+        <button
+            id="menu-admin-community"
+            class="menu-item"
+            type="button"
+        >
+            관리자 커뮤니티
+        </button>
+
+        <button
             id="menu-donation"
             class="menu-item"
             type="button"
@@ -97,38 +133,26 @@
             후원
         </button>
 
-        <button
-            id="menu-advanced-news"
-            class="menu-item locked admin-only-menu"
-            type="button"
-            disabled
-        >
-            고급 소식 🔒
-        </button>
+        <div class="menu-membership-divider" aria-hidden="true">
+            멤버십 전용
+        </div>
 
         <button
             id="menu-video-preview"
-            class="menu-item locked admin-only-menu"
+            class="menu-item locked membership-menu"
             type="button"
             disabled
         >
-            영상 미리보기 🔒
+            영상미리보기 🔒
         </button>
 
         <button
-            class="menu-item upcoming"
+            id="menu-advanced-news"
+            class="menu-item locked membership-menu"
             type="button"
             disabled
         >
-            (추가예정)
-        </button>
-
-        <button
-            class="menu-item upcoming"
-            type="button"
-            disabled
-        >
-            (추가예정)
+            고급소식 🔒
         </button>
 
     </aside>
@@ -611,7 +635,6 @@
 
     </main>
 
-</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
