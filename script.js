@@ -1,13 +1,11 @@
 "use strict";
+"use strict";
 
 const SUPABASE_URL =
     "https://kxrjevmxayolcqcgmixz.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
     "sb_publishable_KrmPM2G4nuS1JXOAvnp-cA_Ik1nuYqS";
-
-const SITE_URL =
-    "https://magpiechicken.github.io/";
 
 const NEWS_IMAGE_BUCKET =
     "news-images";
@@ -27,6 +25,7 @@ let isAdmin = false;
 let currentNewsId = null;
 let selectedImageFiles = [];
 let editingNewsId = null;
+let currentCategory = "general";
 
 const introScreen =
     document.getElementById("screen-news-intro");
@@ -46,6 +45,9 @@ const authScreen =
 const donationScreen =
     document.getElementById("screen-donation");
 
+const adminCommunityScreen =
+    document.getElementById("screen-admin-community");
+
 const advancedNewsScreen =
     document.getElementById("screen-advanced-news");
 
@@ -57,6 +59,12 @@ const newsMenu =
 
 const donationMenu =
     document.getElementById("menu-donation");
+
+const sportsNewsMenu =
+    document.getElementById("menu-sports-news");
+
+const adminCommunityMenu =
+    document.getElementById("menu-admin-community");
 
 const advancedNewsMenu =
     document.getElementById("menu-advanced-news");
@@ -134,6 +142,9 @@ function hideAllScreens() {
     writeScreen.classList.remove("visible");
     authScreen.classList.remove("visible");
     donationScreen.classList.remove("visible");
+    if (adminCommunityScreen) {
+        adminCommunityScreen.classList.remove("visible");
+    }
     advancedNewsScreen.classList.remove("visible");
     videoPreviewScreen.classList.remove("visible");
 }
@@ -141,6 +152,8 @@ function hideAllScreens() {
 function clearMenuActive() {
     [
         newsMenu,
+        sportsNewsMenu,
+        adminCommunityMenu,
         donationMenu,
         advancedNewsMenu,
         videoPreviewMenu
@@ -161,6 +174,20 @@ function activateDonationMenu() {
     donationMenu.classList.add("active");
 }
 
+function activateSportsNewsMenu() {
+    clearMenuActive();
+    if (sportsNewsMenu) {
+        sportsNewsMenu.classList.add("active");
+    }
+}
+
+function activateAdminCommunityMenu() {
+    clearMenuActive();
+    if (adminCommunityMenu) {
+        adminCommunityMenu.classList.add("active");
+    }
+}
+
 function activateAdvancedNewsMenu() {
     clearMenuActive();
     advancedNewsMenu.classList.add("active");
@@ -172,32 +199,29 @@ function activateVideoPreviewMenu() {
 }
 
 function updateAdminOnlyMenus() {
-    const adminMenus = [
-        {
-            element: advancedNewsMenu,
-            title: "고급소식"
-        },
-        {
-            element: videoPreviewMenu,
-            title: "영상미리보기"
-        }
-    ];
+    if (advancedNewsMenu) {
+        advancedNewsMenu.disabled = false;
+        advancedNewsMenu.classList.remove("locked");
+        advancedNewsMenu.textContent = "고급소식";
+    }
 
-    adminMenus.forEach(function(item) {
-        if (!item.element) {
-            return;
-        }
-
+    if (adminCommunityMenu) {
         if (isAdmin) {
-            item.element.disabled = false;
-            item.element.classList.remove("locked");
-            item.element.textContent = item.title;
+            adminCommunityMenu.disabled = false;
+            adminCommunityMenu.classList.remove("locked");
+            adminCommunityMenu.textContent = "관리자 커뮤니티";
         } else {
-            item.element.disabled = true;
-            item.element.classList.add("locked");
-            item.element.textContent = `${item.title} 🔒`;
+            adminCommunityMenu.disabled = true;
+            adminCommunityMenu.classList.add("locked");
+            adminCommunityMenu.textContent = "관리자 커뮤니티 🔒";
         }
-    });
+    }
+
+    if (videoPreviewMenu) {
+        videoPreviewMenu.disabled = true;
+        videoPreviewMenu.classList.add("locked");
+        videoPreviewMenu.textContent = "영상미리보기 🔒";
+    }
 }
 
 function scrollTop() {
@@ -350,27 +374,16 @@ async function refreshAuthState() {
     await loadCurrentProfile();
 }
 
-function openNewsIntro() {
-    hideAllScreens();
-
-    introScreen.classList.add(
-        "visible"
-    );
-
-    activateNewsMenu();
-
+function resetDetailUI() {
     currentNewsId = null;
 
-    detailImages.classList.add(
-        "hidden"
-    );
-
-    detailImages.innerHTML = "";
+    if (detailImages) {
+        detailImages.classList.add("hidden");
+        detailImages.innerHTML = "";
+    }
 
     if (newsInteractions) {
-        newsInteractions.classList.add(
-            "hidden"
-        );
+        newsInteractions.classList.add("hidden");
     }
 
     if (commentsContainer) {
@@ -382,28 +395,97 @@ function openNewsIntro() {
     }
 
     updateCommentLength();
+}
 
+function categoryName(category) {
+    if (category === "sports") return "스포츠소식";
+    if (category === "advanced") return "고급소식";
+    return "소식";
+}
+
+function activateCategoryMenu(category) {
+    if (category === "sports") {
+        activateSportsNewsMenu();
+    } else if (category === "advanced") {
+        activateAdvancedNewsMenu();
+    } else {
+        activateNewsMenu();
+    }
+}
+
+function openNewsIntro() {
+    currentCategory = "general";
+    hideAllScreens();
+    introScreen.classList.add("visible");
+    activateNewsMenu();
+    resetDetailUI();
     updateAuthUI();
-
     scrollTop();
 }
 
-async function openNewsList() {
+async function openCategoryList(category) {
+    currentCategory = category;
     hideAllScreens();
-
-    listScreen.classList.add(
-        "visible"
-    );
-
-    activateNewsMenu();
-
-    currentNewsId = null;
-
+    listScreen.classList.add("visible");
+    activateCategoryMenu(category);
+    resetDetailUI();
     updateAuthUI();
 
-    scrollTop();
+    const heading = listScreen.querySelector(".page-heading");
+    if (heading) {
+        heading.textContent = categoryName(category);
+    }
 
-    await renderNews();
+    const subtitle = listScreen.querySelector(".page-subtitle");
+    if (subtitle) {
+        subtitle.textContent =
+            category === "sports"
+                ? "스포츠 관련 소식과 공지사항입니다."
+                : category === "advanced"
+                    ? "멤버십 전용 고급소식입니다."
+                    : "까치치킨사장님의 소식과 공지사항입니다.";
+    }
+
+    scrollTop();
+    await renderNews(category);
+}
+
+async function openNewsList() {
+    await openCategoryList("general");
+}
+
+async function openSportsNews() {
+    await openCategoryList("sports");
+}
+
+async function openAdvancedNews() {
+    await openCategoryList("advanced");
+}
+
+function openAdminCommunity() {
+    if (!isAdmin) {
+        alert("관리자만 이용할 수 있습니다.");
+        return;
+    }
+
+    hideAllScreens();
+    if (adminCommunityScreen) {
+        adminCommunityScreen.classList.add("visible");
+    }
+    activateAdminCommunityMenu();
+    scrollTop();
+}
+
+function openVideoPreview() {
+    if (!currentUser) {
+        openAuthScreen("login");
+        return;
+    }
+
+    hideAllScreens();
+    videoPreviewScreen.classList.add("visible");
+    activateVideoPreviewMenu();
+    scrollTop();
 }
 
 function openWriteScreen() {
@@ -413,81 +495,40 @@ function openWriteScreen() {
     }
 
     if (!isAdmin) {
-        alert(
-            "관리자만 소식을 작성할 수 있습니다."
-        );
-
+        alert("관리자만 게시물을 작성할 수 있습니다.");
         return;
     }
 
     resetWriteForm();
+    editingNewsId = null;
 
     hideAllScreens();
+    writeScreen.classList.add("visible");
+    activateCategoryMenu(currentCategory);
 
-    writeScreen.classList.add(
-        "visible"
-    );
-
-    activateNewsMenu();
+    const heading = writeScreen.querySelector(".write-box h1");
+    if (heading) {
+        heading.textContent = `${categoryName(currentCategory)} 작성`;
+    }
 
     scrollTop();
 }
 
 function openDonation() {
     hideAllScreens();
-
-    donationScreen.classList.add(
-        "visible"
-    );
-
+    donationScreen.classList.add("visible");
     activateDonationMenu();
-
     scrollTop();
 }
 
-function openAdvancedNews() {
-    if (!currentUser) {
-        alert("고급소식은 관리자만 이용할 수 있습니다.");
-        openAuthScreen("login");
-        return;
-    }
-
-    if (!isAdmin) {
-        alert("고급소식은 관리자만 이용할 수 있습니다.");
-        return;
-    }
-
+function openAuthScreen(
+    mode = "login"
+) {
     hideAllScreens();
-
-    advancedNewsScreen.classList.add(
-        "visible"
-    );
-
-    activateAdvancedNewsMenu();
-
-    scrollTop();
-}
-
-function openVideoPreview() {
-    if (!currentUser) {
-        alert("영상미리보기는 관리자만 이용할 수 있습니다.");
-        openAuthScreen("login");
-        return;
-    }
-
-    if (!isAdmin) {
-        alert("영상미리보기는 관리자만 이용할 수 있습니다.");
-        return;
-    }
-
-    hideAllScreens();
-
-    videoPreviewScreen.classList.add(
-        "visible"
-    );
-
-    activateVideoPreviewMenu();
-
+    authScreen.classList.add("visible");
+    activateNewsMenu();
+    showAuthMode(mode);
+    authMessage.textContent = "";
     scrollTop();
 }
 
@@ -601,20 +642,8 @@ async function login() {
                 error
             );
 
-            const message =
-                String(error.message || "");
-
-            if (
-                /email not confirmed/i.test(message) ||
-                /email.*confirm/i.test(message)
-            ) {
-                authMessage.textContent =
-                    "이메일 인증이 아직 완료되지 않았습니다. 받은 이메일의 인증 링크를 먼저 눌러주세요.";
-            } else {
-                authMessage.textContent =
-                    error.message ||
-                    "로그인에 실패했습니다.";
-            }
+            authMessage.textContent =
+                error.message;
 
             return;
         }
@@ -748,7 +777,6 @@ async function signup() {
                     email,
                     password,
                     options: {
-                        emailRedirectTo: SITE_URL,
                         data: {
                             username
                         }
@@ -767,62 +795,43 @@ async function signup() {
             return;
         }
 
-        /*
-           Confirm Email이 켜져 있으면 정상적으로는 session이 없습니다.
-           인증 메일을 확인하기 전에는 사이트에 로그인시키지 않습니다.
-        */
-        if (data.user && data.session) {
-            const confirmed =
-                !!data.user.email_confirmed_at;
+        if (
+            data.user &&
+            data.session
+        ) {
+            currentUser =
+                data.user;
 
-            if (confirmed) {
-                currentUser = data.user;
-                await loadCurrentProfile();
+            await loadCurrentProfile();
 
-                if (!currentProfile) {
-                    await supabaseClient.auth.signOut();
-                    currentUser = null;
-                    currentProfile = null;
-                    isAdmin = false;
-                    updateAuthUI();
+            if (!currentProfile) {
+                await supabaseClient.auth.signOut();
 
-                    authMessage.textContent =
-                        "가입은 되었지만 회원 정보를 만들지 못했습니다.";
-                    return;
-                }
+                currentUser = null;
+                currentProfile = null;
+                isAdmin = false;
 
-                await openNewsList();
+                updateAuthUI();
+
+                authMessage.textContent =
+                    "가입은 되었지만 회원 정보를 만들지 못했습니다.";
+
                 return;
             }
 
-            await supabaseClient.auth.signOut();
+            await openNewsList();
+
+            return;
         }
 
         authMessage.textContent =
-            "이메일을 확인해주세요. 인증 메일을 보냈습니다.";
-        authMessage.style.display = "block";
-        authMessage.style.visibility = "visible";
-        authMessage.style.opacity = "1";
-
-        const signupDescription =
-            signupPanel?.querySelector(".auth-description");
-
-        if (signupDescription) {
-            signupDescription.textContent =
-                "이메일을 확인해주세요. 받은 인증 메일의 링크를 눌러 인증을 완료해주세요.";
-        }
+            "회원가입이 완료되었습니다. 이메일 인증이 필요한 경우 이메일을 확인한 뒤 로그인해주세요.";
 
         document.getElementById(
             "login-email"
         ).value = email;
 
-        /* 회원가입 패널을 그대로 유지해서 안내문이 즉시 보이게 합니다. */
-        showAuthMode("signup");
-
-        /* 화면에서 안내문이 안 보이는 경우에도 확실히 알 수 있게 합니다. */
-        setTimeout(function() {
-            alert("이메일을 확인해주세요. 인증 메일의 링크를 눌러 인증을 완료해주세요.");
-        }, 50);
+        showAuthMode("login");
 
     } catch (error) {
         console.error(
@@ -866,22 +875,25 @@ async function logout() {
     openNewsIntro();
 }
 
-async function getNews() {
-    const {
-        data,
-        error
-    } =
-        await supabaseClient
+async function getNews(category = "general") {
+    let query =
+        supabaseClient
             .from("news")
             .select(
-                "id, author, title, content, created_at, image_urls, view_count"
+                "id, author, title, content, created_at, image_urls, view_count, category"
             )
+            .eq("category", category)
             .order(
                 "created_at",
                 {
                     ascending: false
                 }
             );
+
+    const {
+        data,
+        error
+    } = await query;
 
     if (error) {
         console.error(
@@ -1143,7 +1155,7 @@ function getPublicImageUrl(
     return data?.publicUrl || null;
 }
 
-async function renderNews() {
+async function renderNews(category = currentCategory) {
     const container =
         document.getElementById(
             "news-list-container"
@@ -1158,7 +1170,7 @@ async function renderNews() {
     `;
 
     const newsList =
-        await getNews();
+        await getNews(category);
 
     if (
         newsList.length === 0
@@ -1166,11 +1178,11 @@ async function renderNews() {
         container.innerHTML = `
             <div class="empty-box">
                 <div class="empty-title">
-                    소식 없음
+                    ${categoryName(category)} 없음
                 </div>
 
                 <div class="empty-description">
-                    현재 등록된 소식이 없습니다.
+                    현재 등록된 ${categoryName(category)}이(가) 없습니다.
                 </div>
             </div>
         `;
@@ -1270,7 +1282,7 @@ async function openNewsDetail(
         await supabaseClient
             .from("news")
             .select(
-                "id, author, title, content, created_at, image_urls, view_count"
+                "id, author, title, content, created_at, image_urls, view_count, category"
             )
             .eq(
                 "id",
@@ -1291,6 +1303,8 @@ async function openNewsDetail(
 
         return;
     }
+
+    currentCategory = news.category || "general";
 
     if (currentUser) {
         await markNewsAsRead(
@@ -1316,7 +1330,7 @@ async function openNewsDetail(
         "visible"
     );
 
-    activateNewsMenu();
+    activateCategoryMenu(currentCategory);
 
     /*
         사진을 기존 article 내부가 아니라
@@ -1422,12 +1436,9 @@ async function openNewsDetail(
         </div>
     `;
 
-    const oldEditButton =
-        document.getElementById("edit-news-button");
-
-    if (oldEditButton) {
-        oldEditButton.remove();
-    }
+    document
+        .getElementById("edit-news-button")
+        ?.remove();
 
     if (isAdmin) {
         const editButton =
@@ -2105,7 +2116,7 @@ function resetWriteForm() {
 
     if (heading) {
         heading.textContent =
-            "소식 작성";
+            `${categoryName(currentCategory)} 작성`;
     }
 
     const saveButton =
@@ -2115,7 +2126,7 @@ function resetWriteForm() {
 
     if (saveButton) {
         saveButton.textContent =
-            "소식 등록";
+            `${categoryName(currentCategory)} 등록`;
     }
 }
 
@@ -2332,6 +2343,8 @@ function openEditScreen(
     editingNewsId =
         news.id;
 
+    currentCategory = news.category || "general";
+
     document.getElementById(
         "input-title"
     ).value =
@@ -2355,7 +2368,7 @@ function openEditScreen(
         "visible"
     );
 
-    activateNewsMenu();
+    activateCategoryMenu(currentCategory);
 
     const heading =
         writeScreen.querySelector(
@@ -2364,7 +2377,7 @@ function openEditScreen(
 
     if (heading) {
         heading.textContent =
-            "소식 수정";
+            `${categoryName(currentCategory)} 수정`;
     }
 
     const saveButton =
@@ -2400,7 +2413,7 @@ function closeEditMode() {
 
     if (saveButton) {
         saveButton.textContent =
-            "소식 등록";
+            `${categoryName(currentCategory)} 등록`;
     }
 }
 
@@ -2677,7 +2690,10 @@ async function saveNews() {
                         content,
 
                     image_urls:
-                        uploadedPaths
+                        uploadedPaths,
+
+                    category:
+                        currentCategory
                 });
 
         if (insertError) {
@@ -2694,9 +2710,11 @@ async function saveNews() {
             return;
         }
 
+        const savedCategory = currentCategory;
         resetWriteForm();
+        currentCategory = savedCategory;
 
-        await openNewsList();
+        await openCategoryList(savedCategory);
 
     } catch (error) {
 
@@ -2806,9 +2824,10 @@ async function deleteCurrentNews() {
         );
     }
 
+    const deletedCategory = currentCategory;
     currentNewsId = null;
 
-    await openNewsList();
+    await openCategoryList(deletedCategory);
 }
 
 function escapeHTML(value) {
@@ -2859,7 +2878,9 @@ document
     )
     .addEventListener(
         "click",
-        openNewsList
+        function() {
+            openCategoryList(currentCategory);
+        }
     );
 
 document
@@ -2868,7 +2889,9 @@ document
     )
     .addEventListener(
         "click",
-        openNewsList
+        function() {
+            openCategoryList(currentCategory);
+        }
     );
 
 document
@@ -2877,7 +2900,9 @@ document
     )
     .addEventListener(
         "click",
-        openNewsList
+        function() {
+            openCategoryList(currentCategory);
+        }
     );
 
 document
@@ -2916,10 +2941,26 @@ document
         openDonation
     );
 
-advancedNewsMenu.addEventListener(
-    "click",
-    openAdvancedNews
-);
+if (sportsNewsMenu) {
+    sportsNewsMenu.addEventListener(
+        "click",
+        openSportsNews
+    );
+}
+
+if (adminCommunityMenu) {
+    adminCommunityMenu.addEventListener(
+        "click",
+        openAdminCommunity
+    );
+}
+
+if (advancedNewsMenu) {
+    advancedNewsMenu.addEventListener(
+        "click",
+        openAdvancedNews
+    );
+}
 
 videoPreviewMenu.addEventListener(
     "click",
@@ -2932,45 +2973,37 @@ accountButton.addEventListener(
 );
 
 
-if (loginTab) {
-    loginTab.addEventListener(
-        "click",
-        function(event) {
-            event.preventDefault();
-            showAuthMode("login");
-        }
-    );
-}
+loginTab.addEventListener(
+    "click",
+    function() {
+        showAuthMode("login");
+    }
+);
 
-if (signupTab) {
-    signupTab.addEventListener(
-        "click",
-        function(event) {
-            event.preventDefault();
-            showAuthMode("signup");
-        }
-    );
-}
+signupTab.addEventListener(
+    "click",
+    function() {
+        showAuthMode("signup");
+    }
+);
 
-const loginSubmitButton =
-    document.getElementById("login-submit");
-
-if (loginSubmitButton) {
-    loginSubmitButton.addEventListener(
+document
+    .getElementById(
+        "login-submit"
+    )
+    .addEventListener(
         "click",
         login
     );
-}
 
-const signupSubmitButton =
-    document.getElementById("signup-submit");
-
-if (signupSubmitButton) {
-    signupSubmitButton.addEventListener(
+document
+    .getElementById(
+        "signup-submit"
+    )
+    .addEventListener(
         "click",
         signup
     );
-}
 
 document
     .getElementById(
