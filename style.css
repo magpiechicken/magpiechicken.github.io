@@ -959,7 +959,7 @@ button:disabled {
     .sidebar {
         width: 88px;
         flex: 0 0 88px;
-        border-right: 3px solid #000000;
+        border-right: 1.5px solid #000000;
     }
 
     .menu-item {
@@ -970,7 +970,7 @@ button:disabled {
         font-size: 15px;
         line-height: 1.2;
         text-align: center;
-        border-bottom: 2px solid #000000;
+        border-bottom: 1px solid #000000;
     }
 
     .menu-item.locked {
@@ -1734,4 +1734,3 @@ button:disabled {
         width: calc(100% - 24px) !important;
     }
 }
-
