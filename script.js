@@ -1,5 +1,4 @@
 "use strict";
-"use strict";
 
 const SUPABASE_URL =
     "https://kxrjevmxayolcqcgmixz.supabase.co";
@@ -200,9 +199,15 @@ function activateVideoPreviewMenu() {
 
 function updateAdminOnlyMenus() {
     if (advancedNewsMenu) {
-        advancedNewsMenu.disabled = false;
-        advancedNewsMenu.classList.remove("locked");
-        advancedNewsMenu.textContent = "고급소식";
+        if (isAdmin) {
+            advancedNewsMenu.disabled = false;
+            advancedNewsMenu.classList.remove("locked");
+            advancedNewsMenu.textContent = "고급소식";
+        } else {
+            advancedNewsMenu.disabled = true;
+            advancedNewsMenu.classList.add("locked");
+            advancedNewsMenu.textContent = "고급소식 🔒";
+        }
     }
 
     if (adminCommunityMenu) {
@@ -459,6 +464,11 @@ async function openSportsNews() {
 }
 
 async function openAdvancedNews() {
+    if (!isAdmin) {
+        alert("관리자만 고급소식을 이용할 수 있습니다.");
+        return;
+    }
+
     await openCategoryList("advanced");
 }
 
