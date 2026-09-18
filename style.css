@@ -1735,6 +1735,219 @@ button:disabled {
     }
 }
 /* =========================
+   관리자 커뮤니티
+========================= */
+.community-shell {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.community-description {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 16px 18px;
+    border: 2px solid #000000;
+    background: #ffffff;
+}
+
+.community-description strong {
+    font-size: 18px;
+    color: #111111;
+}
+
+.community-description span {
+    font-size: 14px;
+    color: #666666;
+    line-height: 1.5;
+}
+
+.community-messages {
+    height: 560px;
+    padding: 20px 16px;
+    overflow-y: auto;
+    border: 2px solid #000000;
+    background: #f6f6f6;
+    scroll-behavior: smooth;
+}
+
+.community-message {
+    display: flex;
+    flex-direction: column;
+    max-width: 78%;
+    margin-bottom: 16px;
+}
+
+.community-message.other {
+    align-items: flex-start;
+}
+
+.community-message.self {
+    margin-left: auto;
+    align-items: flex-end;
+}
+
+.community-name {
+    margin: 0 7px 5px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #333333;
+}
+
+.community-message-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 7px;
+}
+
+.community-message.self .community-message-row {
+    flex-direction: row-reverse;
+}
+
+.community-bubble {
+    max-width: min(620px, 68vw);
+    padding: 10px 13px;
+    border: 1px solid #d8d8d8;
+    border-radius: 16px;
+    background: #ffffff;
+    color: #222222;
+    font-size: 15px;
+    line-height: 1.55;
+    word-break: break-word;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+
+.community-message.self .community-bubble {
+    border-color: #ffd08a;
+    background: #ffdfaa;
+}
+
+.community-time {
+    flex: 0 0 auto;
+    font-size: 11px;
+    color: #888888;
+    white-space: nowrap;
+}
+
+.community-empty,
+.community-loading,
+.community-error {
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #777777;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.community-error {
+    color: #cc0000;
+}
+
+.community-readonly-notice {
+    padding: 11px 14px;
+    border: 1px solid #cccccc;
+    background: #fafafa;
+    color: #666666;
+    text-align: center;
+    font-size: 13px;
+}
+
+.community-composer {
+    border: 2px solid #000000;
+    background: #ffffff;
+    padding: 12px;
+}
+
+.community-composer textarea {
+    width: 100%;
+    min-height: 74px;
+    resize: vertical;
+    box-sizing: border-box;
+    padding: 11px 12px;
+    border: 1px solid #b8b8b8;
+    outline: none;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.55;
+}
+
+.community-composer textarea:focus {
+    border-color: #000000;
+}
+
+.community-composer textarea:disabled {
+    background: #f4f4f4;
+    color: #999999;
+}
+
+.community-composer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.community-message-length {
+    color: #888888;
+    font-size: 12px;
+}
+
+@media (max-width: 700px) {
+    .community-messages {
+        height: 52vh;
+        min-height: 360px;
+        padding: 14px 10px;
+        border-width: 1.5px;
+    }
+
+    .community-message {
+        max-width: 88%;
+        margin-bottom: 13px;
+    }
+
+    .community-bubble {
+        max-width: 68vw;
+        padding: 9px 11px;
+        border-radius: 14px;
+        font-size: 14px;
+    }
+
+    .community-name {
+        font-size: 12px;
+    }
+
+    .community-time {
+        font-size: 10px;
+    }
+
+    .community-description {
+        padding: 12px 13px;
+        border-width: 1.5px;
+    }
+
+    .community-description strong {
+        font-size: 16px;
+    }
+
+    .community-description span {
+        font-size: 12px;
+    }
+
+    .community-composer {
+        border-width: 1.5px;
+        padding: 9px;
+    }
+}
+
+/* =========================
    메뉴 구분
 ========================= */
 .menu-membership-divider {
@@ -1756,3 +1969,4 @@ button:disabled {
         font-size: 9px;
     }
 }
+
