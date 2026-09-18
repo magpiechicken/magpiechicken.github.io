@@ -1,746 +1,2186 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <style>
-/* 상단 배너: 컴퓨터는 airplane1.png, 모바일은 airplane.png */
-.top-bar {
-    background-color: transparent !important;
-    background-image: url("./airplane1.png") !important;
-    background-repeat: no-repeat !important;
-    background-position: center center !important;
-    background-size: cover !important;
+* {
+    box-sizing: border-box;
 }
 
-.top-bar .profile,
-.top-bar .title {
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
+    background: #ffffff;
+    color: #222222;
+    overflow: hidden;
+}
+
+button,
+input,
+textarea {
+    font-family: Arial, "Malgun Gothic", "맑은 고딕", sans-serif;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+/* =========================
+   상단
+========================= */
+
+.top-bar {
+    width: 100%;
+    height: 11.111111vh;
+    display: flex;
+    align-items: center;
+    background: #FF9400;
+    padding: 0 30px;
+    overflow: hidden;
+}
+
+.profile {
+    width: min(120px, calc(11.111111vh - 20px));
+    height: min(120px, calc(11.111111vh - 20px));
+    flex: 0 0 min(120px, calc(11.111111vh - 20px));
+    overflow: hidden;
+}
+
+.profile img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.title {
+    margin-left: 30px;
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1;
+    color: #ffffff;
+    white-space: nowrap;
+    text-shadow: 1px 1px 0 #000000;
+}
+
+.header-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.admin-button,
+.info-button {
+    background: #ffffff;
+    border: 3px solid #000000;
+    color: #111111;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.admin-button {
+    padding: 11px 18px;
+    font-size: 16px;
+}
+
+.info-button {
+    padding: 11px 16px;
+    font-size: 15px;
+}
+
+.admin-button:hover,
+.info-button:hover {
+    background: #eeeeee;
+}
+
+.admin-button.logged-in {
+    background: #000000;
+    color: #ffffff;
+}
+
+.header-line {
+    width: 100%;
+    height: 3px;
+    background: #000000;
+}
+
+/* =========================
+   전체 레이아웃
+========================= */
+
+.site-layout {
+    width: 100%;
+    height: calc(100vh - 11.111111vh - 3px);
+    display: flex;
+}
+
+.sidebar {
+    width: 265px;
+    height: 100%;
+    flex: 0 0 265px;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-right: 2px solid #000000;
+}
+
+.menu-item {
+    width: 100%;
+    height: 82px;
+    min-height: 82px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 20px;
+    background: #ffffff;
+    border: none;
+    border-bottom: 1.5px solid #000000;
+    font-size: 30px;
+    font-weight: 700;
+    color: #111111;
+    text-align: left;
+}
+
+.menu-item.active {
+    background: #FF9400;
+    color: #ffffff;
+}
+
+.menu-item.locked {
+    background: #f5f5f5;
+    color: #555555;
+}
+
+.menu-item.upcoming {
+    background: #eeeeee;
+    color: #999999;
+}
+
+.main-content {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    padding: 45px;
+    overflow-y: auto;
+    background: #ffffff;
+}
+
+/* =========================
+   화면
+========================= */
+
+.screen {
+    display: none;
+    width: 100%;
+}
+
+.screen.visible {
+    display: block;
+}
+
+.page-heading {
+    margin: 0;
+    font-size: 46px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.page-subtitle {
+    margin: 12px 0 0;
+    font-size: 20px;
+    color: #666666;
+}
+
+/* =========================
+   소개
+========================= */
+
+.intro-box {
+    width: 100%;
+    margin-top: 35px;
+    padding: 45px;
+    background: #ffffff;
+    border: 4px solid #000000;
+}
+
+.intro-box h2 {
+    margin: 0 0 22px;
+    font-size: 36px;
+}
+
+.intro-box p {
+    margin: 0 0 35px;
+    font-size: 22px;
+    line-height: 1.6;
+}
+
+.orange-button {
+    padding: 16px 30px;
+    background: #FF9400;
+    border: 3px solid #000000;
+    font-size: 21px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.orange-small-button {
+    flex-shrink: 0;
+    padding: 13px 22px;
+    background: #FF9400;
+    border: 3px solid #000000;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.orange-button:hover,
+.orange-small-button:hover {
+    background: #e98900;
+}
+
+.white-button {
+    margin-bottom: 30px;
+    padding: 12px 20px;
+    background: #ffffff;
+    border: 3px solid #000000;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111111;
+}
+
+.white-button:hover {
+    background: #eeeeee;
+}
+
+/* =========================
+   목록
+========================= */
+
+.list-header {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 35px;
+}
+
+.empty-box {
+    width: 100%;
+    min-height: 330px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border: 4px solid #000000;
+    text-align: center;
+}
+
+.empty-title {
+    font-size: 34px;
+    font-weight: 700;
+    color: #555555;
+}
+
+.empty-description {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #999999;
+}
+
+.news-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.news-row {
+    width: 100%;
+    min-height: 88px;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    background: #ffffff;
+    border: 3px solid #000000;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.15s ease;
+}
+
+.news-row:hover {
+    background: #fff4df;
+}
+
+.news-row.unread {
+    border-color: #e00000;
+}
+
+.news-author {
+    width: 200px;
+    flex-shrink: 0;
+    padding: 0 20px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #666666;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.news-title {
+    flex: 1;
+    min-width: 0;
+    padding: 0 20px;
+    font-size: 25px;
+    font-weight: 700;
+    color: #111111;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.news-unread {
+    margin-left: 10px;
+    color: #e00000;
+    font-size: 16px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.news-date {
+    width: 130px;
+    flex-shrink: 0;
+    padding: 0 20px;
+    font-size: 16px;
+    color: #777777;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* =========================
+   상세 글
+========================= */
+
+.detail-box {
+    width: 100%;
+    padding: 50px;
+    background: #ffffff;
+    border: 4px solid #000000;
+}
+
+.detail-author {
+    margin-bottom: 12px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #555555;
+}
+
+.detail-title-line {
+    width: 100%;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 35px;
+}
+
+.detail-title {
+    margin: 0;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.detail-date {
+    flex-shrink: 0;
+    font-size: 18px;
+    color: #777777;
+}
+
+.detail-content {
+    font-size: 24px;
+    line-height: 1.9;
+    color: #333333;
+    word-break: break-word;
+}
+
+/* =========================
+   사진
+========================= */
+
+.news-images {
+    width: 100%;
+    margin-top: 20px;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    gap: 14px;
+
+    background: transparent;
+    border: none;
+
+    line-height: 0;
+}
+
+.news-image {
+    width: auto !important;
+    height: 175px !important;
+
+    min-width: 0 !important;
+    min-height: 0 !important;
+
+    max-width: none !important;
+    max-height: 175px !important;
+
+    display: block !important;
+
+    flex: 0 0 auto !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    border: 2px solid #000000;
+
+    background: #ffffff;
+
+    object-fit: contain !important;
+    object-position: center center;
+}
+
+/* =========================
+   삭제
+========================= */
+
+.delete-button {
+    margin-top: 20px;
+    padding: 12px 22px;
+    background: #ffffff;
+    border: 3px solid #cc0000;
+    font-size: 18px;
+    font-weight: 700;
+    color: #cc0000;
+}
+
+.delete-button:hover {
+    background: #fff0f0;
+}
+
+/* =========================
+   작성
+========================= */
+
+.write-box {
+    width: 100%;
+    padding: 40px;
+    background: #ffffff;
+    border: 4px solid #000000;
+}
+
+.write-box h1 {
+    margin: 0 0 35px;
+    font-size: 42px;
+}
+
+.write-box label,
+.auth-box label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.write-box input,
+.write-box textarea,
+.auth-box input {
+    width: 100%;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #ffffff;
+    border: 3px solid #000000;
+    font-size: 19px;
+    outline: none;
+}
+
+.write-box textarea {
+    min-height: 260px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.file-input {
+    padding: 10px !important;
+}
+
+.image-help {
+    margin: -10px 0 18px;
+    color: #777777;
+    font-size: 14px;
+}
+
+.image-preview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.preview-item {
+    overflow: hidden;
+    border: 2px solid #000000;
+    background: #f5f5f5;
+}
+
+.preview-item img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: block;
+    object-fit: cover;
+}
+
+.preview-name {
+    padding: 6px;
+    font-size: 11px;
+    background: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.write-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+/* =========================
+   인증
+========================= */
+
+.auth-box {
+    width: min(520px, 100%);
+    margin: 50px auto;
+    padding: 0;
+    background: #ffffff;
+    border: 4px solid #000000;
+}
+
+.auth-tabs {
+    display: flex;
+    width: 100%;
+    border-bottom: 3px solid #000000;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 16px 10px;
+    background: #ffffff;
+    border: none;
+    border-right: 3px solid #000000;
+    font-size: 19px;
+    font-weight: 700;
+}
+
+.auth-tab:last-child {
+    border-right: none;
+}
+
+.auth-tab.active {
+    background: #FF9400;
+    color: #ffffff;
+}
+
+.auth-panel {
+    padding: 40px;
+}
+
+.auth-panel h1 {
+    margin: 0 0 12px;
+    font-size: 38px;
+}
+
+.auth-description {
+    margin: 0 0 35px;
+    font-size: 18px;
+    color: #666666;
+}
+
+.login-button {
+    width: 100%;
+    padding: 15px;
+    background: #FF9400;
+    border: 3px solid #000000;
+    font-size: 20px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.login-button:hover {
+    background: #e98900;
+}
+
+.login-cancel-button {
+    width: calc(100% - 80px);
+    margin: 0 40px 40px;
+    padding: 13px;
+    background: #ffffff;
+    border: 3px solid #000000;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111111;
+}
+
+.login-cancel-button:hover {
+    background: #eeeeee;
+}
+
+.login-error {
+    min-height: 24px;
+    margin: 0 40px 20px;
+    color: #cc0000;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* =========================
+   좋아요 / 댓글
+========================= */
+
+.news-interactions {
+    width: 100%;
+    margin-top: 28px;
+}
+
+.reaction-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid #000000;
+}
+
+.like-button {
+    padding: 11px 18px;
+    background: #ffffff;
+    border: 3px solid #000000;
+    color: #111111;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.like-button:hover {
+    background: #fff4df;
+}
+
+.like-button.liked {
+    background: #ffe8e8;
+    border-color: #d00000;
+    color: #d00000;
+}
+
+.like-button:disabled {
+    opacity: 0.65;
+}
+
+.comment-count {
+    font-size: 17px;
+    font-weight: 700;
+    color: #555555;
+}
+
+.comments-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-item {
+    position: relative;
+    padding: 18px 4px;
+    border-bottom: 1px solid #cccccc;
+}
+
+.comment-top {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.comment-author {
+    font-size: 17px;
+    color: #111111;
+}
+
+.comment-date {
+    font-size: 13px;
+    color: #888888;
+}
+
+.comment-content {
+    margin-top: 8px;
+    padding-right: 50px;
+    font-size: 17px;
+    line-height: 1.7;
+    color: #333333;
+    word-break: break-word;
+}
+
+.comment-delete-button {
+    position: absolute;
+    top: 16px;
+    right: 0;
+    padding: 5px 9px;
+    background: #ffffff;
+    border: 1px solid #999999;
+    color: #666666;
+    font-size: 12px;
+}
+
+.comment-delete-button:hover {
+    border-color: #cc0000;
+    color: #cc0000;
+}
+
+.comment-form {
+    margin-top: 18px;
+}
+
+.comment-form textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 13px;
+    background: #ffffff;
+    border: 3px solid #000000;
+    font-size: 16px;
+    line-height: 1.6;
+    resize: vertical;
+    outline: none;
+}
+
+.comment-form-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.comment-length {
+    font-size: 12px;
+    color: #888888;
+}
+
+.comment-login-notice,
+.comments-login-box,
+.comments-empty,
+.comments-loading,
+.comments-error {
+    padding: 18px 4px;
+    color: #777777;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.comments-error {
+    color: #cc0000;
+}
+
+.hidden {
     display: none !important;
 }
 
-@media (max-width: 700px) {
-    .top-bar {
-        background-image: url("./airplane.png") !important;
-        background-size: cover !important;
-        background-position: center center !important;
+/* =========================
+   태블릿 / 모바일
+========================= */
+
+@media (max-width: 1400px) {
+
+    .title {
+        font-size: 56px;
+    }
+
+    .sidebar {
+        width: 230px;
+        flex-basis: 230px;
+    }
+
+    .menu-item {
+        font-size: 27px;
     }
 }
 
-/* 로그인창 축소 */
-.auth-box {
-    width: 350px !important;
-    max-width: calc(100% - 30px) !important;
-    margin: 30px auto !important;
+@media (max-width: 1100px) {
+
+    .title {
+        margin-left: 22px;
+        font-size: 44px;
+    }
+
+    .sidebar {
+        width: 200px;
+        flex-basis: 200px;
+    }
+
+    .menu-item {
+        font-size: 23px;
+    }
+
+    .main-content {
+        padding: 30px;
+    }
+
+    .news-author {
+        width: 150px;
+    }
+
+    .news-title {
+        font-size: 18px;
+    }
+
+    .header-actions {
+        gap: 7px;
+    }
+
+    .admin-button,
+    .info-button {
+        padding: 8px 10px;
+        font-size: 13px;
+    }
 }
 
+@media (max-width: 800px) {
+
+    .title {
+        margin-left: 15px;
+        font-size: 30px;
+    }
+
+    .sidebar {
+        width: 160px;
+        flex-basis: 160px;
+    }
+
+    .menu-item {
+        font-size: 18px;
+    }
+
+    .main-content {
+        padding: 20px;
+    }
+
+    .news-author {
+        width: 110px;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    .news-title {
+        padding: 0 10px;
+        font-size: 18px;
+    }
+
+    .news-date {
+        width: 100px;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .top-bar {
+        height: 72px;
+        padding: 0 10px 0 12px;
+    }
+
+    .profile {
+        width: 48px;
+        height: 48px;
+        flex: 0 0 48px;
+    }
+
+    .title {
+        margin-left: 12px;
+        font-size: 21px;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .header-actions {
+        margin-left: auto;
+        gap: 5px;
+    }
+
+    .admin-button,
+    .info-button {
+        border-width: 2px;
+        font-size: 10px;
+        padding: 7px 8px;
+    }
+
+    .admin-button {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .info-button {
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .header-line {
+        height: 2px;
+    }
+
+    .site-layout {
+        height: calc(100vh - 74px);
+    }
+
+    .sidebar {
+        width: 88px;
+        flex: 0 0 88px;
+        border-right: 1.5px solid #000000;
+    }
+
+    .menu-item {
+        height: 58px;
+        min-height: 58px;
+        padding: 0 5px;
+        justify-content: center;
+        font-size: 15px;
+        line-height: 1.2;
+        text-align: center;
+        border-bottom: 1px solid #000000;
+    }
+
+    .menu-item.locked {
+        font-size: 13px;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .main-content {
+        width: calc(100% - 88px);
+        padding: 18px 14px;
+        overflow-y: auto;
+    }
+
+    .page-heading {
+        font-size: 28px;
+    }
+
+    .page-subtitle {
+        margin-top: 7px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .intro-box {
+        margin-top: 18px;
+        padding: 20px;
+        border-width: 2px;
+    }
+
+    .intro-box h2 {
+        margin-bottom: 12px;
+        font-size: 22px;
+    }
+
+    .intro-box p {
+        margin-bottom: 20px;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .orange-button {
+        width: 100%;
+        padding: 11px 10px;
+        border-width: 2px;
+        font-size: 15px;
+    }
+
+    .list-header {
+        margin-bottom: 18px;
+        gap: 10px;
+    }
+
+    .orange-small-button {
+        padding: 9px 12px;
+        border-width: 2px;
+        font-size: 13px;
+    }
+
+    .empty-box {
+        min-height: 220px;
+        border-width: 2px;
+    }
+
+    .empty-title {
+        font-size: 24px;
+    }
+
+    .empty-description {
+        font-size: 13px;
+    }
+
+    .news-list {
+        gap: 9px;
+    }
+
+    .news-row {
+        min-height: 64px;
+        border-width: 2px;
+    }
+
+    .news-row.unread {
+        border-width: 3px;
+    }
+
+    .news-author {
+        width: 86px;
+        padding: 0 7px;
+        font-size: 11px;
+    }
+
+    .news-title {
+        padding: 0 7px;
+        font-size: 15px;
+    }
+
+    .news-unread {
+        margin-left: 7px;
+        font-size: 10px;
+    }
+
+    .news-date {
+        width: 74px;
+        padding: 0 6px;
+        font-size: 10px;
+    }
+
+    .white-button {
+        margin-bottom: 16px;
+        padding: 8px 12px;
+        border-width: 2px;
+        font-size: 13px;
+    }
+
+    .detail-box {
+        padding: 20px;
+        border-width: 2px;
+    }
+
+    .detail-author {
+        margin-bottom: 8px;
+        font-size: 13px;
+    }
+
+    .detail-title-line {
+        gap: 6px;
+        margin-bottom: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .detail-title {
+        font-size: 27px;
+    }
+
+    .detail-date {
+        font-size: 12px;
+    }
+
+    .detail-content {
+        font-size: 15px;
+        line-height: 1.8;
+    }
+
+    /*
+      모바일 사진은 현재 괜찮다고 했으므로
+      기존 크기 유지
+    */
+    .news-images {
+        margin-top: 14px;
+        gap: 7px;
+    }
+
+    .news-image {
+        width: auto !important;
+        height: 125px !important;
+        max-width: none !important;
+        max-height: 125px !important;
+        flex: 0 0 auto !important;
+    }
+
+    .delete-button {
+        margin-top: 12px;
+        padding: 9px 14px;
+        border-width: 2px;
+        font-size: 13px;
+    }
+
+    .write-box {
+        padding: 20px;
+        border-width: 2px;
+    }
+
+    .write-box h1 {
+        margin-bottom: 22px;
+        font-size: 27px;
+    }
+
+    .write-box label,
+    .auth-box label {
+        margin-bottom: 7px;
+        font-size: 14px;
+    }
+
+    .write-box input,
+    .write-box textarea,
+    .auth-box input {
+        margin-bottom: 17px;
+        padding: 10px;
+        border-width: 2px;
+        font-size: 14px;
+    }
+
+    .write-box textarea {
+        min-height: 180px;
+    }
+
+    .file-input {
+        padding: 8px !important;
+    }
+
+    .image-help {
+        margin: -8px 0 15px;
+        font-size: 11px;
+    }
+
+    .image-preview {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .preview-name {
+        font-size: 9px;
+    }
+
+    .auth-box {
+        width: 100%;
+        margin: 20px auto;
+        border-width: 2px;
+    }
+
+    .auth-tabs {
+        border-bottom-width: 2px;
+    }
+
+    .auth-tab {
+        padding: 11px 8px;
+        border-right-width: 2px;
+        font-size: 14px;
+    }
+
+    .auth-panel {
+        padding: 22px;
+    }
+
+    .auth-panel h1 {
+        margin-bottom: 8px;
+        font-size: 26px;
+    }
+
+    .auth-description {
+        margin-bottom: 22px;
+        font-size: 13px;
+    }
+
+    .login-button {
+        padding: 11px;
+        border-width: 2px;
+        font-size: 15px;
+    }
+
+    .login-cancel-button {
+        width: calc(100% - 44px);
+        margin: 0 22px 22px;
+        padding: 11px;
+        border-width: 2px;
+        font-size: 15px;
+    }
+
+    .login-error {
+        margin: 0 22px 15px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 700px) {
+
+    .news-interactions {
+        margin-top: 20px;
+    }
+
+    .reaction-bar {
+        gap: 8px;
+        padding-bottom: 12px;
+    }
+
+    .like-button {
+        padding: 8px 12px;
+        border-width: 2px;
+        font-size: 13px;
+    }
+
+    .comment-count {
+        font-size: 12px;
+    }
+
+    .comment-item {
+        padding: 13px 2px;
+    }
+
+    .comment-author {
+        font-size: 13px;
+    }
+
+    .comment-date {
+        font-size: 10px;
+    }
+
+    .comment-content {
+        padding-right: 45px;
+        font-size: 13px;
+        line-height: 1.65;
+    }
+
+    .comment-delete-button {
+        top: 11px;
+        font-size: 10px;
+    }
+
+    .comment-form textarea {
+        min-height: 85px;
+        padding: 10px;
+        border-width: 2px;
+        font-size: 13px;
+    }
+
+    .comment-form-bottom {
+        gap: 8px;
+    }
+
+    .comment-length {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .top-bar {
+        height: 62px;
+        padding: 0 7px 0 8px;
+    }
+
+    .profile {
+        width: 40px;
+        height: 40px;
+        flex-basis: 40px;
+    }
+
+    .title {
+        margin-left: 8px;
+        font-size: 22px;
+    }
+
+    .header-actions {
+        gap: 4px;
+    }
+
+    .admin-button,
+    .info-button {
+        padding: 6px 7px;
+        font-size: 9px;
+    }
+
+    .admin-button {
+        max-width: 90px;
+    }
+
+    .info-button {
+        max-width: 66px;
+    }
+
+    .site-layout {
+        height: calc(100vh - 64px);
+    }
+
+    .sidebar {
+        width: 72px;
+        flex-basis: 72px;
+    }
+
+    .main-content {
+        width: calc(100% - 72px);
+        padding: 14px 10px;
+    }
+
+    .menu-item {
+        height: 52px;
+        min-height: 52px;
+        font-size: 13px;
+    }
+
+    .menu-item.locked {
+        font-size: 11px;
+    }
+
+    .page-heading {
+        font-size: 24px;
+    }
+
+    .news-author {
+        width: 70px;
+        font-size: 10px;
+    }
+
+    .news-title {
+        font-size: 13px;
+    }
+
+    .news-unread {
+        margin-left: 5px;
+        font-size: 9px;
+    }
+
+    .news-date {
+        width: 65px;
+        font-size: 9px;
+    }
+
+    .news-images {
+        gap: 5px;
+        margin-top: 12px;
+    }
+
+    .news-image {
+        width: auto !important;
+        height: 105px !important;
+        max-width: none !important;
+        max-height: 105px !important;
+        flex: 0 0 auto !important;
+    }
+
+}
+
+/* ==========================================================
+   최종 강제 적용
+   PC/컴퓨터에서만 사진 크기를 확실하게 175px로 고정
+   위의 다른 규칙보다 마지막에 적용됨
+========================================================== */
+
+@media (min-width: 701px) {
+
+    .news-images {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        gap: 14px !important;
+    }
+
+    .news-image {
+        width: auto !important;
+        height: 175px !important;
+
+        min-width: 0 !important;
+        min-height: 0 !important;
+
+        max-width: none !important;
+        max-height: 175px !important;
+
+        flex: 0 0 auto !important;
+
+        object-fit: contain !important;
+    }
+}
+
+/* =========================
+   조회수 / 목록 통계 / 수정
+========================= */
+
+.news-stats {
+    display: block;
+    margin-top: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #888888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.detail-stats {
+    margin: -18px 0 28px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #777777;
+}
+
+.edit-news-button {
+    margin-top: 20px;
+    margin-right: 8px;
+    padding: 12px 22px;
+    background: #FF9400;
+    border: 3px solid #000000;
+    font-size: 18px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.edit-news-button:hover {
+    background: #e98900;
+}
+
+@media (max-width: 700px) {
+
+    .news-stats {
+        margin-top: 3px;
+        font-size: 9px;
+    }
+
+    .detail-stats {
+        margin: -10px 0 18px;
+        font-size: 11px;
+    }
+
+    .edit-news-button {
+        margin-top: 12px;
+        margin-right: 5px;
+        padding: 9px 14px;
+        border-width: 2px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .news-stats {
+        font-size: 8px;
+    }
+
+    .detail-stats {
+        font-size: 10px;
+    }
+
+    .edit-news-button {
+        font-size: 12px;
+    }
+}
+
+/* =========================
+   인증 UI 안정화
+========================= */
+.auth-box {
+    position: relative;
+    z-index: 1;
+}
+
+.auth-tabs {
+    position: relative;
+    z-index: 2;
+}
+
+.auth-tab {
+    position: relative;
+    z-index: 3;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+}
+
+@media (min-width: 701px) {
+    .auth-tabs {
+        display: flex;
+    }
+
+    .auth-tab {
+        flex: 1 1 0;
+    }
+}
+
+@media (max-width: 700px) {
+    .auth-tabs {
+        display: flex;
+    }
+
+    .auth-tab {
+        flex: 1 1 0;
+    }
+}
+
+/* ==========================================================
+   로그인 / 회원가입 - PC + 노트북 + 태블릿 + 모바일 압축 배치
+   목적: 화면 아래로 최대한 내리지 않고 전체 폼을 보이게 함
+========================================================== */
+
+.auth-box {
+    width: min(900px, calc(100% - 24px)) !important;
+    max-width: 900px !important;
+    margin: 16px auto !important;
+    padding: 0 !important;
+}
+
+.auth-tabs {
+    display: flex !important;
+    width: 100%;
+}
+
+.auth-tab {
+    flex: 1 1 0 !important;
+    min-width: 0;
+    padding: 10px 8px !important;
+    font-size: 16px !important;
+}
+
+.auth-panel {
+    padding: 20px 24px !important;
+}
+
+.auth-panel h1 {
+    margin: 0 0 6px !important;
+    font-size: 30px !important;
+}
+
+.auth-description {
+    margin: 0 0 14px !important;
+    font-size: 14px !important;
+}
+
+/* PC / 노트북 / 큰 태블릿: 입력칸 가로 배치 */
+@media (min-width: 701px) {
+    .auth-box {
+        width: min(900px, calc(100% - 50px)) !important;
+        max-height: calc(100vh - 80px);
+        overflow: hidden;
+    }
+
+    .auth-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        column-gap: 18px;
+        row-gap: 0;
+        align-items: end;
+    }
+
+    .auth-panel h1,
+    .auth-panel .auth-description,
+    .auth-panel .login-button,
+    .auth-panel + .auth-panel {
+        grid-column: 1 / -1;
+    }
+
+    .auth-panel label {
+        margin-bottom: 5px !important;
+        font-size: 14px !important;
+    }
+
+    .auth-panel input {
+        width: 100% !important;
+        margin-bottom: 12px !important;
+        padding: 10px !important;
+        font-size: 15px !important;
+    }
+
+    .login-button {
+        padding: 11px !important;
+        font-size: 16px !important;
+        margin-top: 2px;
+    }
+
+    .login-cancel-button {
+        width: calc(100% - 48px) !important;
+        margin: 0 24px 18px !important;
+        padding: 10px !important;
+        font-size: 15px !important;
+    }
+
+    .login-error {
+        margin: 0 24px 10px !important;
+        font-size: 13px !important;
+        min-height: 18px !important;
+    }
+}
+
+/* 모바일 / 작은 화면: 세로지만 최대한 짧게 */
 @media (max-width: 700px) {
     .auth-box {
-        width: 340px !important;
-        max-width: calc(100% - 24px) !important;
-        margin: 20px auto !important;
+        width: min(430px, calc(100% - 16px)) !important;
+        max-width: 430px !important;
+        margin: 8px auto !important;
+        max-height: calc(100vh - 88px);
+        overflow-y: auto;
+    }
+
+    .auth-tab {
+        padding: 8px 6px !important;
+        font-size: 14px !important;
+    }
+
+    .auth-panel {
+        padding: 14px 16px !important;
+    }
+
+    .auth-panel h1 {
+        margin-bottom: 4px !important;
+        font-size: 24px !important;
+    }
+
+    .auth-description {
+        margin-bottom: 12px !important;
+        font-size: 12px !important;
+    }
+
+    .auth-panel label {
+        margin-bottom: 4px !important;
+        font-size: 12px !important;
+    }
+
+    .auth-panel input {
+        margin-bottom: 10px !important;
+        padding: 8px !important;
+        font-size: 13px !important;
+    }
+
+    .login-button {
+        padding: 9px !important;
+        font-size: 14px !important;
+    }
+
+    .login-cancel-button {
+        width: calc(100% - 32px) !important;
+        margin: 0 16px 12px !important;
+        padding: 9px !important;
+        font-size: 13px !important;
+    }
+
+    .login-error {
+        margin: 0 16px 10px !important;
+        font-size: 11px !important;
+        min-height: 15px !important;
     }
 }
-    </style>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=70">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
-     crossorigin="anonymous"></script>
-</head>
-
-<body>
-
-<header class="top-bar">
-
-    <div class="profile">
-        <img
-            src="./profile.png"
-            alt="까치치킨사장님"
-        >
-    </div>
-
-    <div class="title">
-        까치치킨사장님 공식 홈페이지
-    </div>
-
-    <div class="header-actions">
-<button
-            id="accountButton"
-            class="admin-button"
-            type="button"
-        >
-            로그인
-        </button>
-
-    </div>
-
-</header>
-
-<div class="header-line"></div>
-
-<div class="site-layout">
-
-    <aside class="sidebar">
-
-        <button
-            id="menu-news"
-            class="menu-item active"
-            type="button"
-        >
-            소식
-        </button>
-
-        <button
-            id="menu-sports-news"
-            class="menu-item"
-            type="button"
-        >
-            스포츠소식
-        </button>
-
-        <button
-            id="menu-admin-community"
-            class="menu-item"
-            type="button"
-        >
-            관리자 커뮤니티
-        </button>
-
-        <button
-            id="menu-donation"
-            class="menu-item"
-            type="button"
-        >
-            후원
-        </button>
-
-        <div class="menu-membership-divider" aria-hidden="true">
-            멤버십 전용
-        </div>
-
-        <button
-            id="menu-video-preview"
-            class="menu-item locked membership-menu"
-            type="button"
-            disabled
-        >
-            영상미리보기 🔒
-        </button>
-
-        <button
-            id="menu-advanced-news"
-            class="menu-item locked membership-menu"
-            type="button"
-        >
-            고급소식
-        </button>
-
-    </aside>
-
-    <main class="main-content">
-
-        <section
-            id="screen-news-intro"
-            class="screen visible"
-        >
-
-            <h1 class="page-heading">
-                소식
-            </h1>
-
-            <div class="intro-box">
-
-                <h2>
-                    까치치킨사장님 공식 소식
-                </h2>
-
-                <p>
-                    새로운 소식과 공지사항이 이곳에 표시됩니다.
-                </p>
-
-                <button
-                    id="show-news-list"
-                    class="orange-button"
-                    type="button"
-                >
-                    소식 자세히 보러가기
-                </button>
-
-            </div>
-
-        </section>
-
-        <section
-            id="screen-news-list"
-            class="screen"
-        >
-
-            <div class="list-header">
-
-                <div>
-
-                    <h1 class="page-heading">
-                        소식
-                    </h1>
-
-                    <p class="page-subtitle">
-                        까치치킨사장님의 소식과 공지사항입니다.
-                    </p>
-
-                </div>
-
-                <button
-                    id="show-write"
-                    class="orange-small-button hidden"
-                    type="button"
-                >
-                    + 소식 작성
-                </button>
-
-            </div>
-
-            <div
-                id="news-list-container"
-            ></div>
-
-        </section>
-
-        <section
-            id="screen-news-detail"
-            class="screen"
-        >
-
-            <button
-                id="back-to-list"
-                class="white-button"
-                type="button"
-            >
-                ← 목록
-            </button>
-
-            <article
-                id="news-detail-container"
-                class="detail-box"
-            ></article>
-
-            <div
-                id="news-detail-images"
-                class="news-images hidden"
-            ></div>
-
-            <section
-                id="news-interactions"
-                class="news-interactions"
-            >
-
-                <div class="reaction-bar">
-
-                    <button
-                        id="like-button"
-                        class="like-button"
-                        type="button"
-                    >
-                        ♡ 좋아요
-                        <span id="like-count">
-                            0
-                        </span>
-                    </button>
-
-                    <span
-                        id="comment-count"
-                        class="comment-count"
-                    >
-                        댓글 0개
-                    </span>
-
-                </div>
-
-                <div
-                    id="comments-container"
-                    class="comments-container"
-                ></div>
-
-                <div
-                    id="comment-login-notice"
-                    class="comment-login-notice hidden"
-                >
-                    로그인하면 좋아요와 댓글을 사용할 수 있습니다.
-                </div>
-
-                <div
-                    id="comment-form"
-                    class="comment-form hidden"
-                >
-
-                    <textarea
-                        id="comment-input"
-                        placeholder="댓글을 입력하세요."
-                        maxlength="500"
-                    ></textarea>
-
-                    <div class="comment-form-bottom">
-
-                        <span
-                            id="comment-length"
-                            class="comment-length"
-                        >
-                            0 / 500
-                        </span>
-
-                        <button
-                            id="comment-submit"
-                            class="orange-small-button"
-                            type="button"
-                        >
-                            댓글 등록
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-            <button
-                id="delete-news"
-                class="delete-button hidden"
-                type="button"
-            >
-                소식 삭제
-            </button>
-
-        </section>
-
-        <section
-            id="screen-write"
-            class="screen"
-        >
-
-            <button
-                id="back-from-write"
-                class="white-button"
-                type="button"
-            >
-                ← 목록
-            </button>
-
-            <div class="write-box">
-
-                <h1>
-                    소식 작성
-                </h1>
-
-                <label for="input-title">
-                    제목
-                </label>
-
-                <input
-                    id="input-title"
-                    type="text"
-                    placeholder="소식 제목"
-                    autocomplete="off"
-                >
-
-                <label for="input-content">
-                    내용
-                </label>
-
-                <textarea
-                    id="input-content"
-                    placeholder="소식 내용을 입력하세요."
-                ></textarea>
-
-                <label for="input-images">
-                    사진 첨부
-                </label>
-
-                <input
-                    id="input-images"
-                    class="file-input"
-                    type="file"
-                    accept="image/*"
-                    multiple
-                >
-
-                <p
-                    id="image-help"
-                    class="image-help"
-                >
-                    사진을 선택하면 아래에 미리보기가 표시됩니다.
-                    최대 5장 · 사진 1장당 최대 5MB
-                </p>
-
-                <div
-                    id="image-preview"
-                    class="image-preview"
-                ></div>
-
-                <div class="write-actions">
-
-                    <button
-                        id="cancel-write"
-                        class="white-button"
-                        type="button"
-                    >
-                        취소
-                    </button>
-
-                    <button
-                        id="save-write"
-                        class="orange-small-button"
-                        type="button"
-                    >
-                        소식 등록
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <section
-            id="screen-auth"
-            class="screen"
-        >
-
-            <div class="auth-box">
-
-                <div class="auth-tabs">
-
-                    <button
-                        id="login-tab"
-                        class="auth-tab active"
-                        type="button"
-                    >
-                        로그인
-                    </button>
-
-                    <button
-                        id="signup-tab"
-                        class="auth-tab"
-                        type="button"
-                    >
-                        회원가입
-                    </button>
-
-                </div>
-
-                <div
-                    id="auth-login-panel"
-                    class="auth-panel"
-                >
-
-                    <h1>
-                        로그인
-                    </h1>
-
-                    <p class="auth-description">
-                        가입한 계정으로 로그인하세요.
-                    </p>
-
-                    <label for="login-email">
-                        이메일
-                    </label>
-
-                    <input
-                        id="login-email"
-                        type="email"
-                        placeholder="이메일"
-                        autocomplete="email"
-                    >
-
-                    <label for="login-password">
-                        비밀번호
-                    </label>
-
-                    <input
-                        id="login-password"
-                        type="password"
-                        placeholder="비밀번호"
-                        autocomplete="current-password"
-                    >
-
-                    <button
-                        id="login-submit"
-                        class="login-button"
-                        type="button"
-                    >
-                        로그인
-                    </button>
-
-                </div>
-
-                <div
-                    id="auth-signup-panel"
-                    class="auth-panel hidden"
-                >
-
-                    <h1>
-                        회원가입
-                    </h1>
-
-                    <p class="auth-description">
-                        계정을 만들어주세요.
-                    </p>
-
-                    <label for="signup-username">
-                        아이디
-                    </label>
-
-                    <input
-                        id="signup-username"
-                        type="text"
-                        placeholder="사용할 아이디"
-                        autocomplete="username"
-                        maxlength="30"
-                    >
-
-                    <label for="signup-email">
-                        이메일
-                    </label>
-
-                    <input
-                        id="signup-email"
-                        type="email"
-                        placeholder="이메일"
-                        autocomplete="email"
-                    >
-
-                    <label for="signup-password">
-                        비밀번호
-                    </label>
-
-                    <input
-                        id="signup-password"
-                        type="password"
-                        placeholder="비밀번호"
-                        autocomplete="new-password"
-                    >
-
-                    <label for="signup-password-confirm">
-                        비밀번호 확인
-                    </label>
-
-                    <input
-                        id="signup-password-confirm"
-                        type="password"
-                        placeholder="비밀번호 다시 입력"
-                        autocomplete="new-password"
-                    >
-
-                    <button
-                        id="signup-submit"
-                        class="login-button"
-                        type="button"
-                    >
-                        회원가입
-                    </button>
-
-                </div>
-
-                <p
-                    id="auth-message"
-                    class="login-error"
-                ></p>
-
-                <button
-                    id="auth-cancel"
-                    class="login-cancel-button"
-                    type="button"
-                >
-                    취소
-                </button>
-
-            </div>
-
-        </section>
-
-        <section
-            id="screen-donation"
-            class="screen"
-        >
-
-            <h1 class="page-heading">
-                후원
-            </h1>
-
-        </section>
-
-        <section
-            id="screen-admin-community"
-            class="screen"
-        >
-
-            <h1 class="page-heading">
-                관리자 커뮤니티
-            </h1>
-
-            <div class="community-shell">
-
-                <div class="community-description">
-                    <strong>관리자 전용 채팅방</strong>
-                    <span>일반 방문자는 내용을 볼 수 있고, 관리자만 메시지를 보낼 수 있습니다.</span>
-                </div>
-
-                <div
-                    id="community-messages"
-                    class="community-messages"
-                >
-                    <div class="community-loading">
-                        커뮤니티를 불러오는 중...
-                    </div>
-                </div>
-
-                <div
-                    id="community-readonly-notice"
-                    class="community-readonly-notice"
-                >
-                    👀 현재 관리자만 채팅할 수 있습니다.
-                </div>
-
-                <div class="community-composer">
-                    <textarea
-                        id="community-message-input"
-                        maxlength="500"
-                        placeholder="관리자만 메시지를 보낼 수 있습니다."
-                    ></textarea>
-
-                    <div class="community-composer-bottom">
-                        <span
-                            id="community-message-length"
-                            class="community-message-length"
-                        >
-                            0 / 500
-                        </span>
-
-                        <button
-                            id="community-send-button"
-                            class="orange-small-button"
-                            type="button"
-                            disabled
-                        >
-                            전송
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-
-        </section>
-
-        <section
-            id="screen-advanced-news"
-            class="screen"
-        >
-
-            <h1 class="page-heading">
-                고급소식
-            </h1>
-
-            <div class="intro-box">
-
-                <h2>
-                    멤버십 유저 전용 고급소식
-                </h2>
-
-                <p>
-                    멤버십 유저만 확인할 수 있는 고급소식 공간입니다.
-                </p>
-
-            </div>
-
-        </section>
-
-        <section
-            id="screen-video-preview"
-            class="screen"
-        >
-
-            <h1 class="page-heading">
-                영상미리보기
-            </h1>
-
-            <div class="intro-box">
-
-                <h2>
-                    멤버십 유저 전용 영상미리보기
-                </h2>
-
-                <p>
-                    멤버십 유저만 확인할 수 있는 영상미리보기 공간입니다.
-                </p>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./script.js?v=70"></script>
-
-</body>
-</html>
-/* 관리자 커뮤니티 전용 수정 */
-
-/* 관리자 커뮤니티 화면에 들어오면 왼쪽 메뉴도 관리자 커뮤니티가 활성화 */
+
+/* 아주 작은 휴대폰: 회원가입도 가급적 한 화면에 */
+@media (max-width: 480px) {
+    .auth-box {
+        width: calc(100% - 10px) !important;
+        max-height: calc(100vh - 72px);
+        margin: 5px auto !important;
+    }
+
+    .auth-panel {
+        padding: 10px 12px !important;
+    }
+
+    .auth-panel h1 {
+        font-size: 21px !important;
+    }
+
+    .auth-description {
+        font-size: 11px !important;
+        margin-bottom: 9px !important;
+    }
+
+    .auth-panel label {
+        font-size: 11px !important;
+    }
+
+    .auth-panel input {
+        padding: 7px !important;
+        font-size: 12px !important;
+        margin-bottom: 7px !important;
+    }
+
+    .login-button {
+        padding: 8px !important;
+        font-size: 13px !important;
+    }
+
+    .login-cancel-button {
+        padding: 8px !important;
+        margin: 0 12px 10px !important;
+        width: calc(100% - 24px) !important;
+    }
+}
+/* =========================
+   관리자 커뮤니티
+========================= */
+.community-shell {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.community-description {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 16px 18px;
+    border: 2px solid #000000;
+    background: #ffffff;
+}
+
+.community-description strong {
+    font-size: 18px;
+    color: #111111;
+}
+
+.community-description span {
+    font-size: 14px;
+    color: #666666;
+    line-height: 1.5;
+}
+
+.community-messages {
+    height: 560px;
+    padding: 20px 16px;
+    overflow-y: auto;
+    border: 3px solid #111111;
+    background: #f3f3f3;
+    scroll-behavior: smooth;
+}
+
+.community-message {
+    display: flex;
+    flex-direction: column;
+    max-width: 78%;
+    margin-bottom: 16px;
+}
+
+.community-message.other {
+    align-items: flex-start;
+}
+
+.community-message.self {
+    margin-left: auto;
+    align-items: flex-end;
+}
+
+.community-name {
+    margin: 0 7px 5px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #333333;
+}
+
+.community-message-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 7px;
+}
+
+.community-message.self .community-message-row {
+    flex-direction: row-reverse;
+}
+
+.community-bubble {
+    max-width: min(620px, 68vw);
+    padding: 10px 13px;
+    border: 2px solid #222222;
+    border-radius: 15px;
+    background: #ffffff;
+    color: #111111;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.6;
+    word-break: break-word;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.10);
+}
+
+.community-message.self .community-bubble {
+    border-color: #111111;
+    background: #ffdf9a;
+}
+
+.community-time {
+    flex: 0 0 auto;
+    font-size: 11px;
+    color: #888888;
+    white-space: nowrap;
+}
+
+.community-empty,
+.community-loading,
+.community-error {
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #777777;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.community-error {
+    color: #cc0000;
+}
+
+.community-readonly-notice {
+    padding: 11px 14px;
+    border: 2px solid #222222;
+    background: #ffffff;
+    color: #666666;
+    text-align: center;
+    font-size: 13px;
+}
+
+.community-composer {
+    border: 2px solid #000000;
+    background: #ffffff;
+    padding: 12px;
+}
+
+.community-composer textarea {
+    width: 100%;
+    min-height: 74px;
+    resize: vertical;
+    box-sizing: border-box;
+    padding: 11px 12px;
+    border: 1px solid #b8b8b8;
+    outline: none;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.55;
+}
+
+.community-composer textarea:focus {
+    border-color: #000000;
+}
+
+.community-composer textarea:disabled {
+    background: #f4f4f4;
+    color: #999999;
+}
+
+.community-composer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.community-message-length {
+    color: #888888;
+    font-size: 12px;
+}
+
+@media (max-width: 700px) {
+    .community-messages {
+        height: 52vh;
+        min-height: 360px;
+        padding: 14px 10px;
+        border-width: 2px;
+    }
+
+    .community-message {
+        max-width: 88%;
+        margin-bottom: 13px;
+    }
+
+    .community-bubble {
+        max-width: 68vw;
+        padding: 9px 11px;
+        border-radius: 13px;
+        border-width: 2px;
+        font-size: 14px;
+    }
+
+    .community-name {
+        font-size: 12px;
+    }
+
+    .community-time {
+        font-size: 10px;
+    }
+
+    .community-description {
+        padding: 12px 13px;
+        border-width: 1.5px;
+    }
+
+    .community-description strong {
+        font-size: 16px;
+    }
+
+    .community-description span {
+        font-size: 12px;
+    }
+
+    .community-composer {
+        border-width: 1.5px;
+        padding: 9px;
+    }
+}
+
+/* =========================
+   메뉴 구분
+========================= */
+.menu-membership-divider {
+    width: 100%;
+    padding: 9px 8px 7px;
+    border-top: 1.5px solid #000000;
+    background: #ffffff;
+    color: #777777;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+}
+
+@media (max-width: 700px) {
+    .menu-membership-divider {
+        padding: 6px 3px 5px;
+        border-top-width: 1px;
+        font-size: 9px;
+    }
+}
+
+/* PC 관리자 커뮤니티 강제 스타일 */
+@media (min-width: 701px) {
+    .community-shell {
+        width: 100%;
+        max-width: 920px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .community-messages {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        min-height: 560px;
+        height: 560px;
+        padding: 20px 18px;
+        overflow-y: auto;
+        border: 3px solid #111 !important;
+        border-radius: 10px;
+        background: #f3f3f3 !important;
+    }
+
+    .community-message {
+        display: flex !important;
+        flex-direction: column !important;
+        width: fit-content;
+        max-width: 78%;
+        margin-bottom: 16px;
+    }
+
+    .community-message.other {
+        align-self: flex-start;
+        align-items: flex-start;
+    }
+
+    .community-message.self {
+        align-self: flex-end;
+        align-items: flex-end;
+        margin-left: auto;
+    }
+
+    .community-name {
+        display: block !important;
+        margin: 0 8px 5px;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        color: #222 !important;
+    }
+
+    .community-message-row {
+        display: flex !important;
+        align-items: flex-end;
+        gap: 7px;
+    }
+
+    .community-message.self .community-message-row {
+        flex-direction: row-reverse;
+    }
+
+    .community-bubble {
+        display: block !important;
+        max-width: min(620px, 65vw);
+        padding: 10px 14px !important;
+        border: 2px solid #222 !important;
+        border-radius: 16px !important;
+        background: #fff !important;
+        color: #111 !important;
+        font-size: 15px !important;
+        line-height: 1.6 !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,.10) !important;
+        word-break: break-word;
+        white-space: pre-wrap;
+    }
+
+    .community-message.self .community-bubble {
+        background: #ffdf9a !important;
+        border-color: #111 !important;
+    }
+
+    .community-time {
+        display: inline-block !important;
+        font-size: 11px !important;
+        color: #777 !important;
+        white-space: nowrap;
+    }
+}
+
+/* ==========================================================
+   관리자 커뮤니티 최종 수정
+   - 커뮤니티 화면에서 소식 주황색 활성화 제거
+   - 관리자 커뮤니티만 주황색 활성화
+   - 말풍선은 글자 길이에 맞게 자동으로 축소/확장
+========================================================== */
+
+/* 관리자 커뮤니티 화면에서는 소식 메뉴를 비활성 상태로 */
 .site-layout:has(#screen-admin-community.visible) #menu-news.active {
     background: #ffffff !important;
     color: #111111 !important;
 }
 
+/* 관리자 커뮤니티 메뉴를 현재 선택 메뉴로 표시 */
 .site-layout:has(#screen-admin-community.visible) #menu-admin-community {
-    background: #ff9400 !important;
+    background: #FF9400 !important;
     color: #ffffff !important;
 }
 
-/* 말풍선은 내용 길이에 맞춰 늘어나고, 너무 길면 자동 줄바꿈 */
+/* 관리자 커뮤니티 메시지 전체 */
 .community-message {
     width: fit-content !important;
-    max-width: 82% !important;
+    max-width: 78% !important;
 }
 
-.community-message-row {
+.community-message.other {
+    align-self: flex-start !important;
+    align-items: flex-start !important;
+}
+
+.community-message.self {
+    align-self: flex-end !important;
+    align-items: flex-end !important;
+    margin-left: auto !important;
+}
+
+/* 닉네임 */
+.community-name {
     width: fit-content !important;
     max-width: 100% !important;
+    white-space: nowrap !important;
+}
+
+/* 말풍선이 글자보다 불필요하게 커지지 않도록 */
+.community-message-row {
+    display: flex !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    align-items: flex-end !important;
 }
 
 .community-bubble {
+    display: block !important;
     width: fit-content !important;
     max-width: min(620px, 65vw) !important;
     min-width: 0 !important;
     box-sizing: border-box !important;
-    display: inline-block !important;
-    white-space: normal !important;
+    padding: 8px 12px !important;
+    border: 2px solid #222222 !important;
+    border-radius: 16px !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    font-weight: 500 !important;
+    white-space: pre-wrap !important;
     overflow-wrap: anywhere !important;
     word-break: break-word !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.10) !important;
 }
 
-/* PC: 짧은 글은 짧게, 긴 글은 필요한 만큼만 */
+.community-message.self .community-bubble {
+    background: #ffdf9a !important;
+    border-color: #111111 !important;
+}
+
+.community-time {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+}
+
+/* PC */
 @media (min-width: 701px) {
     .community-message {
         width: fit-content !important;
-        max-width: 82% !important;
+        max-width: 78% !important;
+    }
+
+    .community-message-row {
+        width: fit-content !important;
+        max-width: 100% !important;
     }
 
     .community-bubble {
-        width: max-content !important;
-        max-width: min(620px, 60vw) !important;
+        width: fit-content !important;
+        max-width: min(620px, 55vw) !important;
+        padding: 8px 12px !important;
+        font-size: 15px !important;
+        line-height: 1.5 !important;
     }
 }
 
-/* 모바일 카톡 느낌 유지 */
+/* 모바일 */
 @media (max-width: 700px) {
     .community-message {
         width: fit-content !important;
         max-width: 90% !important;
     }
 
+    .community-message-row {
+        width: fit-content !important;
+        max-width: 100% !important;
+    }
+
     .community-bubble {
-        width: max-content !important;
+        width: fit-content !important;
         max-width: 68vw !important;
+        padding: 7px 10px !important;
+        border-radius: 13px !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
     }
 }
