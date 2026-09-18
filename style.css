@@ -41,9 +41,16 @@ button:disabled {
     display: flex;
     align-items: center;
     background: #FF9400;
+    background-image: url("./airplane1.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+    background-size: cover;
     padding: 0 30px;
     overflow: hidden;
 }
+
+.top-bar .profile,
+.top-bar .title { display: none; }
 
 .profile {
     width: min(120px, calc(11.111111vh - 20px));
@@ -461,7 +468,7 @@ button:disabled {
     background: #ffffff;
 
     object-fit: contain !important;
-    object-position: center center;
+    object-position: left top;
 }
 
 /* =========================
@@ -1738,8 +1745,7 @@ button:disabled {
    관리자 커뮤니티
 ========================= */
 .community-shell {
-    width: 100%;
-    max-width: 920px;
+    width: min(920px, 100%);
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -1751,121 +1757,92 @@ button:disabled {
     flex-direction: column;
     gap: 5px;
     padding: 16px 18px;
-    border: 2px solid #000000;
-    background: #ffffff;
+    border: 2px solid #000;
+    background: #fff;
 }
-
-.community-description strong {
-    font-size: 18px;
-    color: #111111;
-}
-
-.community-description span {
-    font-size: 14px;
-    color: #666666;
-    line-height: 1.5;
-}
+.community-description strong { font-size: 18px; }
+.community-description span { font-size: 14px; color: #666; line-height: 1.5; }
 
 .community-messages {
     height: 560px;
     padding: 20px 16px;
     overflow-y: auto;
-    border: 3px solid #111111;
+    border: 3px solid #111;
+    border-radius: 10px;
     background: #f3f3f3;
-    scroll-behavior: smooth;
 }
 
 .community-message {
     display: flex;
     flex-direction: column;
-    max-width: 78%;
+    width: fit-content;
+    max-width: 82%;
     margin-bottom: 16px;
 }
-
-.community-message.other {
-    align-items: flex-start;
-}
-
-.community-message.self {
-    margin-left: auto;
-    align-items: flex-end;
-}
-
+.community-message.other { align-items: flex-start; }
+.community-message.self { margin-left: auto; align-items: flex-end; }
 .community-name {
-    margin: 0 7px 5px;
+    margin: 0 8px 5px;
     font-size: 13px;
     font-weight: 700;
-    color: #333333;
+    color: #222;
 }
-
 .community-message-row {
-    display: flex;
+    display: inline-flex;
+    width: fit-content;
+    max-width: 100%;
     align-items: flex-end;
-    gap: 7px;
+    gap: 6px;
 }
-
-.community-message.self .community-message-row {
-    flex-direction: row-reverse;
-}
-
+.community-message.self .community-message-row { flex-direction: row-reverse; }
 .community-bubble {
+    display: inline-block;
+    width: fit-content;
     max-width: min(620px, 68vw);
-    padding: 10px 13px;
-    border: 2px solid #222222;
-    border-radius: 15px;
-    background: #ffffff;
-    color: #111111;
+    min-width: 0;
+    padding: 7px 10px;
+    border: 2px solid #222;
+    border-radius: 14px;
+    background: #fff;
+    color: #111;
     font-size: 15px;
-    font-weight: 500;
-    line-height: 1.6;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
     word-break: break-word;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.10);
+    box-shadow: 0 2px 5px rgba(0,0,0,.10);
 }
-
-.community-message.self .community-bubble {
-    border-color: #111111;
-    background: #ffdf9a;
-}
-
+.community-message.self .community-bubble { background: #ffdf9a; }
 .community-time {
     flex: 0 0 auto;
     font-size: 11px;
-    color: #888888;
+    color: #777;
     white-space: nowrap;
 }
-
-.community-empty,
-.community-loading,
-.community-error {
+.community-empty, .community-loading, .community-error {
     min-height: 220px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: #777777;
+    color: #777;
     font-size: 14px;
     line-height: 1.6;
 }
-
-.community-error {
-    color: #cc0000;
-}
-
+.community-error { color: #c00; }
 .community-readonly-notice {
     padding: 11px 14px;
-    border: 2px solid #222222;
-    background: #ffffff;
-    color: #666666;
+    border: 2px solid #222;
+    background: #fff;
+    color: #666;
     text-align: center;
     font-size: 13px;
 }
-
 .community-composer {
-    border: 2px solid #000000;
-    background: #ffffff;
     padding: 12px;
+    border: 2px solid #000;
+    background: #fff;
 }
-
 .community-composer textarea {
     width: 100%;
     min-height: 74px;
@@ -1873,21 +1850,13 @@ button:disabled {
     box-sizing: border-box;
     padding: 11px 12px;
     border: 1px solid #b8b8b8;
-    outline: none;
-    font-family: inherit;
+    outline: 0;
+    font: inherit;
     font-size: 15px;
     line-height: 1.55;
 }
-
-.community-composer textarea:focus {
-    border-color: #000000;
-}
-
-.community-composer textarea:disabled {
-    background: #f4f4f4;
-    color: #999999;
-}
-
+.community-composer textarea:focus { border-color: #000; }
+.community-composer textarea:disabled { background: #f4f4f4; color: #999; }
 .community-composer-bottom {
     display: flex;
     align-items: center;
@@ -1895,58 +1864,35 @@ button:disabled {
     gap: 12px;
     margin-top: 8px;
 }
-
-.community-message-length {
-    color: #888888;
-    font-size: 12px;
-}
+.community-message-length { color: #888; font-size: 12px; }
 
 @media (max-width: 700px) {
+    .top-bar {
+        background-image: url("./airplane.png");
+        background-position: left top;
+        background-size: cover;
+    }
     .community-messages {
         height: 52vh;
         min-height: 360px;
         padding: 14px 10px;
         border-width: 2px;
     }
-
-    .community-message {
-        max-width: 88%;
-        margin-bottom: 13px;
-    }
-
+    .community-message { max-width: 91%; margin-bottom: 13px; }
+    .community-message-row { gap: 5px; }
     .community-bubble {
-        max-width: 68vw;
-        padding: 9px 11px;
-        border-radius: 13px;
-        border-width: 2px;
+        max-width: 67vw;
+        padding: 6px 9px;
+        border-radius: 11px;
         font-size: 14px;
+        line-height: 1.4;
     }
-
-    .community-name {
-        font-size: 12px;
-    }
-
-    .community-time {
-        font-size: 10px;
-    }
-
-    .community-description {
-        padding: 12px 13px;
-        border-width: 1.5px;
-    }
-
-    .community-description strong {
-        font-size: 16px;
-    }
-
-    .community-description span {
-        font-size: 12px;
-    }
-
-    .community-composer {
-        border-width: 1.5px;
-        padding: 9px;
-    }
+    .community-name { margin: 0 6px 4px; font-size: 11px; }
+    .community-time { font-size: 9px; }
+    .community-description { padding: 12px 13px; border-width: 1.5px; }
+    .community-description strong { font-size: 16px; }
+    .community-description span { font-size: 12px; }
+    .community-composer { border-width: 1.5px; padding: 9px; }
 }
 
 /* =========================
@@ -1972,216 +1918,8 @@ button:disabled {
     }
 }
 
-/* PC 관리자 커뮤니티 강제 스타일 */
-@media (min-width: 701px) {
-    .community-shell {
-        width: 100%;
-        max-width: 920px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-    }
-
-    .community-messages {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        min-height: 560px;
-        height: 560px;
-        padding: 20px 18px;
-        overflow-y: auto;
-        border: 3px solid #111 !important;
-        border-radius: 10px;
-        background: #f3f3f3 !important;
-    }
-
-    .community-message {
-        display: flex !important;
-        flex-direction: column !important;
-        width: fit-content;
-        max-width: 78%;
-        margin-bottom: 16px;
-    }
-
-    .community-message.other {
-        align-self: flex-start;
-        align-items: flex-start;
-    }
-
-    .community-message.self {
-        align-self: flex-end;
-        align-items: flex-end;
-        margin-left: auto;
-    }
-
-    .community-name {
-        display: block !important;
-        margin: 0 8px 5px;
-        font-size: 13px !important;
-        font-weight: 700 !important;
-        color: #222 !important;
-    }
-
-    .community-message-row {
-        display: flex !important;
-        align-items: flex-end;
-        gap: 7px;
-    }
-
-    .community-message.self .community-message-row {
-        flex-direction: row-reverse;
-    }
-
-    .community-bubble {
-        display: block !important;
-        max-width: min(620px, 65vw);
-        padding: 10px 14px !important;
-        border: 2px solid #222 !important;
-        border-radius: 16px !important;
-        background: #fff !important;
-        color: #111 !important;
-        font-size: 15px !important;
-        line-height: 1.6 !important;
-        box-shadow: 0 2px 5px rgba(0,0,0,.10) !important;
-        word-break: break-word;
-        white-space: pre-wrap;
-    }
-
-    .community-message.self .community-bubble {
-        background: #ffdf9a !important;
-        border-color: #111 !important;
-    }
-
-    .community-time {
-        display: inline-block !important;
-        font-size: 11px !important;
-        color: #777 !important;
-        white-space: nowrap;
-    }
-}
-
-/* ==========================================================
-   관리자 커뮤니티 최종 수정
-   - 커뮤니티 화면에서 소식 주황색 활성화 제거
-   - 관리자 커뮤니티만 주황색 활성화
-   - 말풍선은 글자 길이에 맞게 자동으로 축소/확장
-========================================================== */
-
-/* 관리자 커뮤니티 화면에서는 소식 메뉴를 비활성 상태로 */
-.site-layout:has(#screen-admin-community.visible) #menu-news.active {
-    background: #ffffff !important;
-    color: #111111 !important;
-}
-
-/* 관리자 커뮤니티 메뉴를 현재 선택 메뉴로 표시 */
-.site-layout:has(#screen-admin-community.visible) #menu-admin-community {
-    background: #FF9400 !important;
-    color: #ffffff !important;
-}
-
-/* 관리자 커뮤니티 메시지 전체 */
-.community-message {
-    width: fit-content !important;
-    max-width: 78% !important;
-}
-
-.community-message.other {
-    align-self: flex-start !important;
-    align-items: flex-start !important;
-}
-
-.community-message.self {
-    align-self: flex-end !important;
-    align-items: flex-end !important;
-    margin-left: auto !important;
-}
-
-/* 닉네임 */
-.community-name {
-    width: fit-content !important;
-    max-width: 100% !important;
-    white-space: nowrap !important;
-}
-
-/* 말풍선이 글자보다 불필요하게 커지지 않도록 */
-.community-message-row {
-    display: flex !important;
-    width: fit-content !important;
-    max-width: 100% !important;
-    align-items: flex-end !important;
-}
-
-.community-bubble {
-    display: block !important;
-    width: fit-content !important;
-    max-width: min(620px, 65vw) !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    padding: 8px 12px !important;
-    border: 2px solid #222222 !important;
-    border-radius: 16px !important;
-    background: #ffffff !important;
-    color: #111111 !important;
-    font-size: 15px !important;
-    line-height: 1.5 !important;
-    font-weight: 500 !important;
-    white-space: pre-wrap !important;
-    overflow-wrap: anywhere !important;
-    word-break: break-word !important;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.10) !important;
-}
-
-.community-message.self .community-bubble {
-    background: #ffdf9a !important;
-    border-color: #111111 !important;
-}
-
-.community-time {
-    flex: 0 0 auto !important;
-    white-space: nowrap !important;
-}
-
-/* PC */
-@media (min-width: 701px) {
-    .community-message {
-        width: fit-content !important;
-        max-width: 78% !important;
-    }
-
-    .community-message-row {
-        width: fit-content !important;
-        max-width: 100% !important;
-    }
-
-    .community-bubble {
-        width: fit-content !important;
-        max-width: min(620px, 55vw) !important;
-        padding: 8px 12px !important;
-        font-size: 15px !important;
-        line-height: 1.5 !important;
-    }
-}
-
-/* 모바일 */
-@media (max-width: 700px) {
-    .community-message {
-        width: fit-content !important;
-        max-width: 90% !important;
-    }
-
-    .community-message-row {
-        width: fit-content !important;
-        max-width: 100% !important;
-    }
-
-    .community-bubble {
-        width: fit-content !important;
-        max-width: 68vw !important;
-        padding: 7px 10px !important;
-        border-radius: 13px !important;
-        font-size: 14px !important;
-        line-height: 1.5 !important;
-    }
-}
- 
+/* final image anchoring */
+.top-bar { background-position: left top !important; }
+@media (max-width: 700px) { .top-bar { background-image: url("./airplane.png") !important; background-position: left top !important; background-size: cover !important; } }
+.news-image { object-position: left top !important; }
+.edit-news-button { margin-top: 12px; }
