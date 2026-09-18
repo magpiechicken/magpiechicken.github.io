@@ -191,12 +191,16 @@ function activateAdminCommunityMenu() {
 
 function activateAdvancedNewsMenu() {
     clearMenuActive();
-    advancedNewsMenu.classList.add("active");
+    if (advancedNewsMenu) {
+        advancedNewsMenu.classList.add("active");
+    }
 }
 
 function activateVideoPreviewMenu() {
     clearMenuActive();
-    videoPreviewMenu.classList.add("active");
+    if (videoPreviewMenu) {
+        videoPreviewMenu.classList.add("active");
+    }
 }
 
 function updateAdminOnlyMenus() {
@@ -209,18 +213,6 @@ function updateAdminOnlyMenus() {
             advancedNewsMenu.disabled = true;
             advancedNewsMenu.classList.add("locked");
             advancedNewsMenu.textContent = "고급소식 🔒";
-        }
-    }
-
-    if (adminCommunityMenu) {
-        if (isAdmin) {
-            adminCommunityMenu.disabled = false;
-            adminCommunityMenu.classList.remove("locked");
-            adminCommunityMenu.textContent = "관리자 커뮤니티";
-        } else {
-            adminCommunityMenu.disabled = true;
-            adminCommunityMenu.classList.add("locked");
-            adminCommunityMenu.textContent = "관리자 커뮤니티 🔒";
         }
     }
 
@@ -427,10 +419,44 @@ function activateCategoryMenu(category) {
 }
 
 function openNewsIntro() {
-    currentCategory = "general";
+    openCategoryIntro("general");
+}
+
+function openCategoryIntro(category) {
+    currentCategory = category;
     hideAllScreens();
     introScreen.classList.add("visible");
-    activateNewsMenu();
+
+    if (category === "sports") {
+        activateSportsNewsMenu();
+    } else if (category === "advanced") {
+        activateAdvancedNewsMenu();
+    } else {
+        activateNewsMenu();
+    }
+
+    const heading = introScreen.querySelector(".page-heading");
+    const introTitle = introScreen.querySelector(".intro-box h2");
+    const introText = introScreen.querySelector(".intro-box p");
+    const detailButton = document.getElementById("show-news-list");
+
+    if (category === "sports") {
+        if (heading) heading.textContent = "스포츠소식";
+        if (introTitle) introTitle.textContent = "까치치킨사장님 스포츠소식";
+        if (introText) introText.textContent = "스포츠 관련 새로운 소식과 공지사항이 이곳에 표시됩니다.";
+        if (detailButton) detailButton.textContent = "스포츠소식 자세히 보러가기";
+    } else if (category === "advanced") {
+        if (heading) heading.textContent = "고급소식";
+        if (introTitle) introTitle.textContent = "까치치킨사장님 고급소식";
+        if (introText) introText.textContent = "관리자 전용 고급소식과 공지사항이 이곳에 표시됩니다.";
+        if (detailButton) detailButton.textContent = "고급소식 자세히 보러가기";
+    } else {
+        if (heading) heading.textContent = "소식";
+        if (introTitle) introTitle.textContent = "까치치킨사장님 공식 소식";
+        if (introText) introText.textContent = "새로운 소식과 공지사항이 이곳에 표시됩니다.";
+        if (detailButton) detailButton.textContent = "소식 자세히 보러가기";
+    }
+
     resetDetailUI();
     updateAuthUI();
     scrollTop();
@@ -468,7 +494,7 @@ async function openNewsList() {
 }
 
 async function openSportsNews() {
-    await openCategoryList("sports");
+    openCategoryIntro("sports");
 }
 
 async function openAdvancedNews() {
@@ -477,15 +503,10 @@ async function openAdvancedNews() {
         return;
     }
 
-    await openCategoryList("advanced");
+    openCategoryIntro("advanced");
 }
 
 function openAdminCommunity() {
-    if (!isAdmin) {
-        alert("관리자만 이용할 수 있습니다.");
-        return;
-    }
-
     hideAllScreens();
     if (adminCommunityScreen) {
         adminCommunityScreen.classList.add("visible");
@@ -2899,7 +2920,9 @@ document
     )
     .addEventListener(
         "click",
-        openNewsList
+        function() {
+            openCategoryList(currentCategory);
+        }
     );
 
 document
