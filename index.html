@@ -684,3 +684,63 @@
 
 </body>
 </html>
+/* 관리자 커뮤니티 전용 수정 */
+
+/* 관리자 커뮤니티 화면에 들어오면 왼쪽 메뉴도 관리자 커뮤니티가 활성화 */
+.site-layout:has(#screen-admin-community.visible) #menu-news.active {
+    background: #ffffff !important;
+    color: #111111 !important;
+}
+
+.site-layout:has(#screen-admin-community.visible) #menu-admin-community {
+    background: #ff9400 !important;
+    color: #ffffff !important;
+}
+
+/* 말풍선은 내용 길이에 맞춰 늘어나고, 너무 길면 자동 줄바꿈 */
+.community-message {
+    width: fit-content !important;
+    max-width: 82% !important;
+}
+
+.community-message-row {
+    width: fit-content !important;
+    max-width: 100% !important;
+}
+
+.community-bubble {
+    width: fit-content !important;
+    max-width: min(620px, 65vw) !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    display: inline-block !important;
+    white-space: normal !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+}
+
+/* PC: 짧은 글은 짧게, 긴 글은 필요한 만큼만 */
+@media (min-width: 701px) {
+    .community-message {
+        width: fit-content !important;
+        max-width: 82% !important;
+    }
+
+    .community-bubble {
+        width: max-content !important;
+        max-width: min(620px, 60vw) !important;
+    }
+}
+
+/* 모바일 카톡 느낌 유지 */
+@media (max-width: 700px) {
+    .community-message {
+        width: fit-content !important;
+        max-width: 90% !important;
+    }
+
+    .community-bubble {
+        width: max-content !important;
+        max-width: 68vw !important;
+    }
+}
