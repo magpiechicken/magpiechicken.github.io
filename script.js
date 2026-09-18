@@ -434,6 +434,8 @@ function activateCategoryMenu(category) {
         activateSportsNewsMenu();
     } else if (category === "advanced") {
         activateAdvancedNewsMenu();
+    } else if (category === "community") {
+        activateAdminCommunityMenu();
     } else {
         activateNewsMenu();
     }
