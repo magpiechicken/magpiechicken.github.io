@@ -450,13 +450,7 @@ function openCategoryIntro(category) {
     hideAllScreens();
     introScreen.classList.add("visible");
 
-    if (category === "sports") {
-        activateSportsNewsMenu();
-    } else if (category === "advanced") {
-        activateAdvancedNewsMenu();
-    } else {
-        activateNewsMenu();
-    }
+    activateCategoryMenu(category);
 
     const heading = introScreen.querySelector(".page-heading");
     const introTitle = introScreen.querySelector(".intro-box h2");
@@ -1729,10 +1723,6 @@ async function openNewsDetail(
         </div>
     `;
 
-    document
-        .getElementById("edit-news-button")
-        ?.remove();
-
     if (isAdmin) {
         const editButton =
             document.createElement("button");
@@ -1740,14 +1730,12 @@ async function openNewsDetail(
         editButton.id =
             "edit-news-button";
         editButton.className =
-            "orange-small-button";
+            "orange-small-button edit-news-button";
         editButton.type =
             "button";
         editButton.textContent =
             "소식 수정";
 
-        editButton.style.marginTop =
-            "12px";
 
         editButton.addEventListener(
             "click",
