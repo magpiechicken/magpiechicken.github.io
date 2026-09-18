@@ -1,6 +1,6 @@
 "use strict";
 
-// Updated: category menus, admin-only video preview, intro-first navigation, comment usernames
+// Updated: category menus, admin-only video preview, intro-first navigation, community intro, comment usernames
 
 const SUPABASE_URL =
     "https://kxrjevmxayolcqcgmixz.supabase.co";
@@ -471,6 +471,11 @@ function openCategoryIntro(category) {
         if (introTitle) introTitle.textContent = "까치치킨사장님 고급소식";
         if (introText) introText.textContent = "관리자 전용 고급소식과 공지사항이 이곳에 표시됩니다.";
         if (detailButton) detailButton.textContent = "고급소식 자세히 보러가기";
+    } else if (category === "community") {
+        if (heading) heading.textContent = "관리자 커뮤니티";
+        if (introTitle) introTitle.textContent = "관리자 커뮤니티 안내";
+        if (introText) introText.textContent = "일반 방문자는 내용을 볼 수 있고, 관리자만 채팅할 수 있습니다.";
+        if (detailButton) detailButton.textContent = "관리자 커뮤니티 자세히 보러가기";
     } else {
         if (heading) heading.textContent = "소식";
         if (introTitle) introTitle.textContent = "까치치킨사장님 공식 소식";
@@ -527,7 +532,11 @@ async function openAdvancedNews() {
     openCategoryIntro("advanced");
 }
 
-async function openAdminCommunity() {
+function openAdminCommunity() {
+    openCategoryIntro("community");
+}
+
+async function openAdminCommunityChat() {
     hideAllScreens();
 
     if (!adminCommunityScreen) {
@@ -2064,27 +2073,14 @@ async function loadComments(newsId) {
                 profileError
             );
 
-            /*
-             * RPC가 아직 만들어지지 않은 경우를 대비한 기존 방식 fallback.
-             * RLS 때문에 다른 회원의 닉네임을 읽을 수 없다면 '회원'으로 보일 수 있다.
-             */
-            const fallback =
-                await supabaseClient
-                    .from("profiles")
-                    .select("id, username")
-                    .in("id", userIds);
-
-            if (!fallback.error) {
-                profileMap =
-                    new Map(
-                        (fallback.data || []).map(
-                            profile => [
-                                String(profile.id),
-                                profile.username
-                            ]
-                        )
-                    );
-            }
+            commentsContainer.innerHTML = `
+                <div class="comments-error">
+                    댓글 닉네임 정보를 불러오지 못했습니다.<br>
+                    Supabase의 get_comment_profiles SQL을 실행해주세요.
+                </div>
+            `;
+            commentCount.textContent = `댓글 ${list.length}개`;
+            return;
         }
     }
 
@@ -3169,6 +3165,11 @@ document
     .addEventListener(
         "click",
         function() {
+            if (currentCategory === "community") {
+                openAdminCommunityChat();
+                return;
+            }
+
             openCategoryList(currentCategory);
         }
     );
