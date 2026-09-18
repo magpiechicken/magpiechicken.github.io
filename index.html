@@ -685,3 +685,37 @@
 
 </body>
 </html>
+/* ================================
+   상단 사진 영역
+   빨간 박스 기준
+================================ */
+
+.top-bar {
+    height: 120px !important;
+    min-height: 120px !important;
+
+    background-repeat: no-repeat !important;
+    background-position: left top !important;
+
+    /* 사진을 영역 전체 크기에 맞춤 */
+    background-size: 100% 100% !important;
+}
+
+/* 사진 자체가 들어가는 경우도 항상 왼쪽 위 */
+.top-bar img,
+.news-image {
+    object-position: left top !important;
+}
+
+/* 뉴스 사진도 왼쪽 위 기준으로 정렬 */
+.news-images {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+    flex-wrap: wrap !important;
+}
+
+.news-image {
+    object-fit: contain !important;
+    object-position: left top !important;
+}
