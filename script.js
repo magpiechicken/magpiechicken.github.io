@@ -136,7 +136,27 @@ const commentLength =
 const commentSubmit =
     document.getElementById("comment-submit");
 
+const communityMessages =
+    document.getElementById("community-messages");
+
+const communityMessageInput =
+    document.getElementById("community-message-input");
+
+const communityMessageLength =
+    document.getElementById("community-message-length");
+
+const communitySendButton =
+    document.getElementById("community-send-button");
+
+const communityReadonlyNotice =
+    document.getElementById("community-readonly-notice");
+
+let communityPollTimer = null;
+let communityInitialLoad = true;
+
 function hideAllScreens() {
+    stopCommunityPolling();
+
     introScreen.classList.remove("visible");
     listScreen.classList.remove("visible");
     detailScreen.classList.remove("visible");
@@ -240,6 +260,7 @@ function scrollTop() {
 
 function updateAuthUI() {
     updateAdminOnlyMenus();
+    updateCommunityComposer();
 
     if (!currentUser) {
         accountButton.textContent =
@@ -506,13 +527,240 @@ async function openAdvancedNews() {
     openCategoryIntro("advanced");
 }
 
-function openAdminCommunity() {
+async function openAdminCommunity() {
     hideAllScreens();
-    if (adminCommunityScreen) {
-        adminCommunityScreen.classList.add("visible");
+
+    if (!adminCommunityScreen) {
+        return;
     }
+
+    adminCommunityScreen.classList.add("visible");
     activateAdminCommunityMenu();
+    updateCommunityComposer();
+    communityInitialLoad = true;
+
+    await loadCommunityMessages();
+    startCommunityPolling();
     scrollTop();
+}
+
+function stopCommunityPolling() {
+    if (communityPollTimer !== null) {
+        clearInterval(communityPollTimer);
+        communityPollTimer = null;
+    }
+}
+
+function startCommunityPolling() {
+    stopCommunityPolling();
+
+    communityPollTimer =
+        setInterval(
+            function() {
+                if (
+                    adminCommunityScreen &&
+                    adminCommunityScreen.classList.contains("visible")
+                ) {
+                    loadCommunityMessages(true);
+                }
+            },
+            3000
+        );
+}
+
+function updateCommunityMessageLength() {
+    if (!communityMessageInput || !communityMessageLength) {
+        return;
+    }
+
+    communityMessageLength.textContent =
+        `${communityMessageInput.value.length} / 500`;
+}
+
+function updateCommunityComposer() {
+    const canChat =
+        currentUser &&
+        isAdmin;
+
+    if (communityMessageInput) {
+        communityMessageInput.disabled = !canChat;
+        if (!canChat) {
+            communityMessageInput.value = "";
+        }
+    }
+
+    if (communitySendButton) {
+        communitySendButton.disabled = !canChat;
+    }
+
+    if (communityMessageLength) {
+        updateCommunityMessageLength();
+    }
+
+    if (communityReadonlyNotice) {
+        communityReadonlyNotice.classList.toggle(
+            "hidden",
+            !!canChat
+        );
+    }
+}
+
+async function loadCommunityMessages(isPolling = false) {
+    if (!communityMessages) {
+        return;
+    }
+
+    const wasNearBottom =
+        communityMessages.scrollHeight -
+        communityMessages.scrollTop -
+        communityMessages.clientHeight <
+        140;
+
+    const {
+        data: messages,
+        error
+    } = await supabaseClient
+        .from("admin_community_messages")
+        .select(
+            "id, user_id, username, content, created_at"
+        )
+        .order(
+            "created_at",
+            { ascending: true }
+        );
+
+    if (error) {
+        console.error(
+            "관리자 커뮤니티 조회 오류:",
+            error
+        );
+
+        if (!isPolling) {
+            communityMessages.innerHTML = `
+                <div class="community-error">
+                    커뮤니티를 불러오지 못했습니다.<br>
+                    Supabase의 관리자 커뮤니티 SQL을 먼저 실행해주세요.
+                </div>
+            `;
+        }
+
+        return;
+    }
+
+    const list = messages || [];
+
+    if (list.length === 0) {
+        communityMessages.innerHTML = `
+            <div class="community-empty">
+                아직 메시지가 없습니다.
+            </div>
+        `;
+    } else {
+        communityMessages.innerHTML = list
+            .map(function(message) {
+                const mine =
+                    currentUser &&
+                    String(message.user_id) ===
+                        String(currentUser.id);
+
+                const name =
+                    message.username ||
+                    "관리자";
+
+                return `
+                    <div class="community-message ${mine ? "self" : "other"}">
+                        <div class="community-name">
+                            ${escapeHTML(name)}
+                        </div>
+                        <div class="community-message-row">
+                            <div class="community-bubble">
+                                ${escapeHTML(message.content).replace(/\n/g, "<br>")}
+                            </div>
+                            <span class="community-time">
+                                ${formatDateTime(message.created_at)}
+                            </span>
+                        </div>
+                    </div>
+                `;
+            })
+            .join("");
+    }
+
+    if (
+        communityInitialLoad ||
+        wasNearBottom
+    ) {
+        communityMessages.scrollTop =
+            communityMessages.scrollHeight;
+    }
+
+    communityInitialLoad = false;
+}
+
+async function sendCommunityMessage() {
+    if (!currentUser || !isAdmin) {
+        alert("관리자만 채팅할 수 있습니다.");
+        return;
+    }
+
+    if (!communityMessageInput || !communitySendButton) {
+        return;
+    }
+
+    const content =
+        communityMessageInput.value.trim();
+
+    if (!content) {
+        return;
+    }
+
+    if (content.length > 500) {
+        alert("메시지는 500자 이내로 입력해주세요.");
+        return;
+    }
+
+    communitySendButton.disabled = true;
+    communitySendButton.textContent = "전송 중...";
+
+    try {
+        const username =
+            currentProfile?.username ||
+            currentUser.email ||
+            "관리자";
+
+        const { error } =
+            await supabaseClient
+                .from("admin_community_messages")
+                .insert({
+                    user_id: currentUser.id,
+                    username: username,
+                    content: content
+                });
+
+        if (error) {
+            throw error;
+        }
+
+        communityMessageInput.value = "";
+        updateCommunityMessageLength();
+        communityInitialLoad = true;
+        await loadCommunityMessages();
+
+    } catch (error) {
+        console.error(
+            "관리자 커뮤니티 전송 오류:",
+            error
+        );
+
+        alert(
+            "메시지 전송 오류:\n" +
+            error.message
+        );
+
+    } finally {
+        communitySendButton.disabled = !(currentUser && isAdmin);
+        communitySendButton.textContent = "전송";
+    }
 }
 
 function openVideoPreview() {
@@ -3155,6 +3403,33 @@ if (commentSubmit) {
     );
 }
 
+if (communityMessageInput) {
+    communityMessageInput.addEventListener(
+        "input",
+        updateCommunityMessageLength
+    );
+
+    communityMessageInput.addEventListener(
+        "keydown",
+        function(event) {
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey
+            ) {
+                event.preventDefault();
+                sendCommunityMessage();
+            }
+        }
+    );
+}
+
+if (communitySendButton) {
+    communitySendButton.addEventListener(
+        "click",
+        sendCommunityMessage
+    );
+}
+
 supabaseClient.auth.onAuthStateChange(
     async function(
         event,
@@ -3178,6 +3453,11 @@ supabaseClient.auth.onAuthStateChange(
 
             updateAuthUI();
 
+            if (adminCommunityScreen && adminCommunityScreen.classList.contains("visible")) {
+                communityInitialLoad = true;
+                await loadCommunityMessages();
+            }
+
             return;
         }
 
@@ -3195,6 +3475,11 @@ supabaseClient.auth.onAuthStateChange(
                 await renderNewsInteractions(
                     currentNewsId
                 );
+            }
+
+            if (adminCommunityScreen && adminCommunityScreen.classList.contains("visible")) {
+                communityInitialLoad = true;
+                await loadCommunityMessages();
             }
 
         }
