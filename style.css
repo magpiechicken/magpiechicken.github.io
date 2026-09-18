@@ -2060,3 +2060,127 @@ button:disabled {
         white-space: nowrap;
     }
 }
+
+/* ==========================================================
+   관리자 커뮤니티 최종 수정
+   - 커뮤니티 화면에서 소식 주황색 활성화 제거
+   - 관리자 커뮤니티만 주황색 활성화
+   - 말풍선은 글자 길이에 맞게 자동으로 축소/확장
+========================================================== */
+
+/* 관리자 커뮤니티 화면에서는 소식 메뉴를 비활성 상태로 */
+.site-layout:has(#screen-admin-community.visible) #menu-news.active {
+    background: #ffffff !important;
+    color: #111111 !important;
+}
+
+/* 관리자 커뮤니티 메뉴를 현재 선택 메뉴로 표시 */
+.site-layout:has(#screen-admin-community.visible) #menu-admin-community {
+    background: #FF9400 !important;
+    color: #ffffff !important;
+}
+
+/* 관리자 커뮤니티 메시지 전체 */
+.community-message {
+    width: fit-content !important;
+    max-width: 78% !important;
+}
+
+.community-message.other {
+    align-self: flex-start !important;
+    align-items: flex-start !important;
+}
+
+.community-message.self {
+    align-self: flex-end !important;
+    align-items: flex-end !important;
+    margin-left: auto !important;
+}
+
+/* 닉네임 */
+.community-name {
+    width: fit-content !important;
+    max-width: 100% !important;
+    white-space: nowrap !important;
+}
+
+/* 말풍선이 글자보다 불필요하게 커지지 않도록 */
+.community-message-row {
+    display: flex !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    align-items: flex-end !important;
+}
+
+.community-bubble {
+    display: block !important;
+    width: fit-content !important;
+    max-width: min(620px, 65vw) !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    padding: 8px 12px !important;
+    border: 2px solid #222222 !important;
+    border-radius: 16px !important;
+    background: #ffffff !important;
+    color: #111111 !important;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    font-weight: 500 !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.10) !important;
+}
+
+.community-message.self .community-bubble {
+    background: #ffdf9a !important;
+    border-color: #111111 !important;
+}
+
+.community-time {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+}
+
+/* PC */
+@media (min-width: 701px) {
+    .community-message {
+        width: fit-content !important;
+        max-width: 78% !important;
+    }
+
+    .community-message-row {
+        width: fit-content !important;
+        max-width: 100% !important;
+    }
+
+    .community-bubble {
+        width: fit-content !important;
+        max-width: min(620px, 55vw) !important;
+        padding: 8px 12px !important;
+        font-size: 15px !important;
+        line-height: 1.5 !important;
+    }
+}
+
+/* 모바일 */
+@media (max-width: 700px) {
+    .community-message {
+        width: fit-content !important;
+        max-width: 90% !important;
+    }
+
+    .community-message-row {
+        width: fit-content !important;
+        max-width: 100% !important;
+    }
+
+    .community-bubble {
+        width: fit-content !important;
+        max-width: 68vw !important;
+        padding: 7px 10px !important;
+        border-radius: 13px !important;
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+    }
+}
