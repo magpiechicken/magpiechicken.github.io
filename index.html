@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html><!DOCTYPE html>
 <html lang="ko">
 <head>
     <style>
@@ -42,7 +42,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=66">
+    <link rel="stylesheet" href="./style.css?v=67">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
      crossorigin="anonymous"></script>
 </head>
@@ -575,13 +575,55 @@
                 관리자 커뮤니티
             </h1>
 
-            <div class="intro-box">
-                <h2>
-                    관리자 커뮤니티
-                </h2>
-                <p>
-                    일반 방문자는 내용을 열람할 수 있고, 관리자만 글을 작성할 수 있는 공간입니다.
-                </p>
+            <div class="community-shell">
+
+                <div class="community-description">
+                    <strong>관리자 전용 채팅방</strong>
+                    <span>일반 방문자는 내용을 볼 수 있고, 관리자만 메시지를 보낼 수 있습니다.</span>
+                </div>
+
+                <div
+                    id="community-messages"
+                    class="community-messages"
+                >
+                    <div class="community-loading">
+                        커뮤니티를 불러오는 중...
+                    </div>
+                </div>
+
+                <div
+                    id="community-readonly-notice"
+                    class="community-readonly-notice"
+                >
+                    👀 현재 관리자만 채팅할 수 있습니다.
+                </div>
+
+                <div class="community-composer">
+                    <textarea
+                        id="community-message-input"
+                        maxlength="500"
+                        placeholder="관리자만 메시지를 보낼 수 있습니다."
+                    ></textarea>
+
+                    <div class="community-composer-bottom">
+                        <span
+                            id="community-message-length"
+                            class="community-message-length"
+                        >
+                            0 / 500
+                        </span>
+
+                        <button
+                            id="community-send-button"
+                            class="orange-small-button"
+                            type="button"
+                            disabled
+                        >
+                            전송
+                        </button>
+                    </div>
+                </div>
+
             </div>
 
         </section>
@@ -638,7 +680,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./script.js?v=66"></script>
+<script src="./script.js?v=67"></script>
 
 </body>
 </html>
