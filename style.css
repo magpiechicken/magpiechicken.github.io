@@ -2142,3 +2142,12 @@ button:disabled {
         height: calc(100vh - 11.111111vh - 3px - 42px) !important;
     }
 }
+
+
+/* 홈 메뉴 */
+#menu-home {
+    flex: 0 0 auto !important;
+}
+.home-box {
+    max-width: none;
+}
