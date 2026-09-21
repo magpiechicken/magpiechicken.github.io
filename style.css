@@ -2041,7 +2041,7 @@ button:disabled {
     transform: translateX(0) !important;
 }
 
-/* 배너 바로 아래 왼쪽의 3줄 버튼 */
+/* 배너 바로 아래 왼쪽의 햄버거 버튼 */
 .menu-toggle {
     position: relative !important;
     z-index: 1004 !important;
@@ -2053,21 +2053,34 @@ button:disabled {
     border-right: 1px solid #000 !important;
     border-bottom: 1px solid #000 !important;
     background: #fff !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    gap: 4px !important;
+    display: block !important;
     cursor: pointer !important;
+    position: relative !important;
 }
 
-/* 가로줄 3개 햄버거 버튼 */
-.menu-toggle-bar {
-    display: block !important;
+/* 실제 3개 가로줄을 배경으로 고정해서 어떤 상속 스타일에도 안 뒤집힘 */
+.menu-toggle::before {
+    content: "" !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
     width: 24px !important;
-    height: 2px !important;
-    background: #111 !important;
-    border-radius: 1px !important;
+    height: 18px !important;
+    transform: translate(-50%, -50%) !important;
+    background: linear-gradient(
+        to bottom,
+        #111 0, #111 2px,
+        transparent 2px, transparent 8px,
+        #111 8px, #111 10px,
+        transparent 10px, transparent 16px,
+        #111 16px, #111 18px
+    ) !important;
+    pointer-events: none !important;
+}
+
+/* 기존 span은 숨김 */
+.menu-toggle-bar {
+    display: none !important;
 }
 
 /* 나머지 화면 어둡게 */
@@ -2105,12 +2118,19 @@ button:disabled {
     .menu-toggle {
         width: 42px !important;
         height: 42px !important;
-        gap: 3px !important;
     }
 
-    .menu-toggle-bar {
+    .menu-toggle::before {
         width: 22px !important;
-        height: 2px !important;
+        height: 16px !important;
+        background: linear-gradient(
+            to bottom,
+            #111 0, #111 2px,
+            transparent 2px, transparent 7px,
+            #111 7px, #111 9px,
+            transparent 9px, transparent 14px,
+            #111 14px, #111 16px
+        ) !important;
     }
 
     .sidebar {
