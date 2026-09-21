@@ -2054,6 +2054,7 @@ button:disabled {
     border-bottom: 1px solid #000 !important;
     background: #fff !important;
     display: flex !important;
+    flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
     gap: 4px !important;
@@ -2121,4 +2122,3 @@ button:disabled {
         height: calc(100vh - 11.111111vh - 3px - 42px) !important;
     }
 }
- 
