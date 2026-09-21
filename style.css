@@ -2060,11 +2060,11 @@ button:disabled {
     cursor: pointer !important;
 }
 
-/* 요청한 '세로줄 3개' */
+/* 가로줄 3개 햄버거 버튼 */
 .menu-toggle-bar {
     display: block !important;
-    width: 2px !important;
-    height: 20px !important;
+    width: 24px !important;
+    height: 2px !important;
     background: #111 !important;
     border-radius: 1px !important;
 }
@@ -2108,8 +2108,8 @@ button:disabled {
     }
 
     .menu-toggle-bar {
-        width: 2px !important;
-        height: 18px !important;
+        width: 22px !important;
+        height: 2px !important;
     }
 
     .sidebar {
