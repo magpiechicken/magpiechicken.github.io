@@ -2018,3 +2018,106 @@ button:disabled {
         line-height: 1.35 !important;
     }
 }
+
+/* ===== 메뉴 드로어 최종 수정 ===== */
+
+/* 왼쪽 메뉴는 평소 숨김 */
+.sidebar {
+    position: fixed !important;
+    top: calc(11.111111vh + 3px + 48px) !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    width: 265px !important;
+    height: auto !important;
+    flex: none !important;
+    z-index: 1002 !important;
+    transform: translateX(-105%) !important;
+    transition: transform .22s ease !important;
+    box-shadow: 8px 0 24px rgba(0,0,0,.18) !important;
+    overflow-y: auto !important;
+}
+
+.sidebar.open {
+    transform: translateX(0) !important;
+}
+
+/* 배너 바로 아래 왼쪽의 3줄 버튼 */
+.menu-toggle {
+    position: relative !important;
+    z-index: 1004 !important;
+    width: 48px !important;
+    height: 48px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-right: 1px solid #000 !important;
+    border-bottom: 1px solid #000 !important;
+    background: #fff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    cursor: pointer !important;
+}
+
+/* 요청한 '세로줄 3개' */
+.menu-toggle-bar {
+    display: block !important;
+    width: 2px !important;
+    height: 20px !important;
+    background: #111 !important;
+    border-radius: 1px !important;
+}
+
+/* 나머지 화면 어둡게 */
+.sidebar-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 1001 !important;
+    background: rgba(0,0,0,.52) !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transition: opacity .22s ease, visibility .22s ease !important;
+}
+
+.sidebar-overlay.open {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+
+/* 본문은 사이드바가 없어도 전체 폭 사용 */
+.site-layout {
+    display: block !important;
+    width: 100% !important;
+    height: calc(100vh - 11.111111vh - 3px - 48px) !important;
+}
+
+.main-content {
+    width: 100% !important;
+    max-width: none !important;
+    height: 100% !important;
+}
+
+@media (max-width: 700px) {
+    .menu-toggle {
+        width: 42px !important;
+        height: 42px !important;
+        gap: 3px !important;
+    }
+
+    .menu-toggle-bar {
+        width: 2px !important;
+        height: 18px !important;
+    }
+
+    .sidebar {
+        top: calc(11.111111vh + 3px + 42px) !important;
+        width: min(270px, 82vw) !important;
+    }
+
+    .site-layout {
+        height: calc(100vh - 11.111111vh - 3px - 42px) !important;
+    }
+}
