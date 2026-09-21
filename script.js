@@ -73,6 +73,15 @@ const advancedNewsMenu =
 const videoPreviewMenu =
     document.getElementById("menu-video-preview");
 
+const menuToggle =
+    document.getElementById("menu-toggle");
+
+const sidebar =
+    document.querySelector(".sidebar");
+
+const sidebarOverlay =
+    document.getElementById("sidebar-overlay");
+
 const accountButton =
     document.getElementById("accountButton");
 
@@ -154,7 +163,42 @@ const communityReadonlyNotice =
 let communityPollTimer = null;
 let communityInitialLoad = true;
 
+function closeSidebarDrawer() {
+    if (sidebar) {
+        sidebar.classList.remove("open");
+    }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.classList.remove("open");
+        sidebarOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    if (menuToggle) {
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.setAttribute("aria-label", "메뉴 열기");
+    }
+}
+
+function toggleSidebarDrawer() {
+    if (!sidebar || !sidebarOverlay) {
+        return;
+    }
+
+    const willOpen = !sidebar.classList.contains("open");
+
+    sidebar.classList.toggle("open", willOpen);
+    sidebarOverlay.classList.toggle("open", willOpen);
+    sidebarOverlay.setAttribute("aria-hidden", willOpen ? "false" : "true");
+
+    if (menuToggle) {
+        menuToggle.setAttribute("aria-expanded", String(willOpen));
+        menuToggle.setAttribute("aria-label", willOpen ? "메뉴 닫기" : "메뉴 열기");
+    }
+}
+
 function hideAllScreens() {
+    closeSidebarDrawer();
+
     stopCommunityPolling();
 
     introScreen.classList.remove("visible");
@@ -186,16 +230,19 @@ function clearMenuActive() {
 }
 
 function activateNewsMenu() {
+    closeSidebarDrawer();
     clearMenuActive();
     newsMenu.classList.add("active");
 }
 
 function activateDonationMenu() {
+    closeSidebarDrawer();
     clearMenuActive();
     donationMenu.classList.add("active");
 }
 
 function activateSportsNewsMenu() {
+    closeSidebarDrawer();
     clearMenuActive();
     if (sportsNewsMenu) {
         sportsNewsMenu.classList.add("active");
@@ -203,6 +250,7 @@ function activateSportsNewsMenu() {
 }
 
 function activateAdminCommunityMenu() {
+    closeSidebarDrawer();
     clearMenuActive();
     if (adminCommunityMenu) {
         adminCommunityMenu.classList.add("active");
@@ -210,6 +258,7 @@ function activateAdminCommunityMenu() {
 }
 
 function activateAdvancedNewsMenu() {
+    closeSidebarDrawer();
     clearMenuActive();
     if (advancedNewsMenu) {
         advancedNewsMenu.classList.add("active");
@@ -217,6 +266,7 @@ function activateAdvancedNewsMenu() {
 }
 
 function activateVideoPreviewMenu() {
+    closeSidebarDrawer();
     clearMenuActive();
     if (videoPreviewMenu) {
         videoPreviewMenu.classList.add("active");
@@ -3421,6 +3471,30 @@ if (communitySendButton) {
     );
 }
 
+if (menuToggle) {
+    menuToggle.addEventListener("click", toggleSidebarDrawer);
+}
+
+if (sidebarOverlay) {
+    sidebarOverlay.addEventListener("click", closeSidebarDrawer);
+}
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        closeSidebarDrawer();
+    }
+});
+
+if (sidebar) {
+    sidebar.querySelectorAll(".menu-item").forEach(function(menu) {
+        menu.addEventListener("click", function() {
+            if (!menu.disabled) {
+                closeSidebarDrawer();
+            }
+        });
+    });
+}
+
 supabaseClient.auth.onAuthStateChange(
     async function(
         event,
@@ -3489,5 +3563,3 @@ async function initialize() {
     openNewsIntro();
 
 }
-
-initialize();
