@@ -3563,3 +3563,5 @@ async function initialize() {
     openNewsIntro();
 
 }
+
+initialize();
