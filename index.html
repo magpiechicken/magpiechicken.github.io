@@ -3,671 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=76">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
-     crossorigin="anonymous"></script>
+    <title>까치치킨사장님 공식 홈페이지 - 홈</title>
+    <link rel="stylesheet" href="./style.css?v=77">
+    <style>
+        .home-page {
+            min-height: 100vh;
+            background: #fff;
+        }
+
+        .home-page-main {
+            min-height: calc(100vh - 11.111111vh - 3px - 48px);
+            padding: 45px;
+            overflow: auto;
+        }
+
+        .home-window {
+            width: 100%;
+            background: #fff;
+            border: 4px solid #000;
+        }
+
+        .home-window-title {
+            padding: 24px 30px;
+            border-bottom: 3px solid #000;
+            font-size: 34px;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .home-window-body {
+            padding: 55px 45px;
+        }
+
+        .home-window-body h1 {
+            margin: 0 0 18px;
+            font-size: 42px;
+        }
+
+        .home-window-body p {
+            margin: 0 0 28px;
+            font-size: 21px;
+            line-height: 1.7;
+        }
+
+        .youtube-link {
+            display: inline-block;
+            padding: 14px 24px;
+            background: #FF0000;
+            color: #ffffff;
+            border: 3px solid #000000;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .youtube-link:hover {
+            background: #cc0000;
+        }
+
+        .home-page .sidebar {
+            top: calc(11.111111vh + 3px + 48px) !important;
+        }
+
+        @media (max-width: 700px) {
+            .home-page-main {
+                min-height: calc(100vh - 74px - 42px);
+                padding: 14px 10px;
+            }
+
+            .home-window {
+                border-width: 2px;
+            }
+
+            .home-window-title {
+                padding: 14px 16px;
+                border-bottom-width: 2px;
+                font-size: 24px;
+            }
+
+            .home-window-body {
+                padding: 28px 18px;
+            }
+
+            .home-window-body h1 {
+                font-size: 27px;
+            }
+
+            .home-window-body p {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
-
-<body>
-
+<body class="home-page">
 <header class="top-bar">
-
-    <div class="profile">
-        <img
-            src="./profile.png"
-            alt="까치치킨사장님"
-        >
-    </div>
-
-    <div class="title">
-        까치치킨사장님 공식 홈페이지
-    </div>
-
+    <div class="profile"><img src="./profile.png" alt="까치치킨사장님"></div>
+    <div class="title">까치치킨사장님 공식 홈페이지</div>
     <div class="header-actions">
-<button
-            id="accountButton"
-            class="admin-button"
-            type="button"
-        >
-            로그인
-        </button>
-
+        <a class="admin-button" href="./index.html#news">로그인</a>
     </div>
-
 </header>
-
 <div class="header-line"></div>
 
-<button
-    id="menu-toggle"
-    class="menu-toggle"
-    type="button"
-    aria-label="메뉴 열기"
-    aria-expanded="false"
->
+<button id="home-menu-toggle" class="menu-toggle" type="button" aria-label="메뉴 열기" aria-expanded="false">
     <span class="menu-toggle-bar"></span>
     <span class="menu-toggle-bar"></span>
     <span class="menu-toggle-bar"></span>
 </button>
+<div id="home-sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
 
-<div
-    id="sidebar-overlay"
-    class="sidebar-overlay"
-    aria-hidden="true"
-></div>
+<aside id="home-sidebar" class="sidebar">
+    <a class="menu-item active" href="./home.html">홈</a>
+    <a class="menu-item" href="./index.html#news">소식</a>
+    <a class="menu-item" href="./index.html#sports">스포츠소식</a>
+    <a class="menu-item" href="./index.html#community">관리자 커뮤니티</a>
+    <a class="menu-item" href="./index.html#donation">후원</a>
+    <div class="menu-membership-divider" aria-hidden="true">멤버십 전용</div>
+    <a class="menu-item locked" href="./index.html#video">영상미리보기 🔒</a>
+    <a class="menu-item locked" href="./index.html#advanced">고급소식 🔒</a>
+</aside>
 
-<div class="site-layout">
-
-    <aside class="sidebar">
-
-        <button
-            id="menu-home"
-            class="menu-item active"
-            type="button"
-        >
-            홈
-        </button>
-
-        <button
-            id="menu-news"
-            class="menu-item"
-            type="button"
-        >
-            소식
-        </button>
-
-        <button
-            id="menu-sports-news"
-            class="menu-item"
-            type="button"
-        >
-            스포츠소식
-        </button>
-
-        <button
-            id="menu-admin-community"
-            class="menu-item"
-            type="button"
-        >
-            관리자 커뮤니티
-        </button>
-
-        <button
-            id="menu-donation"
-            class="menu-item"
-            type="button"
-        >
-            후원
-        </button>
-
-        <div class="menu-membership-divider" aria-hidden="true">
-            멤버십 전용
+<main class="home-page-main">
+    <section class="home-window">
+        <div class="home-window-title">홈</div>
+        <div class="home-window-body">
+            <h1>까치치킨사장님 공식 홈페이지</h1>
+            <p>홈페이지에 오신 것을 환영합니다.</p>
+            <a
+                class="youtube-link"
+                href="https://www.youtube.com/@magpie-chicken"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                까치치킨사장님 유튜브 링크
+            </a>
         </div>
-
-        <button
-            id="menu-video-preview"
-            class="menu-item locked membership-menu"
-            type="button"
-            disabled
-        >
-            영상미리보기 🔒
-        </button>
-
-        <button
-            id="menu-advanced-news"
-            class="menu-item locked membership-menu"
-            type="button"
-        >
-            고급소식
-        </button>
-
-    </aside>
-
-    <main class="main-content">
-
-        <section
-            id="screen-news-intro"
-            class="screen"
-        >
-
-            <h1 class="page-heading">
-                소식
-            </h1>
-
-            <div class="intro-box">
-
-                <h2>
-                    까치치킨사장님 공식 소식
-                </h2>
-
-                <p>
-                    새로운 소식과 공지사항이 이곳에 표시됩니다.
-                </p>
-
-                <button
-                    id="show-news-list"
-                    class="orange-button"
-                    type="button"
-                >
-                    소식 자세히 보러가기
-                </button>
-
-            </div>
-
-        </section>
-
-        <section
-            id="screen-news-list"
-            class="screen"
-        >
-
-            <div class="list-header">
-
-                <div>
-
-                    <h1 class="page-heading">
-                        소식
-                    </h1>
-
-                    <p class="page-subtitle">
-                        까치치킨사장님의 소식과 공지사항입니다.
-                    </p>
-
-                </div>
-
-                <button
-                    id="show-write"
-                    class="orange-small-button hidden"
-                    type="button"
-                >
-                    + 소식 작성
-                </button>
-
-            </div>
-
-            <div
-                id="news-list-container"
-            ></div>
-
-        </section>
-
-        <section
-            id="screen-news-detail"
-            class="screen"
-        >
-
-            <button
-                id="back-to-list"
-                class="white-button"
-                type="button"
-            >
-                ← 목록
-            </button>
-
-            <article
-                id="news-detail-container"
-                class="detail-box"
-            ></article>
-
-            <div
-                id="news-detail-images"
-                class="news-images hidden"
-            ></div>
-
-            <section
-                id="news-interactions"
-                class="news-interactions"
-            >
-
-                <div class="reaction-bar">
-
-                    <button
-                        id="like-button"
-                        class="like-button"
-                        type="button"
-                    >
-                        ♡ 좋아요
-                        <span id="like-count">
-                            0
-                        </span>
-                    </button>
-
-                    <span
-                        id="comment-count"
-                        class="comment-count"
-                    >
-                        댓글 0개
-                    </span>
-
-                </div>
-
-                <div
-                    id="comments-container"
-                    class="comments-container"
-                ></div>
-
-                <div
-                    id="comment-login-notice"
-                    class="comment-login-notice hidden"
-                >
-                    로그인하면 좋아요와 댓글을 사용할 수 있습니다.
-                </div>
-
-                <div
-                    id="comment-form"
-                    class="comment-form hidden"
-                >
-
-                    <textarea
-                        id="comment-input"
-                        placeholder="댓글을 입력하세요."
-                        maxlength="500"
-                    ></textarea>
-
-                    <div class="comment-form-bottom">
-
-                        <span
-                            id="comment-length"
-                            class="comment-length"
-                        >
-                            0 / 500
-                        </span>
-
-                        <button
-                            id="comment-submit"
-                            class="orange-small-button"
-                            type="button"
-                        >
-                            댓글 등록
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-            <button
-                id="delete-news"
-                class="delete-button hidden"
-                type="button"
-            >
-                소식 삭제
-            </button>
-
-        </section>
-
-        <section
-            id="screen-write"
-            class="screen"
-        >
-
-            <button
-                id="back-from-write"
-                class="white-button"
-                type="button"
-            >
-                ← 목록
-            </button>
-
-            <div class="write-box">
-
-                <h1>
-                    소식 작성
-                </h1>
-
-                <label for="input-title">
-                    제목
-                </label>
-
-                <input
-                    id="input-title"
-                    type="text"
-                    placeholder="소식 제목"
-                    autocomplete="off"
-                >
-
-                <label for="input-content">
-                    내용
-                </label>
-
-                <textarea
-                    id="input-content"
-                    placeholder="소식 내용을 입력하세요."
-                ></textarea>
-
-                <label for="input-images">
-                    사진 첨부
-                </label>
-
-                <input
-                    id="input-images"
-                    class="file-input"
-                    type="file"
-                    accept="image/*"
-                    multiple
-                >
-
-                <p
-                    id="image-help"
-                    class="image-help"
-                >
-                    사진을 선택하면 아래에 미리보기가 표시됩니다.
-                    최대 5장 · 사진 1장당 최대 5MB
-                </p>
-
-                <div
-                    id="image-preview"
-                    class="image-preview"
-                ></div>
-
-                <div class="write-actions">
-
-                    <button
-                        id="cancel-write"
-                        class="white-button"
-                        type="button"
-                    >
-                        취소
-                    </button>
-
-                    <button
-                        id="save-write"
-                        class="orange-small-button"
-                        type="button"
-                    >
-                        소식 등록
-                    </button>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <section
-            id="screen-auth"
-            class="screen"
-        >
-
-            <div class="auth-box">
-
-                <div class="auth-tabs">
-
-                    <button
-                        id="login-tab"
-                        class="auth-tab active"
-                        type="button"
-                    >
-                        로그인
-                    </button>
-
-                    <button
-                        id="signup-tab"
-                        class="auth-tab"
-                        type="button"
-                    >
-                        회원가입
-                    </button>
-
-                </div>
-
-                <div
-                    id="auth-login-panel"
-                    class="auth-panel"
-                >
-
-                    <h1>
-                        로그인
-                    </h1>
-
-                    <p class="auth-description">
-                        가입한 계정으로 로그인하세요.
-                    </p>
-
-                    <label for="login-email">
-                        이메일
-                    </label>
-
-                    <input
-                        id="login-email"
-                        type="email"
-                        placeholder="이메일"
-                        autocomplete="email"
-                    >
-
-                    <label for="login-password">
-                        비밀번호
-                    </label>
-
-                    <input
-                        id="login-password"
-                        type="password"
-                        placeholder="비밀번호"
-                        autocomplete="current-password"
-                    >
-
-                    <button
-                        id="login-submit"
-                        class="login-button"
-                        type="button"
-                    >
-                        로그인
-                    </button>
-
-                </div>
-
-                <div
-                    id="auth-signup-panel"
-                    class="auth-panel hidden"
-                >
-
-                    <h1>
-                        회원가입
-                    </h1>
-
-                    <p class="auth-description">
-                        계정을 만들어주세요.
-                    </p>
-
-                    <label for="signup-username">
-                        아이디
-                    </label>
-
-                    <input
-                        id="signup-username"
-                        type="text"
-                        placeholder="사용할 아이디"
-                        autocomplete="username"
-                        maxlength="30"
-                    >
-
-                    <label for="signup-email">
-                        이메일
-                    </label>
-
-                    <input
-                        id="signup-email"
-                        type="email"
-                        placeholder="이메일"
-                        autocomplete="email"
-                    >
-
-                    <label for="signup-password">
-                        비밀번호
-                    </label>
-
-                    <input
-                        id="signup-password"
-                        type="password"
-                        placeholder="비밀번호"
-                        autocomplete="new-password"
-                    >
-
-                    <label for="signup-password-confirm">
-                        비밀번호 확인
-                    </label>
-
-                    <input
-                        id="signup-password-confirm"
-                        type="password"
-                        placeholder="비밀번호 다시 입력"
-                        autocomplete="new-password"
-                    >
-
-                    <button
-                        id="signup-submit"
-                        class="login-button"
-                        type="button"
-                    >
-                        회원가입
-                    </button>
-
-                </div>
-
-                <p
-                    id="auth-message"
-                    class="login-error"
-                ></p>
-
-                <button
-                    id="auth-cancel"
-                    class="login-cancel-button"
-                    type="button"
-                >
-                    취소
-                </button>
-
-            </div>
-
-        </section>
-
-        <section
-            id="screen-donation"
-            class="screen"
-        >
-
-            <h1 class="page-heading">
-                후원
-            </h1>
-
-        </section>
-
-        <section
-            id="screen-admin-community"
-            class="screen"
-        >
-
-            <h1 class="page-heading">
-                관리자 커뮤니티
-            </h1>
-
-            <div class="community-shell">
-
-                <div class="community-description">
-                    <strong>관리자 전용 채팅방</strong>
-                    <span>일반 방문자는 내용을 볼 수 있고, 관리자만 메시지를 보낼 수 있습니다.</span>
-                </div>
-
-                <div
-                    id="community-messages"
-                    class="community-messages"
-                >
-                    <div class="community-loading">
-                        커뮤니티를 불러오는 중...
-                    </div>
-                </div>
-
-                <div
-                    id="community-readonly-notice"
-                    class="community-readonly-notice"
-                >
-                    👀 현재 관리자만 채팅할 수 있습니다.
-                </div>
-
-                <div class="community-composer">
-                    <textarea
-                        id="community-message-input"
-                        maxlength="500"
-                        placeholder="관리자만 메시지를 보낼 수 있습니다."
-                    ></textarea>
-
-                    <div class="community-composer-bottom">
-                        <span
-                            id="community-message-length"
-                            class="community-message-length"
-                        >
-                            0 / 500
-                        </span>
-
-                        <button
-                            id="community-send-button"
-                            class="orange-small-button"
-                            type="button"
-                            disabled
-                        >
-                            전송
-                        </button>
-                    </div>
-                </div>
-
-            </div>
-
-        </section>
-
-        <section
-            id="screen-advanced-news"
-            class="screen"
-        >
-
-            <h1 class="page-heading">
-                고급소식
-            </h1>
-
-            <div class="intro-box">
-
-                <h2>
-                    멤버십 유저 전용 고급소식
-                </h2>
-
-                <p>
-                    멤버십 유저만 확인할 수 있는 고급소식 공간입니다.
-                </p>
-
-            </div>
-
-        </section>
-
-        <section
-            id="screen-video-preview"
-            class="screen"
-        >
-
-            <h1 class="page-heading">
-                영상미리보기
-            </h1>
-
-            <div class="intro-box">
-
-                <h2>
-                    멤버십 유저 전용 영상미리보기
-                </h2>
-
-                <p>
-                    멤버십 유저만 확인할 수 있는 영상미리보기 공간입니다.
-                </p>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./script.js?v=77"></script>
-
+    </section>
+</main>
+
+<script>
+(() => {
+    const toggle = document.getElementById('home-menu-toggle');
+    const sidebar = document.getElementById('home-sidebar');
+    const overlay = document.getElementById('home-sidebar-overlay');
+
+    function closeMenu() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    toggle.addEventListener('click', () => {
+        const open = !sidebar.classList.contains('open');
+        sidebar.classList.toggle('open', open);
+        overlay.classList.toggle('open', open);
+        toggle.setAttribute('aria-expanded', String(open));
+    });
+
+    overlay.addEventListener('click', closeMenu);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeMenu();
+    });
+
+    sidebar.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', closeMenu);
+    });
+})();
+</script>
 </body>
 </html>
