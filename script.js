@@ -28,6 +28,9 @@ let selectedImageFiles = [];
 let editingNewsId = null;
 let currentCategory = "general";
 
+const homeScreen =
+    document.getElementById("screen-home");
+
 const introScreen =
     document.getElementById("screen-news-intro");
 
@@ -54,6 +57,9 @@ const advancedNewsScreen =
 
 const videoPreviewScreen =
     document.getElementById("screen-video-preview");
+
+const homeMenu =
+    document.getElementById("menu-home");
 
 const newsMenu =
     document.getElementById("menu-news");
@@ -201,6 +207,9 @@ function hideAllScreens() {
 
     stopCommunityPolling();
 
+    if (homeScreen) {
+        homeScreen.classList.remove("visible");
+    }
     introScreen.classList.remove("visible");
     listScreen.classList.remove("visible");
     detailScreen.classList.remove("visible");
@@ -216,6 +225,7 @@ function hideAllScreens() {
 
 function clearMenuActive() {
     [
+        homeMenu,
         newsMenu,
         sportsNewsMenu,
         adminCommunityMenu,
@@ -227,6 +237,14 @@ function clearMenuActive() {
             menu.classList.remove("active");
         }
     });
+}
+
+function activateHomeMenu() {
+    closeSidebarDrawer();
+    clearMenuActive();
+    if (homeMenu) {
+        homeMenu.classList.add("active");
+    }
 }
 
 function activateNewsMenu() {
@@ -489,6 +507,20 @@ function activateCategoryMenu(category) {
     } else {
         activateNewsMenu();
     }
+}
+
+function openHome() {
+    hideAllScreens();
+
+    if (homeScreen) {
+        homeScreen.classList.add("visible");
+    }
+
+    currentCategory = null;
+    activateHomeMenu();
+    resetDetailUI();
+    updateAuthUI();
+    scrollTop();
 }
 
 function openNewsIntro() {
@@ -3274,6 +3306,13 @@ document
         deleteCurrentNews
     );
 
+if (homeMenu) {
+    homeMenu.addEventListener(
+        "click",
+        openHome
+    );
+}
+
 document
     .getElementById(
         "menu-news"
@@ -3560,7 +3599,23 @@ async function initialize() {
 
     renderImagePreview();
 
-    openNewsIntro();
+    const hash = window.location.hash.toLowerCase();
+
+    if (hash === "#news") {
+        openNewsIntro();
+    } else if (hash === "#sports") {
+        openSportsNews();
+    } else if (hash === "#community") {
+        openAdminCommunity();
+    } else if (hash === "#donation") {
+        openDonation();
+    } else if (hash === "#advanced") {
+        openAdvancedNews();
+    } else if (hash === "#video") {
+        openVideoPreview();
+    } else {
+        openHome();
+    }
 
 }
 
