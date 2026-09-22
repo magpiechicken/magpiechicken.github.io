@@ -114,13 +114,13 @@
 
 <aside id="home-sidebar" class="sidebar">
     <a class="menu-item active" href="./home.html">홈</a>
-    <a class="menu-item" href="./index.html#news">소식</a>
-    <a class="menu-item" href="./index.html#sports">스포츠소식</a>
-    <a class="menu-item" href="./index.html#community">관리자 커뮤니티</a>
-    <a class="menu-item" href="./index.html#donation">후원</a>
+    <a class="menu-item" href="./index.html#news" data-target="news">소식</a>
+    <a class="menu-item" href="./index.html#sports" data-target="sports">스포츠소식</a>
+    <a class="menu-item" href="./index.html#community" data-target="community">관리자 커뮤니티</a>
+    <a class="menu-item" href="./index.html#donation" data-target="donation">후원</a>
     <div class="menu-membership-divider" aria-hidden="true">멤버십 전용</div>
-    <a class="menu-item locked" href="./index.html#video">영상미리보기 🔒</a>
-    <a class="menu-item locked" href="./index.html#advanced">고급소식 🔒</a>
+    <a class="menu-item locked" href="./index.html#video" data-target="video">영상미리보기 🔒</a>
+    <a class="menu-item locked" href="./index.html#advanced" data-target="advanced">고급소식 🔒</a>
 </aside>
 
 <main class="home-page-main">
@@ -165,9 +165,16 @@
         if (e.key === 'Escape') closeMenu();
     });
 
-    sidebar.querySelectorAll('a').forEach(a => {
-        a.addEventListener('click', closeMenu);
+    sidebar.querySelectorAll('a[data-target]').forEach(a => {
+        a.addEventListener('click', (event) => {
+            event.preventDefault();
+            const target = a.dataset.target;
+            closeMenu();
+            window.location.assign(`./index.html#${target}`);
+        });
     });
+
+    sidebar.querySelector('a[href="./home.html"]').addEventListener('click', closeMenu);
 })();
 </script>
 </body>
