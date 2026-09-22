@@ -2207,3 +2207,33 @@ button:disabled {
         font-size: 14px;
     }
 }
+
+/* 홈 화면 보완 */
+#screen-home .home-window-title {
+    text-align: center;
+}
+
+#screen-home .youtube-link {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 13px 22px;
+    background: #ff0000;
+    border: 3px solid #000000;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+#screen-home .youtube-link:hover {
+    background: #cc0000;
+}
+
+@media (max-width: 700px) {
+    #screen-home .youtube-link {
+        margin-top: 18px;
+        padding: 10px 14px;
+        border-width: 2px;
+        font-size: 14px;
+    }
+}
