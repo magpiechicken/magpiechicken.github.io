@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=78">
+    <link rel="stylesheet" href="./style.css?v=79">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
      crossorigin="anonymous"></script>
 </head>
@@ -701,6 +701,28 @@
     </main>
 
 </div>
+
+<script>
+/* 루트(index.html)로 직접 들어오면 항상 홈 화면 표시 */
+document.addEventListener("DOMContentLoaded", function () {
+    if (!window.location.hash) {
+        document.querySelectorAll(".screen").forEach(function (screen) {
+            screen.classList.remove("visible");
+        });
+
+        var home = document.getElementById("screen-home");
+        var homeMenu = document.getElementById("menu-home");
+
+        if (home) home.classList.add("visible");
+        if (homeMenu) {
+            document.querySelectorAll(".menu-item").forEach(function (menu) {
+                menu.classList.remove("active");
+            });
+            homeMenu.classList.add("active");
+        }
+    }
+});
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="./script.js?v=78"></script>
