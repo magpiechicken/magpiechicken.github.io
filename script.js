@@ -3593,13 +3593,18 @@ supabaseClient.auth.onAuthStateChange(
 
 async function initialize() {
 
+    /* 홈은 Supabase 응답을 기다리지 않고 즉시 표시 */
+    const hash = window.location.hash.toLowerCase();
+
+    if (!hash) {
+        openHome();
+    }
+
     await refreshAuthState();
 
     updateAuthUI();
 
     renderImagePreview();
-
-    const hash = window.location.hash.toLowerCase();
 
     if (hash === "#news") {
         openNewsIntro();
@@ -3613,8 +3618,6 @@ async function initialize() {
         openAdvancedNews();
     } else if (hash === "#video") {
         openVideoPreview();
-    } else {
-        openHome();
     }
 
 }
