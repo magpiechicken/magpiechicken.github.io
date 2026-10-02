@@ -101,6 +101,14 @@
             후원
         </button>
 
+        <button
+            id="menu-membership"
+            class="menu-item"
+            type="button"
+        >
+            멤버십 인증하기
+        </button>
+
         <div class="menu-membership-divider" aria-hidden="true">
             멤버십 전용
         </div>
@@ -748,6 +756,124 @@
         </section>
 
         <section
+            id="screen-membership"
+            class="screen membership-screen"
+        >
+
+            <h1 class="page-heading">
+                멤버십 인증하기
+            </h1>
+
+            <div class="membership-box">
+
+                <div class="membership-box-title">
+                    멤버십 인증 신청
+                </div>
+
+                <p class="membership-box-description">
+                    아래 정보를 입력하고 인증 스크린샷 1장을 제출해주세요.
+                    관리자가 확인한 뒤 멤버십 전용 메뉴를 사용할 수 있습니다.
+                </p>
+
+                <div
+                    id="membership-current-status"
+                    class="membership-current-status"
+                >
+                    인증 상태를 확인하는 중...
+                </div>
+
+                <div class="membership-form">
+
+                    <label for="membership-website-nickname">
+                        웹사이트 닉네임
+                    </label>
+
+                    <input
+                        id="membership-website-nickname"
+                        type="text"
+                        maxlength="30"
+                        autocomplete="off"
+                        placeholder="사이트에서 사용하는 닉네임"
+                    >
+
+                    <label for="membership-youtube-handle">
+                        유튜브 핸들
+                    </label>
+
+                    <input
+                        id="membership-youtube-handle"
+                        type="text"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="예: @magpie-chicken"
+                    >
+
+                    <label for="membership-screenshot-input">
+                        인증 스크린샷
+                    </label>
+
+                    <input
+                        id="membership-screenshot-input"
+                        class="file-input"
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                    >
+
+                    <p class="membership-help">
+                        인증 화면이 잘 보이는 스크린샷 1장 · 최대 10MB
+                    </p>
+
+                    <div
+                        id="membership-screenshot-preview"
+                        class="membership-screenshot-preview"
+                    ></div>
+
+                    <button
+                        id="membership-submit-button"
+                        class="orange-button"
+                        type="button"
+                    >
+                        멤버십 인증 신청하기
+                    </button>
+
+                </div>
+
+            </div>
+
+            <div
+                id="membership-admin-panel"
+                class="membership-admin-panel hidden"
+            >
+
+                <div class="membership-admin-heading">
+                    <div>
+                        <span class="membership-admin-kicker">ADMIN</span>
+                        <h2>멤버십 인증 신청 관리</h2>
+                    </div>
+
+                    <button
+                        id="membership-admin-refresh"
+                        class="white-button"
+                        type="button"
+                    >
+                        새로고침
+                    </button>
+                </div>
+
+                <div
+                    id="membership-admin-list"
+                    class="membership-admin-list"
+                >
+                    <div class="membership-admin-loading">
+                        신청 목록을 불러오는 중...
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section
             id="screen-admin-community"
             class="screen"
         >
@@ -845,7 +971,7 @@
                     </h1>
 
                     <p class="page-subtitle">
-                        관리자만 영상을 업로드하고 미리볼 수 있는 공간입니다.
+                        관리자는 영상을 업로드하고, 멤버십 인증 회원은 영상을 미리볼 수 있습니다.
                     </p>
                 </div>
 
@@ -969,7 +1095,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
-<script src="./script.js?v=88"></script>
+<script src="./script.js?v=89"></script>
 
 </body>
 </html>
