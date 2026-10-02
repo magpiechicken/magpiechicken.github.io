@@ -1,4 +1,3 @@
-"use strict";
 
 // Updated: category menus, admin-only video preview, intro-first navigation, community intro, comment usernames, large video uploads
 
