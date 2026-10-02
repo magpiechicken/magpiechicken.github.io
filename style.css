@@ -3956,3 +3956,91 @@ button:disabled {
         max-width: calc(100vw - 80px) !important;
     }
 }
+
+/* ==========================================================
+   커뮤니티 말풍선 최종 폰트 확대
+   글자 크기 약 2.5배 / 말풍선은 글자 크기에 밀착
+========================================================== */
+.community-message {
+    display: flex !important;
+    flex-direction: column !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
+.community-message-row {
+    display: inline-flex !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    align-items: flex-end !important;
+    gap: 8px !important;
+}
+
+.community-bubble {
+    display: inline-block !important;
+    width: fit-content !important;
+    max-width: min(760px, 72vw) !important;
+    min-width: 0 !important;
+    height: auto !important;
+    flex: 0 1 auto !important;
+    box-sizing: border-box !important;
+
+    padding: 5px 10px !important;
+    margin: 0 !important;
+    border: 2px solid #222 !important;
+    border-radius: 14px !important;
+
+    font-size: 37px !important;
+    line-height: 1.12 !important;
+    font-weight: 500 !important;
+
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+}
+
+.community-name {
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+    margin-bottom: 6px !important;
+}
+
+.community-time {
+    font-size: 11px !important;
+    line-height: 1 !important;
+}
+
+@media (max-width: 700px) {
+    .community-message {
+        max-width: 100% !important;
+    }
+
+    .community-message-row {
+        gap: 6px !important;
+    }
+
+    .community-bubble {
+        max-width: calc(100vw - 95px) !important;
+        padding: 4px 9px !important;
+        border-radius: 12px !important;
+        font-size: 35px !important;
+        line-height: 1.12 !important;
+    }
+
+    .community-name {
+        font-size: 13px !important;
+        margin-bottom: 5px !important;
+    }
+
+    .community-time {
+        font-size: 9px !important;
+    }
+}
+
+@media (max-width: 420px) {
+    .community-bubble {
+        max-width: calc(100vw - 82px) !important;
+    }
+}
