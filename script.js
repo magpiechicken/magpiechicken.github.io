@@ -1205,16 +1205,9 @@ async function loadCommunityMessages(isPolling = false) {
                     profileInfo.username ||
                     "회원";
 
-                const role =
-                    profileInfo.role ||
-                    "user";
-
-                const roleClass =
-                    role === "admin"
-                        ? "admin"
-                        : role === "membership"
-                            ? "membership"
-                            : "";
+                // 관리자 커뮤니티는 관리자만 작성할 수 있으므로
+                // 모든 작성자 닉네임을 관리자 색상으로 표시한다.
+                const roleClass = "admin";
 
                 return `
                     <div class="community-message ${mine ? "self" : "other"}">
@@ -3572,8 +3565,10 @@ async function loadComments(newsId) {
                 "회원";
 
             const commentRole =
-                commentProfile.role ||
-                "user";
+                String(
+                    commentProfile.role ||
+                    "user"
+                ).trim().toLowerCase();
 
             const commentRoleClass =
                 commentRole === "admin"
