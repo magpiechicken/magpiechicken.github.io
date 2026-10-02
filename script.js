@@ -1125,16 +1125,12 @@ async function loadCommunityMessages(isPolling = false) {
 
     const list = messages || [];
 
-    /*
-     * 현재 관리자 커뮤니티는 관리자만 메시지를 보낼 수 있으므로
-     * 커뮤니티에서 표시되는 닉네임은 관리자 색상(파란색)을 사용합니다.
-     * 향후 다른 역할의 메시지가 들어와도 profiles 정보를 사용할 수 있도록
-     * 역할 정보를 함께 조회해 둡니다.
-     */
     const communityUserIds = [
         ...new Set(
             list
-                .map(message => message.user_id)
+                .map(function(message) {
+                    return message.user_id;
+                })
                 .filter(Boolean)
         )
     ];
@@ -1143,21 +1139,46 @@ async function loadCommunityMessages(isPolling = false) {
 
     if (communityUserIds.length > 0) {
         const {
-            data: communityProfiles,
-            error: communityProfileError
+            data: roleProfiles,
+            error: roleError
         } = await supabaseClient
-            .from("profiles")
-            .select("id, username, can_manage_news, membership_verified")
-            .in("id", communityUserIds);
+            .rpc(
+                "get_user_roles",
+                {
+                    p_user_ids: communityUserIds
+                }
+            );
 
-        if (!communityProfileError) {
+        if (!roleError) {
             communityRoleMap = new Map(
-                (communityProfiles || []).map(profile => [
-                    String(profile.id),
-                    profile
-                ])
+                (roleProfiles || []).map(function(profile) {
+                    return [
+                        String(profile.id),
+                        profile
+                    ];
+                })
+            );
+        } else {
+            console.error(
+                "커뮤니티 작성자 역할 조회 오류:",
+                roleError
             );
         }
+    }
+
+    if (currentUser && currentProfile?.username) {
+        communityRoleMap.set(
+            String(currentUser.id),
+            {
+                id: currentUser.id,
+                username: currentProfile.username,
+                role: isAdmin
+                    ? "admin"
+                    : isMembership
+                        ? "membership"
+                        : "user"
+            }
+        );
     }
 
     if (list.length === 0) {
@@ -1174,22 +1195,26 @@ async function loadCommunityMessages(isPolling = false) {
                     String(message.user_id) ===
                         String(currentUser.id);
 
-                const profile =
+                const profileInfo =
                     communityRoleMap.get(
                         String(message.user_id)
-                    );
+                    ) || {};
 
                 const name =
                     message.username ||
-                    profile?.username ||
-                    "관리자";
+                    profileInfo.username ||
+                    "회원";
+
+                const role =
+                    profileInfo.role ||
+                    "user";
 
                 const roleClass =
-                    profile?.can_manage_news === true
+                    role === "admin"
                         ? "admin"
-                        : profile?.membership_verified === true
+                        : role === "membership"
                             ? "membership"
-                            : "admin";
+                            : "";
 
                 return `
                     <div class="community-message ${mine ? "self" : "other"}">
@@ -3486,7 +3511,7 @@ async function loadComments(newsId) {
             error: profileError
         } = await supabaseClient
             .rpc(
-                "get_comment_profiles",
+                "get_user_roles",
                 {
                     p_user_ids: userIds
                 }
@@ -3495,66 +3520,18 @@ async function loadComments(newsId) {
         if (!profileError) {
             profileMap =
                 new Map(
-                    (profiles || []).map(
-                        profile => [
+                    (profiles || []).map(function(profile) {
+                        return [
                             String(profile.id),
-                            {
-                                id: profile.id,
-                                username: profile.username,
-                                can_manage_news: profile.can_manage_news === true,
-                                membership_verified: profile.membership_verified === true,
-                                role: profile.role || (profile.can_manage_news === true ? "admin" : profile.membership_verified === true ? "membership" : "user")
-                            }
-                        ]
-                    )
+                            profile
+                        ];
+                    })
                 );
         } else {
             console.error(
-                "댓글 작성자 조회 RPC 오류:",
+                "댓글 작성자 역할 조회 RPC 오류:",
                 profileError
             );
-
-            commentsContainer.innerHTML = `
-                <div class="comments-error">
-                    댓글 닉네임 정보를 불러오지 못했습니다.<br>
-                    Supabase의 get_comment_profiles SQL을 실행해주세요.
-                </div>
-            `;
-            commentCount.textContent = `댓글 ${list.length}개`;
-            return;
-        }
-
-        /*
-         * 기존 RPC가 닉네임만 반환하는 경우에도 역할 색상을 알아낼 수 있도록
-         * profiles 테이블에서 역할 정보를 한 번 더 시도합니다.
-         * RLS로 막혀 있어도 기존 댓글 닉네임 기능은 그대로 유지됩니다.
-         */
-        const {
-            data: roleProfiles,
-            error: roleProfileError
-        } = await supabaseClient
-            .from("profiles")
-            .select("id, username, can_manage_news, membership_verified")
-            .in("id", userIds);
-
-        if (!roleProfileError) {
-            (roleProfiles || []).forEach(function(profile) {
-                const key = String(profile.id);
-                const existing = profileMap.get(key) || {};
-
-                profileMap.set(key, {
-                    ...existing,
-                    id: profile.id,
-                    username: profile.username || existing.username,
-                    can_manage_news: profile.can_manage_news === true,
-                    membership_verified: profile.membership_verified === true,
-                    role: profile.can_manage_news === true
-                        ? "admin"
-                        : profile.membership_verified === true
-                            ? "membership"
-                            : "user"
-                });
-            });
         }
     }
 
@@ -3564,8 +3541,6 @@ async function loadComments(newsId) {
             {
                 id: currentUser.id,
                 username: currentProfile.username,
-                can_manage_news: currentProfile.can_manage_news === true || isAdmin,
-                membership_verified: currentProfile.membership_verified === true || isMembership,
                 role: isAdmin
                     ? "admin"
                     : isMembership
@@ -3585,7 +3560,7 @@ async function loadComments(newsId) {
             item.className =
                 "comment-item";
 
-            const profileInfo =
+            const commentProfile =
                 profileMap.get(
                     String(
                         comment.user_id
@@ -3593,15 +3568,17 @@ async function loadComments(newsId) {
                 ) || {};
 
             const username =
-                profileInfo.username ||
+                commentProfile.username ||
                 "회원";
 
-            const roleClass =
-                profileInfo.can_manage_news === true ||
-                profileInfo.role === "admin"
+            const commentRole =
+                commentProfile.role ||
+                "user";
+
+            const commentRoleClass =
+                commentRole === "admin"
                     ? "admin"
-                    : profileInfo.membership_verified === true ||
-                        profileInfo.role === "membership"
+                    : commentRole === "membership"
                         ? "membership"
                         : "";
 
@@ -3616,7 +3593,7 @@ async function loadComments(newsId) {
 
             item.innerHTML = `
                 <div class="comment-top">
-                    <strong class="comment-author ${roleClass}">
+                    <strong class="comment-author ${commentRoleClass}">
                         ${escapeHTML(
                             username
                         )}
