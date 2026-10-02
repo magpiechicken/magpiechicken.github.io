@@ -1,6 +1,6 @@
 "use strict";
 
-// Updated: category menus, admin-only video preview, intro-first navigation, community intro, comment usernames
+// Updated: category menus, admin-only video preview, intro-first navigation, community intro, comment usernames, large video uploads
 
 const SUPABASE_URL =
     "https://kxrjevmxayolcqcgmixz.supabase.co";
@@ -13,6 +13,15 @@ const NEWS_IMAGE_BUCKET =
 
 const MAX_IMAGES = 5;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+
+const VIDEO_BUCKET =
+    "video-preview";
+
+const MAX_VIDEO_SIZE =
+    5 * 1024 * 1024 * 1024;
+
+const SUPABASE_PROJECT_ID =
+    "kxrjevmxayolcqcgmixz";
 
 const supabaseClient =
     window.supabase.createClient(
@@ -57,6 +66,36 @@ const advancedNewsScreen =
 
 const videoPreviewScreen =
     document.getElementById("screen-video-preview");
+
+const videoTitleInput =
+    document.getElementById("video-title-input");
+
+const videoDescriptionInput =
+    document.getElementById("video-description-input");
+
+const videoFileInput =
+    document.getElementById("video-file-input");
+
+const videoFileName =
+    document.getElementById("video-file-name");
+
+const videoUploadButton =
+    document.getElementById("video-upload-button");
+
+const videoUploadStatus =
+    document.getElementById("video-upload-status");
+
+const videoUploadProgressWrap =
+    document.getElementById("video-upload-progress-wrap");
+
+const videoUploadProgressBar =
+    document.getElementById("video-upload-progress-bar");
+
+const videoUploadProgressText =
+    document.getElementById("video-upload-progress-text");
+
+const videoPreviewList =
+    document.getElementById("video-preview-list");
 
 const homeMenu =
     document.getElementById("menu-home");
@@ -990,6 +1029,480 @@ async function sendCommunityMessage() {
     }
 }
 
+function formatFileSize(bytes) {
+    if (!Number.isFinite(bytes) || bytes < 0) {
+        return "0 B";
+    }
+
+    if (bytes < 1024) {
+        return `${bytes} B`;
+    }
+
+    const units = [
+        "KB",
+        "MB",
+        "GB",
+        "TB"
+    ];
+
+    let value = bytes / 1024;
+    let unitIndex = 0;
+
+    while (value >= 1024 && unitIndex < units.length - 1) {
+        value /= 1024;
+        unitIndex += 1;
+    }
+
+    return `${value.toFixed(value >= 10 ? 1 : 2)} ${units[unitIndex]}`;
+}
+
+function resetVideoUploadUI() {
+    if (videoTitleInput) {
+        videoTitleInput.value = "";
+    }
+
+    if (videoDescriptionInput) {
+        videoDescriptionInput.value = "";
+    }
+
+    if (videoFileInput) {
+        videoFileInput.value = "";
+    }
+
+    if (videoFileName) {
+        videoFileName.textContent = "선택된 영상 없음";
+    }
+
+    if (videoUploadStatus) {
+        videoUploadStatus.textContent = "";
+        videoUploadStatus.classList.remove("error", "success");
+    }
+
+    if (videoUploadProgressWrap) {
+        videoUploadProgressWrap.classList.add("hidden");
+    }
+
+    if (videoUploadProgressBar) {
+        videoUploadProgressBar.style.width = "0%";
+    }
+
+    if (videoUploadProgressText) {
+        videoUploadProgressText.textContent = "0%";
+    }
+}
+
+function setVideoUploadStatus(message, type = "") {
+    if (!videoUploadStatus) {
+        return;
+    }
+
+    videoUploadStatus.textContent = message;
+    videoUploadStatus.classList.remove("error", "success");
+
+    if (type) {
+        videoUploadStatus.classList.add(type);
+    }
+}
+
+function setVideoUploadProgress(percent) {
+    const safePercent = Math.max(0, Math.min(100, Number(percent) || 0));
+
+    if (videoUploadProgressWrap) {
+        videoUploadProgressWrap.classList.remove("hidden");
+    }
+
+    if (videoUploadProgressBar) {
+        videoUploadProgressBar.style.width = `${safePercent}%`;
+    }
+
+    if (videoUploadProgressText) {
+        videoUploadProgressText.textContent = `${safePercent.toFixed(0)}%`;
+    }
+}
+
+function createVideoObjectName(file) {
+    const original = file.name || "video";
+    const dotIndex = original.lastIndexOf(".");
+    const extension = dotIndex >= 0
+        ? original.slice(dotIndex).toLowerCase().replace(/[^a-z0-9.]/g, "")
+        : ".mp4";
+
+    let base = dotIndex >= 0
+        ? original.slice(0, dotIndex)
+        : original;
+
+    base = base
+        .normalize("NFKC")
+        .replace(/[^a-zA-Z0-9_-]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 80);
+
+    if (!base) {
+        base = "video";
+    }
+
+    const random =
+        typeof crypto !== "undefined" && crypto.randomUUID
+            ? crypto.randomUUID()
+            : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+    return `${currentUser.id}/${Date.now()}-${random}-${base}${extension}`;
+}
+
+async function uploadVideoWithTus(file, objectPath) {
+    if (typeof tus === "undefined" || !tus.Upload) {
+        throw new Error("대용량 영상 업로드 모듈을 불러오지 못했습니다.");
+    }
+
+    const {
+        data: sessionData,
+        error: sessionError
+    } = await supabaseClient.auth.getSession();
+
+    if (sessionError || !sessionData?.session?.access_token) {
+        throw new Error("로그인 세션을 확인할 수 없습니다.");
+    }
+
+    const accessToken =
+        sessionData.session.access_token;
+
+    const endpoint =
+        `https://${SUPABASE_PROJECT_ID}.storage.supabase.co/storage/v1/upload/resumable`;
+
+    return new Promise((resolve, reject) => {
+        const upload = new tus.Upload(file, {
+            endpoint,
+            retryDelays: [0, 3000, 5000, 10000, 20000],
+            headers: {
+                authorization: `Bearer ${accessToken}`,
+                "x-upsert": "false"
+            },
+            uploadDataDuringCreation: true,
+            removeFingerprintOnSuccess: true,
+            chunkSize: 6 * 1024 * 1024,
+            metadata: {
+                bucketName: VIDEO_BUCKET,
+                objectName: objectPath,
+                contentType: file.type || "video/mp4",
+                cacheControl: "3600"
+            },
+            onError(error) {
+                reject(error);
+            },
+            onProgress(bytesUploaded, bytesTotal) {
+                if (bytesTotal > 0) {
+                    setVideoUploadProgress(
+                        (bytesUploaded / bytesTotal) * 100
+                    );
+                }
+            },
+            onSuccess() {
+                resolve();
+            }
+        });
+
+        upload.findPreviousUploads()
+            .then(previousUploads => {
+                if (previousUploads.length > 0) {
+                    upload.resumeFromPreviousUpload(previousUploads[0]);
+                }
+
+                upload.start();
+            })
+            .catch(reject);
+    });
+}
+
+async function loadVideoPreviews() {
+    if (!videoPreviewList) {
+        return;
+    }
+
+    videoPreviewList.innerHTML = `
+        <div class="video-empty-box">
+            영상을 불러오는 중...
+        </div>
+    `;
+
+    const {
+        data: videos,
+        error
+    } = await supabaseClient
+        .from("video_previews")
+        .select("id, title, description, storage_path, file_name, file_size, mime_type, created_at")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("영상 목록 조회 오류:", error);
+        videoPreviewList.innerHTML = `
+            <div class="video-empty-box video-error-box">
+                영상 목록을 불러오지 못했습니다.<br>
+                ${escapeHTML(error.message)}
+            </div>
+        `;
+        return;
+    }
+
+    if (!videos || videos.length === 0) {
+        videoPreviewList.innerHTML = `
+            <div class="video-empty-box">
+                아직 업로드된 영상이 없습니다.
+            </div>
+        `;
+        return;
+    }
+
+    const cards = [];
+
+    for (const video of videos) {
+        let signedUrl = null;
+
+        const {
+            data: signedData,
+            error: signedError
+        } = await supabaseClient
+            .storage
+            .from(VIDEO_BUCKET)
+            .createSignedUrl(video.storage_path, 60 * 60);
+
+        if (!signedError) {
+            signedUrl = signedData?.signedUrl || null;
+        }
+
+        const card = document.createElement("article");
+        card.className = "video-preview-card";
+
+        const dateText =
+            video.created_at
+                ? formatDate(video.created_at)
+                : "";
+
+        card.innerHTML = `
+            <div class="video-player-wrap">
+                ${signedUrl
+                    ? `<video class="video-player" controls preload="metadata" playsinline src="${escapeAttribute(signedUrl)}"></video>`
+                    : `<div class="video-player-error">영상을 불러오지 못했습니다.</div>`
+                }
+            </div>
+
+            <div class="video-preview-card-body">
+                <div class="video-preview-card-title">
+                    ${escapeHTML(video.title)}
+                </div>
+
+                ${video.description
+                    ? `<div class="video-preview-card-description">${escapeHTML(video.description).replace(/\n/g, "<br>")}</div>`
+                    : ""
+                }
+
+                <div class="video-preview-card-meta">
+                    ${escapeHTML(video.file_name || "영상")} · ${formatFileSize(Number(video.file_size) || 0)}${dateText ? ` · ${escapeHTML(dateText)}` : ""}
+                </div>
+
+                <button
+                    type="button"
+                    class="video-delete-button"
+                    data-video-id="${escapeAttribute(video.id)}"
+                    data-video-path="${escapeAttribute(video.storage_path)}"
+                >
+                    영상 삭제
+                </button>
+            </div>
+        `;
+
+        const deleteButton =
+            card.querySelector(".video-delete-button");
+
+        if (deleteButton) {
+            deleteButton.addEventListener(
+                "click",
+                function() {
+                    deleteVideoPreview(
+                        video.id,
+                        video.storage_path
+                    );
+                }
+            );
+        }
+
+        cards.push(card);
+    }
+
+    videoPreviewList.innerHTML = "";
+
+    cards.forEach(card => {
+        videoPreviewList.appendChild(card);
+    });
+}
+
+async function uploadVideo() {
+    if (!currentUser) {
+        alert("로그인이 필요합니다.");
+        openAuthScreen("login");
+        return;
+    }
+
+    if (!isAdmin) {
+        alert("관리자만 영상을 업로드할 수 있습니다.");
+        return;
+    }
+
+    if (!videoFileInput || !videoUploadButton) {
+        return;
+    }
+
+    const file = videoFileInput.files?.[0] || null;
+
+    if (!file) {
+        setVideoUploadStatus("영상을 먼저 선택해주세요.", "error");
+        return;
+    }
+
+    if (file.size > MAX_VIDEO_SIZE) {
+        setVideoUploadStatus(
+            `영상 크기가 5GB를 초과했습니다. 현재 파일: ${formatFileSize(file.size)}`,
+            "error"
+        );
+        return;
+    }
+
+    const title =
+        videoTitleInput?.value.trim() ||
+        file.name;
+
+    if (!title) {
+        setVideoUploadStatus("영상 제목을 입력해주세요.", "error");
+        return;
+    }
+
+    const description =
+        videoDescriptionInput?.value.trim() ||
+        "";
+
+    const objectPath =
+        createVideoObjectName(file);
+
+    videoUploadButton.disabled = true;
+    videoUploadButton.textContent = "업로드 중...";
+    setVideoUploadProgress(0);
+    setVideoUploadStatus(
+        `업로드 준비 중... (${formatFileSize(file.size)})`
+    );
+
+    let uploaded = false;
+
+    try {
+        await uploadVideoWithTus(
+            file,
+            objectPath
+        );
+
+        uploaded = true;
+        setVideoUploadProgress(100);
+        setVideoUploadStatus(
+            "영상 업로드 완료. 정보 저장 중..."
+        );
+
+        const {
+            error: insertError
+        } = await supabaseClient
+            .from("video_previews")
+            .insert({
+                title,
+                description,
+                storage_path: objectPath,
+                file_name: file.name,
+                file_size: file.size,
+                mime_type: file.type || "video/mp4",
+                created_by: currentUser.id
+            });
+
+        if (insertError) {
+            await supabaseClient
+                .storage
+                .from(VIDEO_BUCKET)
+                .remove([objectPath]);
+
+            uploaded = false;
+            throw insertError;
+        }
+
+        setVideoUploadStatus(
+            "영상이 정상적으로 등록되었습니다.",
+            "success"
+        );
+
+        resetVideoUploadUI();
+
+        setVideoUploadStatus(
+            "영상이 정상적으로 등록되었습니다.",
+            "success"
+        );
+
+        await loadVideoPreviews();
+
+    } catch (error) {
+        console.error("영상 업로드 오류:", error);
+
+        if (!uploaded) {
+            setVideoUploadStatus(
+                `영상 업로드 오류: ${error?.message || "알 수 없는 오류"}`,
+                "error"
+            );
+        } else {
+            setVideoUploadStatus(
+                `영상은 업로드됐지만 저장 처리 중 오류가 발생했습니다: ${error?.message || "알 수 없는 오류"}`,
+                "error"
+            );
+        }
+    } finally {
+        videoUploadButton.disabled = false;
+        videoUploadButton.textContent = "영상 업로드";
+    }
+}
+
+async function deleteVideoPreview(videoId, storagePath) {
+    if (!currentUser || !isAdmin) {
+        alert("관리자만 영상을 삭제할 수 있습니다.");
+        return;
+    }
+
+    if (!window.confirm("이 영상을 삭제하시겠습니까?")) {
+        return;
+    }
+
+    try {
+        const { error: storageError } =
+            await supabaseClient
+                .storage
+                .from(VIDEO_BUCKET)
+                .remove([storagePath]);
+
+        if (storageError) {
+            throw storageError;
+        }
+
+        const { error: rowError } =
+            await supabaseClient
+                .from("video_previews")
+                .delete()
+                .eq("id", videoId);
+
+        if (rowError) {
+            throw rowError;
+        }
+
+        await loadVideoPreviews();
+
+    } catch (error) {
+        console.error("영상 삭제 오류:", error);
+        alert(
+            "영상 삭제 오류:\n" +
+            (error?.message || "알 수 없는 오류")
+        );
+    }
+}
+
 function openVideoPreview() {
     if (!currentUser) {
         alert("영상미리보기는 관리자만 이용할 수 있습니다.");
@@ -1006,6 +1519,8 @@ function openVideoPreview() {
     videoPreviewScreen.classList.add("visible");
     activateVideoPreviewMenu();
     scrollTop();
+
+    loadVideoPreviews();
 }
 
 function openWriteScreen() {
@@ -3726,6 +4241,41 @@ if (communitySendButton) {
     communitySendButton.addEventListener(
         "click",
         sendCommunityMessage
+    );
+}
+
+if (videoFileInput) {
+    videoFileInput.addEventListener(
+        "change",
+        function() {
+            const file = videoFileInput.files?.[0] || null;
+
+            if (!file) {
+                videoFileName.textContent = "선택된 영상 없음";
+                return;
+            }
+
+            if (file.size > MAX_VIDEO_SIZE) {
+                videoFileName.textContent =
+                    `${file.name} · ${formatFileSize(file.size)} · 5GB 초과`;
+                setVideoUploadStatus(
+                    "5GB보다 큰 영상은 선택할 수 없습니다.",
+                    "error"
+                );
+                return;
+            }
+
+            videoFileName.textContent =
+                `${file.name} · ${formatFileSize(file.size)}`;
+            setVideoUploadStatus("");
+        }
+    );
+}
+
+if (videoUploadButton) {
+    videoUploadButton.addEventListener(
+        "click",
+        uploadVideo
     );
 }
 
