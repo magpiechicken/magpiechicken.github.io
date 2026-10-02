@@ -1125,7 +1125,7 @@ async function loadCommunityMessages(isPolling = false) {
 
     const list = messages || [];
 
-    const communityUserIds = [
+    const userIds = [
         ...new Set(
             list
                 .map(function(message) {
@@ -1135,9 +1135,9 @@ async function loadCommunityMessages(isPolling = false) {
         )
     ];
 
-    let communityRoleMap = new Map();
+    let roleMap = new Map();
 
-    if (communityUserIds.length > 0) {
+    if (userIds.length > 0) {
         const {
             data: roleProfiles,
             error: roleError
@@ -1145,12 +1145,12 @@ async function loadCommunityMessages(isPolling = false) {
             .rpc(
                 "get_user_roles",
                 {
-                    p_user_ids: communityUserIds
+                    p_user_ids: userIds
                 }
             );
 
         if (!roleError) {
-            communityRoleMap = new Map(
+            roleMap = new Map(
                 (roleProfiles || []).map(function(profile) {
                     return [
                         String(profile.id),
@@ -1166,17 +1166,21 @@ async function loadCommunityMessages(isPolling = false) {
         }
     }
 
-    if (currentUser && currentProfile?.username) {
-        communityRoleMap.set(
+    if (
+        currentUser &&
+        currentProfile?.username
+    ) {
+        roleMap.set(
             String(currentUser.id),
             {
                 id: currentUser.id,
                 username: currentProfile.username,
-                role: isAdmin
-                    ? "admin"
-                    : isMembership
-                        ? "membership"
-                        : "user"
+                role:
+                    isAdmin
+                        ? "admin"
+                        : isMembership
+                            ? "membership"
+                            : "user"
             }
         );
     }
@@ -1196,18 +1200,25 @@ async function loadCommunityMessages(isPolling = false) {
                         String(currentUser.id);
 
                 const profileInfo =
-                    communityRoleMap.get(
+                    roleMap.get(
                         String(message.user_id)
                     ) || {};
 
                 const name =
-                    message.username ||
                     profileInfo.username ||
+                    message.username ||
                     "회원";
 
-                // 관리자 커뮤니티는 관리자만 작성할 수 있으므로
-                // 모든 작성자 닉네임을 관리자 색상으로 표시한다.
-                const roleClass = "admin";
+                const role =
+                    profileInfo.role ||
+                    "user";
+
+                const roleClass =
+                    role === "admin"
+                        ? "admin"
+                        : role === "membership"
+                            ? "membership"
+                            : "";
 
                 return `
                     <div class="community-message ${mine ? "self" : "other"}">
@@ -3407,48 +3418,32 @@ function updateCommentLength() {
 }
 
 async function loadComments(newsId) {
-    if (!commentsContainer || !commentCount) {
-        return;
-    }
-
-    commentsContainer.innerHTML = `
-        <div class="comments-loading">
-            댓글을 불러오는 중...
-        </div>
-    `;
-
-    if (!currentUser) {
-        commentsContainer.innerHTML = `
-            <div class="comments-login-box">
-                댓글은 로그인한 회원에게만 표시됩니다.
-            </div>
-        `;
-
-        commentCount.textContent =
-            "댓글";
-
+    if (
+        !commentsContainer ||
+        !commentCount ||
+        !newsId
+    ) {
         return;
     }
 
     const {
         data: comments,
         error
-    } =
-        await supabaseClient
-            .from("news_comments")
-            .select(
-                "id, news_id, user_id, content, created_at"
-            )
-            .eq(
-                "news_id",
-                newsId
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: true
-                }
-            );
+    } = await supabaseClient
+        .from("news_comments")
+        .select(
+            "id, news_id, user_id, content, created_at"
+        )
+        .eq(
+            "news_id",
+            newsId
+        )
+        .order(
+            "created_at",
+            {
+                ascending: true
+            }
+        );
 
     if (error) {
         console.error(
@@ -3488,10 +3483,11 @@ async function loadComments(newsId) {
 
     const userIds = [
         ...new Set(
-            list.map(
-                comment =>
-                    comment.user_id
-            )
+            list
+                .map(function(comment) {
+                    return comment.user_id;
+                })
+                .filter(Boolean)
         )
     ];
 
@@ -3513,12 +3509,14 @@ async function loadComments(newsId) {
         if (!profileError) {
             profileMap =
                 new Map(
-                    (profiles || []).map(function(profile) {
-                        return [
-                            String(profile.id),
-                            profile
-                        ];
-                    })
+                    (profiles || []).map(
+                        function(profile) {
+                            return [
+                                String(profile.id),
+                                profile
+                            ];
+                        }
+                    )
                 );
         } else {
             console.error(
@@ -3528,17 +3526,22 @@ async function loadComments(newsId) {
         }
     }
 
-    if (currentUser && currentProfile?.username) {
+    if (
+        currentUser &&
+        currentProfile?.username
+    ) {
         profileMap.set(
             String(currentUser.id),
             {
                 id: currentUser.id,
-                username: currentProfile.username,
-                role: isAdmin
-                    ? "admin"
-                    : isMembership
-                        ? "membership"
-                        : "user"
+                username:
+                    currentProfile.username,
+                role:
+                    isAdmin
+                        ? "admin"
+                        : isMembership
+                            ? "membership"
+                            : "user"
             }
         );
     }
@@ -3565,10 +3568,8 @@ async function loadComments(newsId) {
                 "회원";
 
             const commentRole =
-                String(
-                    commentProfile.role ||
-                    "user"
-                ).trim().toLowerCase();
+                commentProfile.role ||
+                "user";
 
             const commentRoleClass =
                 commentRole === "admin"
@@ -3589,9 +3590,7 @@ async function loadComments(newsId) {
             item.innerHTML = `
                 <div class="comment-top">
                     <strong class="comment-author ${commentRoleClass}">
-                        ${escapeHTML(
-                            username
-                        )}
+                        ${escapeHTML(username)}
                     </strong>
 
                     <span class="comment-date">
