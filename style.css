@@ -2445,7 +2445,7 @@ button:disabled {
     height: 200%;
     max-width: 200%;
     max-height: 200%;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
     flex: 0 0 auto;
     transform: rotate(25deg);
