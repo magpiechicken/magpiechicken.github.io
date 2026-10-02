@@ -3857,3 +3857,78 @@ button:disabled {
         max-width: calc(100vw - 95px) !important;
     }
 }
+
+
+/* ==========================================================
+   커뮤니티 최종 수정
+   - 관리자/멤버십 닉네임 색상
+   - 말풍선은 글자 길이에 딱 맞게 최소 크기
+========================================================== */
+.community-name.admin,
+.comment-author.admin {
+    color: #1976d2 !important;
+}
+
+.community-name.membership,
+.comment-author.membership {
+    color: #d9a300 !important;
+}
+
+.community-message {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
+.community-message.self {
+    margin-left: auto !important;
+    align-items: flex-end !important;
+}
+
+.community-message-row {
+    display: flex !important;
+    flex: 0 0 auto !important;
+    align-items: flex-end !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    gap: 6px !important;
+}
+
+.community-bubble {
+    display: block !important;
+    flex: 0 1 auto !important;
+    width: fit-content !important;
+    max-width: min(620px, calc(100vw - 120px)) !important;
+    min-width: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+}
+
+.community-time {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+}
+
+@media (max-width: 700px) {
+    .community-bubble {
+        width: fit-content !important;
+        max-width: calc(100vw - 105px) !important;
+        padding: 7px 9px !important;
+        font-size: 14px !important;
+        line-height: 1.35 !important;
+    }
+}
+
+@media (max-width: 420px) {
+    .community-bubble {
+        max-width: calc(100vw - 95px) !important;
+    }
+}
