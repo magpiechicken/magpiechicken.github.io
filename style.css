@@ -3382,3 +3382,357 @@ button:disabled {
         max-width: calc(100vw - 95px) !important;
     }
 }
+
+/* ==========================================================
+   최근 소식 3개 - 소개 화면 안에서만 공간 채우기
+   PC / 모바일 모두 페이지 자체 스크롤 없이 표시
+========================================================== */
+.category-intro-screen.visible {
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    overflow: hidden !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.category-intro-screen .page-heading {
+    flex: 0 0 auto;
+}
+
+.category-intro-box {
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+}
+
+.intro-recent-panel {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+
+.intro-recent-grid {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    overflow: hidden !important;
+}
+
+.intro-recent-card {
+    min-height: 0 !important;
+    height: 100% !important;
+}
+
+@media (max-width: 700px) {
+    .category-intro-screen .page-heading {
+        margin-bottom: 6px !important;
+        font-size: 24px !important;
+    }
+
+    .category-intro-box {
+        margin-top: 8px !important;
+        padding: 12px 14px !important;
+    }
+
+    .category-intro-box h2 {
+        margin-bottom: 6px !important;
+        font-size: 17px !important;
+        line-height: 1.25 !important;
+    }
+
+    .category-intro-box p {
+        margin-bottom: 8px !important;
+        font-size: 11px !important;
+        line-height: 1.35 !important;
+    }
+
+    .category-intro-box .orange-button {
+        padding: 8px 11px !important;
+        border-width: 2px !important;
+        font-size: 12px !important;
+    }
+
+    .intro-recent-panel {
+        flex-basis: 170px !important;
+        margin-top: 8px !important;
+        padding: 8px !important;
+    }
+
+    .intro-recent-heading {
+        margin-bottom: 6px !important;
+    }
+
+    .intro-recent-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+    }
+
+    .intro-recent-card {
+        padding: 7px !important;
+        gap: 5px !important;
+    }
+
+    .intro-recent-card-title {
+        font-size: 10px !important;
+        line-height: 1.25 !important;
+        -webkit-line-clamp: 2 !important;
+    }
+
+    .intro-recent-card-meta,
+    .intro-recent-card-author {
+        font-size: 7px !important;
+    }
+}
+
+@media (max-width: 420px) {
+    .intro-recent-panel {
+        flex-basis: 155px !important;
+        padding: 7px !important;
+    }
+
+    .intro-recent-grid {
+        gap: 5px !important;
+    }
+
+    .intro-recent-card {
+        padding: 6px !important;
+        gap: 4px !important;
+    }
+
+    .intro-recent-number {
+        font-size: 10px !important;
+    }
+
+    .intro-recent-card-title {
+        font-size: 9px !important;
+    }
+
+    .intro-recent-card-meta,
+    .intro-recent-card-author {
+        font-size: 6.5px !important;
+    }
+
+    .intro-recent-arrow {
+        font-size: 10px !important;
+    }
+}
+
+/* ==========================================================
+   관리자 커뮤니티 말풍선 - 글자 길이에 맞춰 표시
+========================================================== */
+.community-message {
+    width: fit-content !important;
+    max-width: 88% !important;
+}
+
+.community-message-row {
+    width: fit-content !important;
+    max-width: 100% !important;
+    display: inline-flex !important;
+}
+
+.community-bubble {
+    width: auto !important;
+    max-width: min(620px, 68vw) !important;
+    min-width: 0 !important;
+    height: auto !important;
+    flex: 0 1 auto !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 700px) {
+    .community-message {
+        max-width: 91% !important;
+    }
+
+    .community-message-row {
+        width: fit-content !important;
+        max-width: 100% !important;
+    }
+
+    .community-bubble {
+        max-width: calc(100vw - 110px) !important;
+    }
+}
+
+
+/* ==========================================================
+   최종: 카테고리 소개 화면 / 최근 소식 3개 안정화
+   PC / 모바일 모두 화면 밖으로 밀려나지 않도록 높이를 고정
+========================================================== */
+.category-intro-screen.visible {
+    box-sizing: border-box !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.category-intro-screen .category-intro-box {
+    flex: 0 0 auto !important;
+    min-height: 0 !important;
+}
+
+.category-intro-screen .intro-recent-panel {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.category-intro-screen .intro-recent-grid {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    overflow: hidden !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+.category-intro-screen .intro-recent-card {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    overflow: hidden !important;
+}
+
+/* ==========================================================
+   관리자 커뮤니티 말풍선 최종 정리
+   글자 길이에 맞춰서만 늘어나고, 긴 글만 줄바꿈
+========================================================== */
+.community-message {
+    width: fit-content !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
+.community-message-row {
+    width: fit-content !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    display: inline-flex !important;
+    align-items: flex-end !important;
+}
+
+.community-bubble {
+    width: fit-content !important;
+    max-width: min(620px, 70vw) !important;
+    min-width: 0 !important;
+    height: auto !important;
+    flex: 0 1 auto !important;
+    display: inline-block !important;
+    box-sizing: border-box !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+}
+
+@media (max-width: 700px) {
+    .category-intro-screen.visible {
+        overflow: hidden !important;
+    }
+
+    .category-intro-screen .category-intro-box {
+        margin-top: 8px !important;
+        padding: 11px 13px !important;
+    }
+
+    .category-intro-screen .category-intro-box h2 {
+        margin-bottom: 5px !important;
+        font-size: 17px !important;
+    }
+
+    .category-intro-screen .category-intro-box p {
+        margin-bottom: 7px !important;
+        font-size: 10.5px !important;
+        line-height: 1.32 !important;
+    }
+
+    .category-intro-screen .category-intro-box .orange-button {
+        padding: 7px 10px !important;
+        font-size: 11.5px !important;
+    }
+
+    .category-intro-screen .intro-recent-panel {
+        flex: 0 0 150px !important;
+        min-height: 150px !important;
+        margin-top: 7px !important;
+        padding: 7px !important;
+    }
+
+    .category-intro-screen .intro-recent-heading {
+        margin-bottom: 5px !important;
+    }
+
+    .category-intro-screen .intro-recent-heading h2 {
+        font-size: 16px !important;
+    }
+
+    .category-intro-screen .intro-recent-description {
+        font-size: 8px !important;
+    }
+
+    .category-intro-screen .intro-recent-grid {
+        gap: 5px !important;
+    }
+
+    .category-intro-screen .intro-recent-card {
+        padding: 6px !important;
+        gap: 4px !important;
+    }
+
+    .category-intro-screen .intro-recent-card-title {
+        font-size: 9px !important;
+        line-height: 1.22 !important;
+        -webkit-line-clamp: 2 !important;
+    }
+
+    .category-intro-screen .intro-recent-card-meta,
+    .category-intro-screen .intro-recent-card-author {
+        font-size: 6.5px !important;
+    }
+
+    .category-intro-screen .intro-recent-number {
+        font-size: 10px !important;
+    }
+
+    .category-intro-screen .intro-recent-arrow {
+        font-size: 10px !important;
+    }
+
+    .community-bubble {
+        max-width: calc(100vw - 105px) !important;
+        padding: 7px 9px !important;
+        font-size: 14px !important;
+        line-height: 1.35 !important;
+    }
+}
+
+@media (max-width: 420px) {
+    .category-intro-screen .intro-recent-panel {
+        flex-basis: 140px !important;
+        min-height: 140px !important;
+    }
+
+    .category-intro-screen .intro-recent-card {
+        padding: 5px !important;
+    }
+
+    .category-intro-screen .intro-recent-card-title {
+        font-size: 8.5px !important;
+    }
+
+    .category-intro-screen .intro-recent-card-meta,
+    .category-intro-screen .intro-recent-card-author {
+        font-size: 6px !important;
+    }
+
+    .community-bubble {
+        max-width: calc(100vw - 95px) !important;
+    }
+}
