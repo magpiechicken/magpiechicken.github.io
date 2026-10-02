@@ -183,71 +183,47 @@ button:disabled {
 }
 
 /* =========================
-   화면
+   화면 전환 애니메이션
 ========================= */
 
 .screen {
     display: none;
     width: 100%;
+    transform-origin: center top;
 }
 
 .screen.visible {
     display: block;
-    animation: screenEnter 0.34s cubic-bezier(0.22, 0.61, 0.36, 1) both;
-    transform-origin: top center;
+    animation: screenFadeSlide 0.62s cubic-bezier(0.22, 0.8, 0.2, 1) both;
+    will-change: opacity, transform;
 }
 
-@keyframes screenEnter {
+@keyframes screenFadeSlide {
     0% {
         opacity: 0;
-        transform: translateY(18px) scale(0.985);
-    }
-
-    55% {
-        opacity: 1;
+        transform: translate3d(0, 28px, 0) scale(0.985);
     }
 
     100% {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translate3d(0, 0, 0) scale(1);
     }
 }
 
-#screen-news-intro.visible,
-#screen-news-list.visible,
-#screen-admin-community.visible,
-#screen-advanced-news.visible,
-#screen-video-preview.visible {
-    animation-duration: 0.38s;
-}
-
+/* 상세 글은 오른쪽에서 살짝 들어오며 전환 */
 #screen-news-detail.visible {
-    animation: newsDetailEnter 0.42s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    animation: detailFadeSlide 0.66s cubic-bezier(0.22, 0.8, 0.2, 1) both;
 }
 
-@keyframes newsDetailEnter {
+@keyframes detailFadeSlide {
     0% {
         opacity: 0;
-        transform: translateX(28px) translateY(8px) scale(0.985);
-        filter: blur(2px);
-    }
-
-    60% {
-        opacity: 1;
-        filter: blur(0);
+        transform: translate3d(36px, 10px, 0) scale(0.985);
     }
 
     100% {
         opacity: 1;
-        transform: translateX(0) translateY(0) scale(1);
-        filter: blur(0);
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .screen.visible,
-    #screen-news-detail.visible {
-        animation: none;
+        transform: translate3d(0, 0, 0) scale(1);
     }
 }
 
