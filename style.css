@@ -3992,7 +3992,7 @@ button:disabled {
     border: 2px solid #222 !important;
     border-radius: 14px !important;
 
-    font-size: 37px !important;
+    font-size: 40px !important;
     line-height: 1.12 !important;
     font-weight: 500 !important;
 
@@ -4025,7 +4025,7 @@ button:disabled {
         max-width: calc(100vw - 95px) !important;
         padding: 4px 9px !important;
         border-radius: 12px !important;
-        font-size: 35px !important;
+        font-size: 40px !important;
         line-height: 1.12 !important;
     }
 
@@ -4042,5 +4042,25 @@ button:disabled {
 @media (max-width: 420px) {
     .community-bubble {
         max-width: calc(100vw - 82px) !important;
+    }
+}
+
+
+/* FORCE FINAL COMMUNITY BUBBLE SIZE */
+.community-messages .community-bubble {
+    font-size: 40px !important;
+    line-height: 1.12 !important;
+    width: fit-content !important;
+    min-width: 0 !important;
+    max-width: min(760px, 72vw) !important;
+    padding: 5px 10px !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 700px) {
+    .community-messages .community-bubble {
+        font-size: 40px !important;
+        max-width: calc(100vw - 95px) !important;
+        padding: 4px 9px !important;
     }
 }
