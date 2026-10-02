@@ -3849,10 +3849,77 @@ button:disabled {
 
 
 /* ==========================================================
-   커뮤니티 최종 수정
-   - 작성자 역할 색상은 모든 사용자에게 표시
-   - 말풍선은 글자와 최소한의 패딩만 차지
+   커뮤니티 말풍선 NEW
+   - 기존 말풍선 폭 계산을 무시하고 새 구조로 적용
+   - 짧은 글은 글자 폭 + 최소 여백만 사용
+   - 긴 글만 최대 폭에서 자동 줄바꿈
 ========================================================== */
+.community-message {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.community-message.other {
+    align-items: flex-start !important;
+    margin-left: 0 !important;
+    margin-right: auto !important;
+}
+
+.community-message.self {
+    align-items: flex-end !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+}
+
+.community-message-row {
+    display: flex !important;
+    align-items: flex-end !important;
+    align-self: flex-start !important;
+    flex: 0 0 auto !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    gap: 4px !important;
+    box-sizing: border-box !important;
+}
+
+.community-message.self .community-message-row {
+    align-self: flex-end !important;
+    flex-direction: row-reverse !important;
+}
+
+.community-bubble {
+    display: block !important;
+    flex: 0 1 auto !important;
+    width: auto !important;
+    max-width: min(620px, 70vw) !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    padding: 1px 5px !important;
+    border: 2px solid #222 !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    color: #111 !important;
+    font-size: 15px !important;
+    line-height: 1.25 !important;
+    white-space: pre-wrap !important;
+    overflow-wrap: anywhere !important;
+    word-break: break-word !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.10) !important;
+}
+
+.community-message.self .community-bubble {
+    background: #ffdf9a !important;
+}
+
 .community-name.admin,
 .comment-author.admin {
     color: #1976d2 !important;
@@ -3863,66 +3930,29 @@ button:disabled {
     color: #d9a300 !important;
 }
 
-.community-message {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    width: fit-content !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-}
-
-.community-message.self {
-    margin-left: auto !important;
-    align-items: flex-end !important;
-}
-
-.community-message-row,
-.community-message.self .community-message-row {
-    display: inline-flex !important;
-    width: fit-content !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    flex: 0 0 auto !important;
-    align-items: flex-end !important;
-    gap: 5px !important;
-}
-
-.community-bubble {
-    display: block !important;
-    width: max-content !important;
-    max-width: min(620px, 70vw) !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    height: auto !important;
-    flex: 0 1 auto !important;
-    box-sizing: border-box !important;
-    padding: 2px 6px !important;
-    margin: 0 !important;
-    font-size: 15px !important;
-    line-height: 1.25 !important;
-    white-space: pre-wrap !important;
-    overflow-wrap: anywhere !important;
-    word-break: break-word !important;
-}
-
-.community-time {
-    flex: 0 0 auto !important;
-    white-space: nowrap !important;
-}
-
 @media (max-width: 700px) {
-    .community-bubble {
+    .community-message {
         width: max-content !important;
-        max-width: calc(100vw - 100px) !important;
-        padding: 2px 6px !important;
+        max-width: 100% !important;
+    }
+
+    .community-message-row {
+        width: max-content !important;
+        max-width: 100% !important;
+        gap: 3px !important;
+    }
+
+    .community-bubble {
+        max-width: calc(100vw - 90px) !important;
+        padding: 1px 5px !important;
         font-size: 14px !important;
         line-height: 1.25 !important;
+        border-radius: 11px !important;
     }
 }
 
 @media (max-width: 420px) {
     .community-bubble {
-        max-width: calc(100vw - 90px) !important;
+        max-width: calc(100vw - 80px) !important;
     }
 }
