@@ -3736,3 +3736,285 @@ button:disabled {
         max-width: calc(100vw - 95px) !important;
     }
 }
+
+
+/* ==========================================================
+   멤버십 인증
+========================================================== */
+
+.membership-screen {
+    width: 100%;
+}
+
+.membership-box,
+.membership-admin-panel {
+    width: 100%;
+    margin-top: 28px;
+    padding: 32px;
+    background: #ffffff;
+    border: 4px solid #000000;
+}
+
+.membership-box-title {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.membership-box-description {
+    margin: 0 0 24px;
+    color: #666666;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.membership-current-status {
+    margin-bottom: 24px;
+    padding: 14px 16px;
+    background: #f4f4f4;
+    border: 2px solid #000000;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.membership-current-status.pending {
+    background: #fff3d9;
+}
+
+.membership-current-status.verified {
+    background: #e8f7e8;
+}
+
+.membership-current-status.rejected {
+    background: #ffe9e9;
+}
+
+.membership-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.membership-form label {
+    margin-bottom: 8px;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.membership-form input {
+    margin-bottom: 18px;
+    padding: 13px 14px;
+    background: #ffffff;
+    border: 3px solid #000000;
+    outline: none;
+    font-size: 16px;
+}
+
+.membership-help {
+    margin: -7px 0 18px;
+    color: #777777;
+    font-size: 13px;
+}
+
+.membership-screenshot-preview {
+    width: min(520px, 100%);
+    margin-bottom: 22px;
+}
+
+.membership-screenshot-preview img {
+    width: 100%;
+    max-height: 420px;
+    display: block;
+    object-fit: contain;
+    border: 2px solid #000000;
+    background: #f5f5f5;
+}
+
+.membership-admin-panel.hidden {
+    display: none;
+}
+
+.membership-admin-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.membership-admin-heading h2 {
+    margin: 4px 0 0;
+    font-size: 26px;
+}
+
+.membership-admin-kicker {
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 0.16em;
+}
+
+.membership-admin-list {
+    display: grid;
+    gap: 16px;
+}
+
+.membership-admin-card {
+    padding: 18px;
+    border: 3px solid #000000;
+    background: #ffffff;
+}
+
+.membership-admin-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.membership-admin-card-top > div {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.membership-admin-card-top strong {
+    font-size: 20px;
+}
+
+.membership-admin-card-top span {
+    font-size: 14px;
+    color: #666666;
+}
+
+.membership-status-badge {
+    flex: 0 0 auto;
+    padding: 6px 10px;
+    border: 2px solid #000000;
+    font-size: 12px !important;
+    font-weight: 800;
+    color: #111111 !important;
+}
+
+.membership-admin-date {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #888888;
+}
+
+.membership-admin-content {
+    margin-top: 16px;
+}
+
+.membership-screenshot-link {
+    display: block;
+    width: min(520px, 100%);
+}
+
+.membership-screenshot-link img {
+    width: 100%;
+    max-height: 480px;
+    display: block;
+    object-fit: contain;
+    border: 2px solid #000000;
+    background: #f5f5f5;
+}
+
+.membership-screenshot-missing {
+    padding: 18px;
+    border: 2px dashed #000000;
+    color: #777777;
+}
+
+.membership-admin-note {
+    margin-top: 14px;
+    padding: 11px 13px;
+    background: #f5f5f5;
+    border: 2px solid #000000;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.membership-admin-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.membership-admin-loading,
+.membership-admin-empty {
+    padding: 28px;
+    text-align: center;
+    border: 2px solid #000000;
+    background: #f7f7f7;
+    color: #777777;
+}
+
+@media (max-width: 700px) {
+    .membership-box,
+    .membership-admin-panel {
+        margin-top: 18px;
+        padding: 18px;
+        border-width: 2px;
+    }
+
+    .membership-box-title {
+        font-size: 22px;
+    }
+
+    .membership-box-description {
+        margin-bottom: 18px;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .membership-current-status {
+        padding: 11px 12px;
+        border-width: 2px;
+        font-size: 12px;
+    }
+
+    .membership-form label {
+        font-size: 13px;
+    }
+
+    .membership-form input {
+        padding: 10px;
+        border-width: 2px;
+        font-size: 13px;
+    }
+
+    .membership-help {
+        font-size: 10px;
+    }
+
+    .membership-admin-heading {
+        align-items: flex-start;
+    }
+
+    .membership-admin-heading h2 {
+        font-size: 20px;
+    }
+
+    .membership-admin-card {
+        padding: 12px;
+        border-width: 2px;
+    }
+
+    .membership-admin-card-top strong {
+        font-size: 15px;
+    }
+
+    .membership-admin-card-top span {
+        font-size: 11px;
+    }
+
+    .membership-admin-actions {
+        flex-direction: column;
+    }
+
+    .membership-admin-actions .white-button,
+    .membership-admin-actions .orange-small-button {
+        width: 100%;
+    }
+}
