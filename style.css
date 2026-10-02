@@ -2684,3 +2684,78 @@ button:disabled {
         border-width: 2px;
     }
 }
+
+
+/* 후원 페이지 */
+.donation-box {
+    width: min(760px, 100%);
+    margin: 24px auto 0;
+    padding: 34px 28px;
+    border: 2px solid #111;
+    border-radius: 18px;
+    background: #fff;
+    box-sizing: border-box;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.donation-box-title {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 12px;
+}
+
+.donation-box-description {
+    margin: 0 auto 24px;
+    max-width: 620px;
+    color: #444;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.donation-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 0 24px;
+    border: 2px solid #111;
+    border-radius: 12px;
+    background: #ff9400;
+    color: #111;
+    font-size: 16px;
+    font-weight: 800;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.donation-button:hover {
+    filter: brightness(1.05);
+    transform: translateY(-2px);
+}
+
+.donation-button:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 640px) {
+    .donation-box {
+        padding: 28px 18px;
+        border-radius: 14px;
+    }
+
+    .donation-box-title {
+        font-size: 23px;
+    }
+
+    .donation-box-description {
+        font-size: 15px;
+    }
+
+    .donation-button {
+        width: 100%;
+        padding: 0 16px;
+        font-size: 15px;
+    }
+}
