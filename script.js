@@ -442,30 +442,47 @@ async function loadCurrentProfile() {
 }
 
 async function refreshAuthState() {
-    const {
-        data,
-        error
-    } =
-        await supabaseClient.auth.getUser();
+    try {
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth.getUser();
 
-    if (
-        error ||
-        !data ||
-        !data.user
-    ) {
+        if (
+            error ||
+            !data ||
+            !data.user
+        ) {
+            currentUser = null;
+            currentProfile = null;
+            isAdmin = false;
+
+            updateAuthUI();
+
+            return;
+        }
+
+        currentUser =
+            data.user;
+
+        /*
+         * 프로필 조회 실패만으로 로그인 세션을 취소하지 않습니다.
+         * profiles RLS/행 누락이 있어도 로그인 자체는 유지합니다.
+         */
+        await loadCurrentProfile();
+    } catch (error) {
+        console.error(
+            "인증 상태 확인 오류:",
+            error
+        );
+
         currentUser = null;
         currentProfile = null;
         isAdmin = false;
 
         updateAuthUI();
-
-        return;
     }
-
-    currentUser =
-        data.user;
-
-    await loadCurrentProfile();
 }
 
 function resetDetailUI() {
@@ -1143,24 +1160,18 @@ async function login() {
         currentUser =
             data.user;
 
+        /*
+         * 프로필이 없거나 profiles RLS가 잠시 실패해도
+         * 로그인 세션 자체는 유지합니다.
+         */
         await loadCurrentProfile();
 
-        if (!currentProfile) {
-            await supabaseClient.auth.signOut();
+        await openHome();
 
-            currentUser = null;
-            currentProfile = null;
-            isAdmin = false;
-
-            updateAuthUI();
-
-            authMessage.textContent =
-                "로그인은 성공했지만 회원 정보를 찾지 못했습니다.";
-
-            return;
-        }
-
-        await openNewsIntro();
+        authMessage.textContent =
+            isAdmin
+                ? "관리자 계정으로 로그인되었습니다."
+                : "로그인되었습니다.";
 
     } catch (error) {
         console.error(
@@ -1368,8 +1379,11 @@ async function logout() {
 }
 
 async function getNews(category = "general") {
-    let query =
-        supabaseClient
+    try {
+        const {
+            data,
+            error
+        } = await supabaseClient
             .from("news")
             .select(
                 "id, author, title, content, created_at, image_urls, view_count, category"
@@ -1382,26 +1396,48 @@ async function getNews(category = "general") {
                 }
             );
 
-    const {
-        data,
-        error
-    } = await query;
+        if (error) {
+            throw error;
+        }
 
-    if (error) {
+        return data || [];
+    } catch (error) {
         console.error(
-            "소식 불러오기 오류:",
+            `소식 불러오기 오류 [${category}]:`,
             error
         );
 
-        alert(
-            "소식 불러오기 오류:\n" +
-            error.message
-        );
+        const message =
+            error?.message ||
+            "알 수 없는 오류";
+
+        const code =
+            error?.code
+                ? ` [${error.code}]`
+                : "";
+
+        const container =
+            document.getElementById(
+                "news-list-container"
+            );
+
+        if (container) {
+            container.innerHTML = `
+                <div class="empty-box">
+                    <div class="empty-title">
+                        ${escapeHTML(categoryName(category))}을(를) 불러오지 못했습니다.
+                    </div>
+                    <div class="empty-description">
+                        ${escapeHTML(message + code)}
+                        <br>
+                        Supabase의 news SELECT 정책과 category 컬럼을 확인해주세요.
+                    </div>
+                </div>
+            `;
+        }
 
         return [];
     }
-
-    return data || [];
 }
 
 async function incrementNewsView(
@@ -3718,7 +3754,7 @@ if (sidebar) {
 }
 
 supabaseClient.auth.onAuthStateChange(
-    async function(
+    function(
         event,
         session
     ) {
@@ -3727,23 +3763,32 @@ supabaseClient.auth.onAuthStateChange(
             event ===
             "SIGNED_OUT"
         ) {
-
             currentUser = null;
             currentProfile = null;
             isAdmin = false;
 
-            if (currentNewsId !== null) {
-                await renderNewsInteractions(
-                    currentNewsId
-                );
-            }
-
             updateAuthUI();
 
-            if (adminCommunityScreen && adminCommunityScreen.classList.contains("visible")) {
-                communityInitialLoad = true;
-                await loadCommunityMessages();
-            }
+            /*
+             * Supabase auth callback 안에서 다른 Supabase 요청을
+             * await하지 않습니다. 이렇게 해야 로그인 직후
+             * auth lock으로 인해 요청이 멈추는 문제를 피할 수 있습니다.
+             */
+            setTimeout(async function() {
+                if (currentNewsId !== null) {
+                    await renderNewsInteractions(
+                        currentNewsId
+                    );
+                }
+
+                if (
+                    adminCommunityScreen &&
+                    adminCommunityScreen.classList.contains("visible")
+                ) {
+                    communityInitialLoad = true;
+                    await loadCommunityMessages();
+                }
+            }, 0);
 
             return;
         }
@@ -3752,23 +3797,31 @@ supabaseClient.auth.onAuthStateChange(
             session &&
             session.user
         ) {
-
             currentUser =
                 session.user;
 
-            await loadCurrentProfile();
+            updateAuthUI();
 
-            if (currentNewsId !== null) {
-                await renderNewsInteractions(
-                    currentNewsId
-                );
-            }
+            /*
+             * 프로필 조회는 auth callback 바깥의 다음 task에서 처리합니다.
+             */
+            setTimeout(async function() {
+                await loadCurrentProfile();
 
-            if (adminCommunityScreen && adminCommunityScreen.classList.contains("visible")) {
-                communityInitialLoad = true;
-                await loadCommunityMessages();
-            }
+                if (currentNewsId !== null) {
+                    await renderNewsInteractions(
+                        currentNewsId
+                    );
+                }
 
+                if (
+                    adminCommunityScreen &&
+                    adminCommunityScreen.classList.contains("visible")
+                ) {
+                    communityInitialLoad = true;
+                    await loadCommunityMessages();
+                }
+            }, 0);
         }
 
     }
