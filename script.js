@@ -32,6 +32,7 @@ const supabaseClient =
 let currentUser = null;
 let currentProfile = null;
 let isAdmin = false;
+let isMembership = false;
 let currentNewsId = null;
 let selectedImageFiles = [];
 let editingNewsId = null;
@@ -57,6 +58,9 @@ const authScreen =
 
 const donationScreen =
     document.getElementById("screen-donation");
+
+const membershipScreen =
+    document.getElementById("screen-membership");
 
 const adminCommunityScreen =
     document.getElementById("screen-admin-community");
@@ -105,6 +109,9 @@ const newsMenu =
 
 const donationMenu =
     document.getElementById("menu-donation");
+
+const membershipMenu =
+    document.getElementById("menu-membership");
 
 const sportsNewsMenu =
     document.getElementById("menu-sports-news");
@@ -205,6 +212,33 @@ const communitySendButton =
 const communityReadonlyNotice =
     document.getElementById("community-readonly-notice");
 
+const membershipCurrentStatus =
+    document.getElementById("membership-current-status");
+
+const membershipWebsiteNickname =
+    document.getElementById("membership-website-nickname");
+
+const membershipYoutubeHandle =
+    document.getElementById("membership-youtube-handle");
+
+const membershipScreenshotInput =
+    document.getElementById("membership-screenshot-input");
+
+const membershipScreenshotPreview =
+    document.getElementById("membership-screenshot-preview");
+
+const membershipSubmitButton =
+    document.getElementById("membership-submit-button");
+
+const membershipAdminPanel =
+    document.getElementById("membership-admin-panel");
+
+const membershipAdminList =
+    document.getElementById("membership-admin-list");
+
+const membershipAdminRefresh =
+    document.getElementById("membership-admin-refresh");
+
 let communityPollTimer = null;
 let communityInitialLoad = true;
 
@@ -255,6 +289,9 @@ function hideAllScreens() {
     writeScreen.classList.remove("visible");
     authScreen.classList.remove("visible");
     donationScreen.classList.remove("visible");
+    if (membershipScreen) {
+        membershipScreen.classList.remove("visible");
+    }
     if (adminCommunityScreen) {
         adminCommunityScreen.classList.remove("visible");
     }
@@ -269,6 +306,7 @@ function clearMenuActive() {
         sportsNewsMenu,
         adminCommunityMenu,
         donationMenu,
+        membershipMenu,
         advancedNewsMenu,
         videoPreviewMenu
     ].forEach(function(menu) {
@@ -296,6 +334,14 @@ function activateDonationMenu() {
     closeSidebarDrawer();
     clearMenuActive();
     donationMenu.classList.add("active");
+}
+
+function activateMembershipMenu() {
+    closeSidebarDrawer();
+    clearMenuActive();
+    if (membershipMenu) {
+        membershipMenu.classList.add("active");
+    }
 }
 
 function activateSportsNewsMenu() {
@@ -331,8 +377,11 @@ function activateVideoPreviewMenu() {
 }
 
 function updateAdminOnlyMenus() {
+    const canUseMembership =
+        isAdmin || isMembership;
+
     if (advancedNewsMenu) {
-        if (isAdmin) {
+        if (canUseMembership) {
             advancedNewsMenu.disabled = false;
             advancedNewsMenu.classList.remove("locked");
             advancedNewsMenu.textContent = "고급소식";
@@ -344,7 +393,7 @@ function updateAdminOnlyMenus() {
     }
 
     if (videoPreviewMenu) {
-        if (isAdmin) {
+        if (canUseMembership) {
             videoPreviewMenu.disabled = false;
             videoPreviewMenu.classList.remove("locked");
             videoPreviewMenu.textContent = "영상미리보기";
@@ -368,6 +417,10 @@ function scrollTop() {
 function updateAuthUI() {
     updateAdminOnlyMenus();
     updateCommunityComposer();
+
+    if (membershipAdminPanel && !isAdmin) {
+        membershipAdminPanel.classList.add("hidden");
+    }
 
     if (!currentUser) {
         accountButton.textContent =
@@ -449,7 +502,7 @@ async function loadCurrentProfile() {
         await supabaseClient
             .from("profiles")
             .select(
-                "id, username, can_manage_news"
+                "id, username, can_manage_news, membership_verified"
             )
             .eq(
                 "id",
@@ -465,6 +518,7 @@ async function loadCurrentProfile() {
 
         currentProfile = null;
         isAdmin = false;
+        isMembership = false;
 
         updateAuthUI();
 
@@ -476,6 +530,9 @@ async function loadCurrentProfile() {
 
     isAdmin =
         profile?.can_manage_news === true;
+
+    isMembership =
+        profile?.membership_verified === true;
 
     updateAuthUI();
 }
@@ -496,6 +553,11 @@ async function refreshAuthState() {
             currentUser = null;
             currentProfile = null;
             isAdmin = false;
+            isMembership = false;
+
+            if (membershipAdminPanel) {
+                membershipAdminPanel.classList.add("hidden");
+            }
 
             updateAuthUI();
 
@@ -519,6 +581,7 @@ async function refreshAuthState() {
         currentUser = null;
         currentProfile = null;
         isAdmin = false;
+        isMembership = false;
 
         updateAuthUI();
     }
@@ -895,8 +958,15 @@ async function openSportsNews() {
 }
 
 async function openAdvancedNews() {
-    if (!isAdmin) {
-        alert("관리자만 고급소식을 이용할 수 있습니다.");
+    if (!currentUser) {
+        alert("고급소식은 멤버십 인증 후 이용할 수 있습니다.");
+        openAuthScreen("login");
+        return;
+    }
+
+    if (!isAdmin && !isMembership) {
+        alert("고급소식은 멤버십 인증 완료 후 이용할 수 있습니다.");
+        openMembership();
         return;
     }
 
@@ -1619,13 +1689,14 @@ async function deleteVideoPreview(videoId, storagePath) {
 
 function openVideoPreview() {
     if (!currentUser) {
-        alert("영상미리보기는 관리자만 이용할 수 있습니다.");
+        alert("영상미리보기는 멤버십 인증 후 이용할 수 있습니다.");
         openAuthScreen("login");
         return;
     }
 
-    if (!isAdmin) {
-        alert("영상미리보기는 관리자만 이용할 수 있습니다.");
+    if (!isAdmin && !isMembership) {
+        alert("영상미리보기는 멤버십 인증 완료 후 이용할 수 있습니다.");
+        openMembership();
         return;
     }
 
@@ -1661,6 +1732,431 @@ function openWriteScreen() {
     }
 
     scrollTop();
+}
+
+async function loadMembershipStatus() {
+    if (!membershipCurrentStatus || !membershipSubmitButton) {
+        return;
+    }
+
+    if (!currentUser) {
+        membershipCurrentStatus.textContent =
+            "로그인 후 멤버십 인증을 신청할 수 있습니다.";
+        membershipSubmitButton.disabled = true;
+        return;
+    }
+
+    if (isMembership) {
+        membershipCurrentStatus.className =
+            "membership-current-status verified";
+        membershipCurrentStatus.textContent =
+            "✓ 멤버십 인증 완료 · 멤버십 전용 메뉴를 사용할 수 있습니다.";
+        membershipSubmitButton.disabled = true;
+    } else {
+        membershipCurrentStatus.className =
+            "membership-current-status";
+        membershipCurrentStatus.textContent =
+            "인증 신청 상태를 확인하는 중...";
+        membershipSubmitButton.disabled = false;
+    }
+
+    const { data, error } =
+        await supabaseClient
+            .from("membership_requests")
+            .select(
+                "id, website_nickname, youtube_handle, status, admin_note, created_at, reviewed_at"
+            )
+            .eq("user_id", currentUser.id)
+            .order("created_at", { ascending: false })
+            .limit(1)
+            .maybeSingle();
+
+    if (error) {
+        console.error("멤버십 신청 상태 조회 오류:", error);
+        membershipCurrentStatus.textContent =
+            isMembership
+                ? "✓ 멤버십 인증 완료"
+                : "현재 신청 상태를 불러오지 못했습니다. 다시 시도해주세요.";
+        return;
+    }
+
+    if (!data) {
+        membershipCurrentStatus.className =
+            "membership-current-status";
+        membershipCurrentStatus.textContent =
+            isMembership
+                ? "✓ 멤버십 인증 완료"
+                : "아직 멤버십 인증 신청을 하지 않았습니다.";
+        return;
+    }
+
+    if (data.status === "pending") {
+        membershipCurrentStatus.className =
+            "membership-current-status pending";
+        membershipCurrentStatus.innerHTML =
+            "⏳ 인증 신청 검토 중입니다.";
+        membershipSubmitButton.disabled = true;
+    } else if (data.status === "approved") {
+        membershipCurrentStatus.className =
+            "membership-current-status verified";
+        membershipCurrentStatus.innerHTML =
+            "✓ 멤버십 인증 완료 · 멤버십 전용 메뉴를 사용할 수 있습니다.";
+        membershipSubmitButton.disabled = true;
+    } else {
+        membershipCurrentStatus.className =
+            "membership-current-status rejected";
+        membershipCurrentStatus.textContent =
+            data.admin_note
+                ? `인증이 반려되었습니다. 관리자 안내: ${data.admin_note}`
+                : "인증이 반려되었습니다. 정보를 확인한 뒤 다시 신청해주세요.";
+        membershipSubmitButton.disabled = false;
+    }
+
+    if (data.website_nickname && membershipWebsiteNickname) {
+        membershipWebsiteNickname.value = data.website_nickname;
+    }
+
+    if (data.youtube_handle && membershipYoutubeHandle) {
+        membershipYoutubeHandle.value = data.youtube_handle;
+    }
+}
+
+function previewMembershipScreenshot() {
+    if (!membershipScreenshotPreview) {
+        return;
+    }
+
+    membershipScreenshotPreview.innerHTML = "";
+
+    const file =
+        membershipScreenshotInput?.files?.[0] || null;
+
+    if (!file) {
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        return;
+    }
+
+    const url = URL.createObjectURL(file);
+    membershipScreenshotPreview.innerHTML = `
+        <img src="${escapeAttribute(url)}" alt="인증 스크린샷 미리보기">
+    `;
+}
+
+async function submitMembershipRequest() {
+    if (!currentUser) {
+        openAuthScreen("login");
+        return;
+    }
+
+    if (isMembership) {
+        alert("이미 멤버십 인증이 완료된 계정입니다.");
+        return;
+    }
+
+    const websiteNickname =
+        membershipWebsiteNickname?.value.trim() || "";
+    const youtubeHandle =
+        membershipYoutubeHandle?.value.trim() || "";
+    const file =
+        membershipScreenshotInput?.files?.[0] || null;
+
+    if (!websiteNickname) {
+        alert("웹사이트 닉네임을 입력해주세요.");
+        membershipWebsiteNickname?.focus();
+        return;
+    }
+
+    if (!youtubeHandle) {
+        alert("유튜브 핸들을 입력해주세요.");
+        membershipYoutubeHandle?.focus();
+        return;
+    }
+
+    if (!file) {
+        alert("인증 스크린샷을 1장 선택해주세요.");
+        return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+        alert("이미지 파일만 업로드할 수 있습니다.");
+        return;
+    }
+
+    const MAX_MEMBERSHIP_SCREENSHOT_SIZE =
+        10 * 1024 * 1024;
+
+    if (file.size > MAX_MEMBERSHIP_SCREENSHOT_SIZE) {
+        alert("인증 스크린샷은 10MB 이하로 업로드해주세요.");
+        return;
+    }
+
+    membershipSubmitButton.disabled = true;
+    membershipSubmitButton.textContent =
+        "신청 중...";
+
+    let storagePath = null;
+
+    try {
+        const randomPart =
+            (window.crypto?.randomUUID?.() || String(Date.now()));
+        const safeName =
+            createSafeFileName(file.name);
+        storagePath =
+            `${currentUser.id}/${randomPart}-${safeName}`;
+
+        const { error: uploadError } =
+            await supabaseClient.storage
+                .from("membership-verification")
+                .upload(
+                    storagePath,
+                    file,
+                    {
+                        cacheControl: "3600",
+                        upsert: false,
+                        contentType: file.type
+                    }
+                );
+
+        if (uploadError) {
+            throw uploadError;
+        }
+
+        const { error: insertError } =
+            await supabaseClient
+                .from("membership_requests")
+                .insert({
+                    user_id: currentUser.id,
+                    website_nickname: websiteNickname,
+                    youtube_handle: youtubeHandle,
+                    screenshot_path: storagePath
+                });
+
+        if (insertError) {
+            await supabaseClient
+                .storage
+                .from("membership-verification")
+                .remove([storagePath]);
+            throw insertError;
+        }
+
+        membershipCurrentStatus.className =
+            "membership-current-status pending";
+        membershipCurrentStatus.textContent =
+            "⏳ 인증 신청이 완료되었습니다. 관리자의 검토를 기다려주세요.";
+
+        membershipScreenshotInput.value = "";
+        membershipScreenshotPreview.innerHTML = "";
+
+        await loadMembershipStatus();
+
+        alert("멤버십 인증 신청이 완료되었습니다.");
+    } catch (error) {
+        console.error("멤버십 인증 신청 오류:", error);
+        alert(
+            "멤버십 인증 신청 오류:\n" +
+            (error?.message || "알 수 없는 오류")
+        );
+    } finally {
+        membershipSubmitButton.disabled =
+            isMembership || membershipCurrentStatus?.classList.contains("pending");
+        membershipSubmitButton.textContent =
+            "멤버십 인증 신청하기";
+    }
+}
+
+async function loadMembershipAdminRequests() {
+    if (!membershipAdminList || !isAdmin) {
+        return;
+    }
+
+    membershipAdminList.innerHTML = `
+        <div class="membership-admin-loading">신청 목록을 불러오는 중...</div>
+    `;
+
+    const { data: requests, error } =
+        await supabaseClient
+            .from("membership_requests")
+            .select(
+                "id, user_id, website_nickname, youtube_handle, screenshot_path, status, admin_note, created_at, reviewed_at"
+            )
+            .order("status", { ascending: true })
+            .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("멤버십 관리자 목록 조회 오류:", error);
+        membershipAdminList.innerHTML = `
+            <div class="membership-admin-empty">신청 목록을 불러오지 못했습니다.<br>${escapeHTML(error.message)}</div>
+        `;
+        return;
+    }
+
+    if (!requests || requests.length === 0) {
+        membershipAdminList.innerHTML = `
+            <div class="membership-admin-empty">현재 멤버십 인증 신청이 없습니다.</div>
+        `;
+        return;
+    }
+
+    const cards = [];
+
+    for (const request of requests) {
+        let screenshotUrl = null;
+
+        if (request.screenshot_path) {
+            const { data: signedData } =
+                await supabaseClient.storage
+                    .from("membership-verification")
+                    .createSignedUrl(
+                        request.screenshot_path,
+                        10 * 60
+                    );
+            screenshotUrl = signedData?.signedUrl || null;
+        }
+
+        const statusLabel =
+            request.status === "pending"
+                ? "대기 중"
+                : request.status === "approved"
+                    ? "인증 완료"
+                    : "반려";
+
+        const card = document.createElement("article");
+        card.className =
+            `membership-admin-card membership-status-${request.status}`;
+
+        card.innerHTML = `
+            <div class="membership-admin-card-top">
+                <div>
+                    <strong>${escapeHTML(request.website_nickname)}</strong>
+                    <span>${escapeHTML(request.youtube_handle)}</span>
+                </div>
+                <span class="membership-status-badge">${statusLabel}</span>
+            </div>
+
+            <div class="membership-admin-date">
+                신청일 · ${escapeHTML(formatDate(request.created_at))}
+            </div>
+
+            <div class="membership-admin-content">
+                ${screenshotUrl
+                    ? `<a href="${escapeAttribute(screenshotUrl)}" target="_blank" rel="noopener noreferrer" class="membership-screenshot-link"><img src="${escapeAttribute(screenshotUrl)}" alt="멤버십 인증 스크린샷"></a>`
+                    : `<div class="membership-screenshot-missing">스크린샷을 불러오지 못했습니다.</div>`
+                }
+            </div>
+
+            ${request.admin_note
+                ? `<div class="membership-admin-note">관리자 메모: ${escapeHTML(request.admin_note)}</div>`
+                : ""
+            }
+
+            ${request.status === "pending"
+                ? `
+                    <div class="membership-admin-actions">
+                        <button type="button" class="orange-small-button membership-approve-button" data-request-id="${escapeAttribute(request.id)}">인증 완료</button>
+                        <button type="button" class="white-button membership-reject-button" data-request-id="${escapeAttribute(request.id)}">반려</button>
+                    </div>
+                `
+                : ""
+            }
+        `;
+
+        cards.push(card);
+    }
+
+    membershipAdminList.innerHTML = "";
+    cards.forEach(card => membershipAdminList.appendChild(card));
+
+    membershipAdminList
+        .querySelectorAll(".membership-approve-button")
+        .forEach(button => {
+            button.addEventListener("click", function() {
+                reviewMembershipRequest(
+                    button.dataset.requestId,
+                    "approved"
+                );
+            });
+        });
+
+    membershipAdminList
+        .querySelectorAll(".membership-reject-button")
+        .forEach(button => {
+            button.addEventListener("click", function() {
+                reviewMembershipRequest(
+                    button.dataset.requestId,
+                    "rejected"
+                );
+            });
+        });
+}
+
+async function reviewMembershipRequest(requestId, status) {
+    if (!currentUser || !isAdmin) {
+        alert("관리자만 멤버십 인증을 처리할 수 있습니다.");
+        return;
+    }
+
+    let note = "";
+
+    if (status === "rejected") {
+        note =
+            window.prompt(
+                "반려 사유를 입력해주세요. (선택사항)",
+                ""
+            ) || "";
+    } else if (status === "approved") {
+        if (!window.confirm("이 회원의 멤버십을 인증 완료하시겠습니까?")) {
+            return;
+        }
+    }
+
+    const { data, error } =
+        await supabaseClient.rpc(
+            "review_membership_request",
+            {
+                p_request_id: requestId,
+                p_status: status,
+                p_admin_note: note
+            }
+        );
+
+    if (error) {
+        console.error("멤버십 인증 처리 오류:", error);
+        alert(
+            "멤버십 인증 처리 오류:\n" +
+            error.message
+        );
+        return;
+    }
+
+    if (!data) {
+        alert("처리 결과를 확인하지 못했습니다.");
+    }
+
+    await loadMembershipAdminRequests();
+}
+
+async function openMembership() {
+    if (!currentUser) {
+        openAuthScreen("login");
+        return;
+    }
+
+    hideAllScreens();
+    membershipScreen.classList.add("visible");
+    activateMembershipMenu();
+    scrollTop();
+
+    await loadMembershipStatus();
+
+    if (isAdmin) {
+        membershipAdminPanel?.classList.remove("hidden");
+        await loadMembershipAdminRequests();
+    } else {
+        membershipAdminPanel?.classList.add("hidden");
+    }
 }
 
 function openDonation() {
@@ -4188,6 +4684,13 @@ document
         openDonation
     );
 
+if (membershipMenu) {
+    membershipMenu.addEventListener(
+        "click",
+        openMembership
+    );
+}
+
 if (sportsNewsMenu) {
     sportsNewsMenu.addEventListener(
         "click",
@@ -4304,6 +4807,27 @@ if (imageInput) {
         handleImageSelection
     );
 
+}
+
+if (membershipScreenshotInput) {
+    membershipScreenshotInput.addEventListener(
+        "change",
+        previewMembershipScreenshot
+    );
+}
+
+if (membershipSubmitButton) {
+    membershipSubmitButton.addEventListener(
+        "click",
+        submitMembershipRequest
+    );
+}
+
+if (membershipAdminRefresh) {
+    membershipAdminRefresh.addEventListener(
+        "click",
+        loadMembershipAdminRequests
+    );
 }
 
 if (likeButton) {
@@ -4439,6 +4963,7 @@ supabaseClient.auth.onAuthStateChange(
             currentUser = null;
             currentProfile = null;
             isAdmin = false;
+            isMembership = false;
 
             updateAuthUI();
 
@@ -4523,6 +5048,8 @@ async function initialize() {
         openAdminCommunity();
     } else if (hash === "#donation") {
         openDonation();
+    } else if (hash === "#membership") {
+        openMembership();
     } else if (hash === "#advanced") {
         openAdvancedNews();
     } else if (hash === "#video") {
