@@ -3786,46 +3786,49 @@ button:disabled {
     }
 }
 
-/* ==========================================================
-   역할별 닉네임 색상 + 커뮤니티 말풍선 최종 적용
-   관리자 = 파란색 / 멤버십 = 노란색
-========================================================== */
 
+/* 역할별 닉네임 색상 + 커뮤니티 말풍선 최종 보정 */
 .community-name.admin,
 .comment-author.admin {
-    color: #1976D2 !important;
+    color: #1976d2 !important;
 }
 
 .community-name.membership,
 .comment-author.membership {
-    color: #D89B00 !important;
+    color: #d9a300 !important;
 }
 
-/*
-   말풍선은 글자 길이에 맞춰 최대한 작게 표시하고,
-   너무 긴 글만 최대 너비에서 자동 줄바꿈합니다.
-*/
 .community-message {
+    display: flex !important;
+    flex-direction: column !important;
     width: fit-content !important;
     max-width: 100% !important;
     min-width: 0 !important;
+}
+
+.community-message.other {
+    align-items: flex-start !important;
+}
+
+.community-message.self {
+    margin-left: auto !important;
+    align-items: flex-end !important;
 }
 
 .community-message-row {
     display: inline-flex !important;
+    align-items: flex-end !important;
     width: fit-content !important;
     max-width: 100% !important;
     min-width: 0 !important;
-    align-items: flex-end !important;
     gap: 6px !important;
 }
 
 .community-bubble {
-    display: inline-block !important;
-    width: fit-content !important;
-    max-width: min(620px, 68vw) !important;
+    display: block !important;
+    width: max-content !important;
+    max-width: min(620px, 70vw) !important;
     min-width: 0 !important;
-    min-height: 0 !important;
     height: auto !important;
     flex: 0 1 auto !important;
     box-sizing: border-box !important;
@@ -3834,18 +3837,14 @@ button:disabled {
     word-break: break-word !important;
 }
 
+.community-time {
+    flex: 0 0 auto !important;
+    white-space: nowrap !important;
+}
+
 @media (max-width: 700px) {
-    .community-message {
-        max-width: 91% !important;
-    }
-
-    .community-message-row {
-        width: fit-content !important;
-        max-width: 100% !important;
-        gap: 5px !important;
-    }
-
     .community-bubble {
+        width: max-content !important;
         max-width: calc(100vw - 105px) !important;
         padding: 7px 9px !important;
         font-size: 14px !important;
