@@ -553,6 +553,105 @@ function categoryName(category) {
     return "소식";
 }
 
+async function renderIntroRecentNews(category = currentCategory) {
+    const container = document.getElementById("intro-recent-news");
+
+    if (!container) {
+        return;
+    }
+
+    container.innerHTML = `
+        <div class="intro-recent-loading">
+            최근 소식을 불러오는 중...
+        </div>
+    `;
+
+    /*
+     * 공개 화면(소식/스포츠소식/관리자 커뮤니티)은
+     * 일반 + 스포츠 글 중 최신 3개를 보여줍니다.
+     * 고급소식 화면에서는 관리자 전용 고급소식만 보여줍니다.
+     */
+    const categories =
+        category === "advanced"
+            ? ["advanced"]
+            : ["general", "sports"];
+
+    const {
+        data: newsList,
+        error
+    } = await supabaseClient
+        .from("news")
+        .select(
+            "id, author, title, created_at, view_count, category"
+        )
+        .in("category", categories)
+        .order("created_at", { ascending: false })
+        .limit(3);
+
+    if (error) {
+        console.error("소개 화면 최근 소식 조회 오류:", error);
+
+        container.innerHTML = `
+            <div class="intro-recent-empty">
+                최근 소식을 불러오지 못했습니다.
+            </div>
+        `;
+
+        return;
+    }
+
+    if (!newsList || newsList.length === 0) {
+        container.innerHTML = `
+            <div class="intro-recent-empty">
+                아직 등록된 소식이 없습니다.
+            </div>
+        `;
+
+        return;
+    }
+
+    container.innerHTML = newsList
+        .map(function(news, index) {
+            const categoryLabel = categoryName(news.category || "general");
+            const viewCount = Number(news.view_count) || 0;
+
+            return `
+                <button
+                    class="intro-recent-card"
+                    type="button"
+                    data-intro-news-id="${escapeHTML(String(news.id))}"
+                >
+                    <span class="intro-recent-number">
+                        ${String(index + 1).padStart(2, "0")}
+                    </span>
+
+                    <span class="intro-recent-card-main">
+                        <span class="intro-recent-card-meta">
+                            ${escapeHTML(categoryLabel)} · ${escapeHTML(formatDate(news.created_at))}
+                        </span>
+                        <strong class="intro-recent-card-title">
+                            ${escapeHTML(news.title || "제목 없음")}
+                        </strong>
+                        <span class="intro-recent-card-author">
+                            ${escapeHTML(news.author || "작성자 없음")} · ${viewCount.toLocaleString("ko-KR")}회
+                        </span>
+                    </span>
+
+                    <span class="intro-recent-arrow">→</span>
+                </button>
+            `;
+        })
+        .join("");
+
+    container
+        .querySelectorAll("[data-intro-news-id]")
+        .forEach(function(button) {
+            button.addEventListener("click", function() {
+                openNewsDetail(button.dataset.introNewsId);
+            });
+        });
+}
+
 function activateCategoryMenu(category) {
     if (category === "sports") {
         activateSportsNewsMenu();
@@ -742,6 +841,7 @@ function openCategoryIntro(category) {
 
     resetDetailUI();
     updateAuthUI();
+    renderIntroRecentNews(category);
     scrollTop();
 }
 
