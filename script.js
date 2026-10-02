@@ -1097,19 +1097,11 @@ async function loadCommunityMessages(isPolling = false) {
         error
     } = await supabaseClient
         .from("admin_community_messages")
-        .select(
-            "id, user_id, username, content, created_at"
-        )
-        .order(
-            "created_at",
-            { ascending: true }
-        );
+        .select("id, user_id, username, content, created_at")
+        .order("created_at", { ascending: true });
 
     if (error) {
-        console.error(
-            "관리자 커뮤니티 조회 오류:",
-            error
-        );
+        console.error("관리자 커뮤니티 조회 오류:", error);
 
         if (!isPolling) {
             communityMessages.innerHTML = `
@@ -1119,7 +1111,6 @@ async function loadCommunityMessages(isPolling = false) {
                 </div>
             `;
         }
-
         return;
     }
 
@@ -1142,47 +1133,27 @@ async function loadCommunityMessages(isPolling = false) {
             data: roleProfiles,
             error: roleError
         } = await supabaseClient
-            .rpc(
-                "get_user_roles",
-                {
-                    p_user_ids: userIds
-                }
-            );
+            .rpc("get_user_roles", {
+                p_user_ids: userIds
+            });
 
         if (!roleError) {
             roleMap = new Map(
                 (roleProfiles || []).map(function(profile) {
-                    return [
-                        String(profile.id),
-                        profile
-                    ];
+                    return [String(profile.id), profile];
                 })
             );
         } else {
-            console.error(
-                "커뮤니티 작성자 역할 조회 오류:",
-                roleError
-            );
+            console.error("커뮤니티 작성자 역할 조회 오류:", roleError);
         }
     }
 
-    if (
-        currentUser &&
-        currentProfile?.username
-    ) {
-        roleMap.set(
-            String(currentUser.id),
-            {
-                id: currentUser.id,
-                username: currentProfile.username,
-                role:
-                    isAdmin
-                        ? "admin"
-                        : isMembership
-                            ? "membership"
-                            : "user"
-            }
-        );
+    if (currentUser && currentProfile?.username) {
+        roleMap.set(String(currentUser.id), {
+            id: currentUser.id,
+            username: currentProfile.username,
+            role: isAdmin ? "admin" : isMembership ? "membership" : "user"
+        });
     }
 
     if (list.length === 0) {
@@ -1192,59 +1163,50 @@ async function loadCommunityMessages(isPolling = false) {
             </div>
         `;
     } else {
-        communityMessages.innerHTML = list
-            .map(function(message) {
-                const mine =
-                    currentUser &&
-                    String(message.user_id) ===
-                        String(currentUser.id);
+        communityMessages.innerHTML = list.map(function(message) {
+            const mine =
+                currentUser &&
+                String(message.user_id) === String(currentUser.id);
 
-                const profileInfo =
-                    roleMap.get(
-                        String(message.user_id)
-                    ) || {};
+            const profileInfo =
+                roleMap.get(String(message.user_id)) || {};
 
-                const name =
-                    profileInfo.username ||
-                    message.username ||
-                    "회원";
+            const name =
+                profileInfo.username ||
+                message.username ||
+                "회원";
 
-                const role =
-                    profileInfo.role ||
-                    "user";
+            const role = profileInfo.role || "user";
 
-                const roleClass =
-                    role === "admin"
-                        ? "admin"
-                        : role === "membership"
-                            ? "membership"
-                            : "";
+            const roleClass =
+                role === "admin"
+                    ? "admin"
+                    : role === "membership"
+                        ? "membership"
+                        : "";
 
-                return `
-                    <div class="community-message ${mine ? "self" : "other"}">
-                        <div class="community-name ${roleClass}">
-                            ${escapeHTML(name)}
-                        </div>
-                        <div class="community-message-row">
-                            <div class="community-bubble">
-                                ${escapeHTML(message.content).replace(/\n/g, "<br>")}
-                            </div>
-                            <span class="community-time">
-                                ${formatDateTime(message.created_at)}
-                            </span>
-                        </div>
+            const safeContent =
+                escapeHTML(message.content).replace(/\n/g, "<br>");
+
+            return `
+                <div class="community-message ${mine ? "self" : "other"}">
+                    <div class="community-name ${roleClass}">
+                        ${escapeHTML(name)}
                     </div>
-                `;
-            })
-            .join("");
+
+                    <div class="community-message-row">
+                        <div class="community-bubble">${safeContent}</div>
+                        <span class="community-time">
+                            ${formatDateTime(message.created_at)}
+                        </span>
+                    </div>
+                </div>
+            `;
+        }).join("");
     }
 
-    if (
-        communityInitialLoad ||
-        wasNearBottom
-    ) {
-        communityMessages.scrollTop =
-            communityMessages.scrollHeight;
+    if (communityInitialLoad || wasNearBottom) {
+        communityMessages.scrollTop = communityMessages.scrollHeight;
     }
 
     communityInitialLoad = false;
@@ -3418,11 +3380,24 @@ function updateCommentLength() {
 }
 
 async function loadComments(newsId) {
-    if (
-        !commentsContainer ||
-        !commentCount ||
-        !newsId
-    ) {
+    if (!commentsContainer || !commentCount) {
+        return;
+    }
+
+    commentsContainer.innerHTML = `
+        <div class="comments-loading">
+            댓글을 불러오는 중...
+        </div>
+    `;
+
+    if (!currentUser) {
+        commentsContainer.innerHTML = `
+            <div class="comments-login-box">
+                댓글은 로그인한 회원에게만 표시됩니다.
+            </div>
+        `;
+
+        commentCount.textContent = "댓글";
         return;
     }
 
@@ -3431,25 +3406,12 @@ async function loadComments(newsId) {
         error
     } = await supabaseClient
         .from("news_comments")
-        .select(
-            "id, news_id, user_id, content, created_at"
-        )
-        .eq(
-            "news_id",
-            newsId
-        )
-        .order(
-            "created_at",
-            {
-                ascending: true
-            }
-        );
+        .select("id, news_id, user_id, content, created_at")
+        .eq("news_id", newsId)
+        .order("created_at", { ascending: true });
 
     if (error) {
-        console.error(
-            "댓글 조회 오류:",
-            error
-        );
+        console.error("댓글 조회 오류:", error);
 
         commentsContainer.innerHTML = `
             <div class="comments-error">
@@ -3457,18 +3419,13 @@ async function loadComments(newsId) {
             </div>
         `;
 
-        commentCount.textContent =
-            "댓글";
-
+        commentCount.textContent = "댓글";
         return;
     }
 
-    const list =
-        comments || [];
+    const list = comments || [];
 
-    commentCount.textContent =
-        `댓글 ${list.length}개`;
-
+    commentCount.textContent = `댓글 ${list.length}개`;
     commentsContainer.innerHTML = "";
 
     if (list.length === 0) {
@@ -3477,7 +3434,6 @@ async function loadComments(newsId) {
                 아직 댓글이 없습니다.
             </div>
         `;
-
         return;
     }
 
@@ -3491,161 +3447,100 @@ async function loadComments(newsId) {
         )
     ];
 
-    let profileMap =
-        new Map();
+    let profileMap = new Map();
 
     if (userIds.length > 0) {
         const {
             data: profiles,
             error: profileError
         } = await supabaseClient
-            .rpc(
-                "get_user_roles",
-                {
-                    p_user_ids: userIds
-                }
-            );
+            .rpc("get_user_roles", {
+                p_user_ids: userIds
+            });
 
         if (!profileError) {
-            profileMap =
-                new Map(
-                    (profiles || []).map(
-                        function(profile) {
-                            return [
-                                String(profile.id),
-                                profile
-                            ];
-                        }
-                    )
-                );
+            profileMap = new Map(
+                (profiles || []).map(function(profile) {
+                    return [String(profile.id), profile];
+                })
+            );
         } else {
-            console.error(
-                "댓글 작성자 역할 조회 RPC 오류:",
-                profileError
-            );
+            console.error("댓글 작성자 역할 조회 RPC 오류:", profileError);
         }
     }
 
-    if (
-        currentUser &&
-        currentProfile?.username
-    ) {
-        profileMap.set(
-            String(currentUser.id),
-            {
-                id: currentUser.id,
-                username:
-                    currentProfile.username,
-                role:
-                    isAdmin
-                        ? "admin"
-                        : isMembership
-                            ? "membership"
-                            : "user"
+    if (currentUser && currentProfile?.username) {
+        profileMap.set(String(currentUser.id), {
+            id: currentUser.id,
+            username: currentProfile.username,
+            role: isAdmin ? "admin" : isMembership ? "membership" : "user"
+        });
+    }
+
+    list.forEach(function(comment) {
+        const item = document.createElement("article");
+        item.className = "comment-item";
+
+        const commentProfile =
+            profileMap.get(String(comment.user_id)) || {};
+
+        const username =
+            commentProfile.username || "회원";
+
+        const commentRole =
+            commentProfile.role || "user";
+
+        const commentRoleClass =
+            commentRole === "admin"
+                ? "admin"
+                : commentRole === "membership"
+                    ? "membership"
+                    : "";
+
+        const canDelete =
+            currentUser &&
+            String(currentUser.id) === String(comment.user_id);
+
+        item.innerHTML = `
+            <div class="comment-top">
+                <strong class="comment-author ${commentRoleClass}">
+                    ${escapeHTML(username)}
+                </strong>
+
+                <span class="comment-date">
+                    ${formatDateTime(comment.created_at)}
+                </span>
+            </div>
+
+            <div class="comment-content">
+                ${escapeHTML(comment.content).replace(/\n/g, "<br>")}
+            </div>
+
+            ${
+                canDelete
+                    ? `
+                        <button
+                            class="comment-delete-button"
+                            type="button"
+                            data-comment-id="${comment.id}"
+                        >
+                            삭제
+                        </button>
+                      `
+                    : ""
             }
-        );
-    }
+        `;
 
-    list.forEach(
-        function(comment) {
-            const item =
-                document.createElement(
-                    "article"
-                );
-
-            item.className =
-                "comment-item";
-
-            const commentProfile =
-                profileMap.get(
-                    String(
-                        comment.user_id
-                    )
-                ) || {};
-
-            const username =
-                commentProfile.username ||
-                "회원";
-
-            const commentRole =
-                commentProfile.role ||
-                "user";
-
-            const commentRoleClass =
-                commentRole === "admin"
-                    ? "admin"
-                    : commentRole === "membership"
-                        ? "membership"
-                        : "";
-
-            const canDelete =
-                currentUser &&
-                String(
-                    currentUser.id
-                ) ===
-                    String(
-                        comment.user_id
-                    );
-
-            item.innerHTML = `
-                <div class="comment-top">
-                    <strong class="comment-author ${commentRoleClass}">
-                        ${escapeHTML(username)}
-                    </strong>
-
-                    <span class="comment-date">
-                        ${formatDateTime(
-                            comment.created_at
-                        )}
-                    </span>
-                </div>
-
-                <div class="comment-content">
-                    ${escapeHTML(
-                        comment.content
-                    ).replace(
-                        /\n/g,
-                        "<br>"
-                    )}
-                </div>
-
-                ${
-                    canDelete
-                        ? `
-                            <button
-                                class="comment-delete-button"
-                                type="button"
-                                data-comment-id="${comment.id}"
-                            >
-                                삭제
-                            </button>
-                          `
-                        : ""
-                }
-            `;
-
-            commentsContainer.appendChild(
-                item
-            );
-        }
-    );
+        commentsContainer.appendChild(item);
+    });
 
     commentsContainer
-        .querySelectorAll(
-            ".comment-delete-button"
-        )
-        .forEach(
-            function(button) {
-                button.addEventListener(
-                    "click",
-                    function() {
-                        deleteComment(
-                            button.dataset.commentId
-                        );
-                    }
-                );
-            }
-        );
+        .querySelectorAll(".comment-delete-button")
+        .forEach(function(button) {
+            button.addEventListener("click", function() {
+                deleteComment(button.dataset.commentId);
+            });
+        });
 }
 
 async function submitComment() {
