@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=79">
+    <link rel="stylesheet" href="./style.css?v=80">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
      crossorigin="anonymous"></script>
 </head>
@@ -131,32 +131,144 @@
             class="screen home-screen visible"
         >
 
-            <div class="home-window">
+            <div class="home-dashboard">
 
-                <div class="home-window-title">
-                    홈
+                <section class="home-hero">
+
+                    <div class="home-hero-copy">
+                        <div class="home-eyebrow">MAGPIE CHICKEN</div>
+
+                        <h1>
+                            까치치킨사장님<br>
+                            공식 홈페이지
+                        </h1>
+
+                        <p>
+                            소식부터 커뮤니티까지 한곳에서 확인하세요.
+                        </p>
+
+                        <div class="home-actions">
+                            <button
+                                id="home-news-button"
+                                class="home-primary-button"
+                                type="button"
+                            >
+                                최신 소식 보기
+                            </button>
+
+                            <a
+                                class="home-youtube-button"
+                                href="https://www.youtube.com/@magpie-chicken"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                ▶ 유튜브 바로가기
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="home-hero-mark" aria-hidden="true">
+                        <span>CA</span>
+                    </div>
+
+                </section>
+
+                <div class="home-section-grid">
+
+                    <section class="home-panel home-recent-panel">
+                        <div class="home-panel-heading">
+                            <div>
+                                <span class="home-panel-kicker">LATEST</span>
+                                <h2>최근 소식</h2>
+                            </div>
+
+                            <button
+                                id="home-recent-more"
+                                class="home-text-button"
+                                type="button"
+                            >
+                                전체 보기 →
+                            </button>
+                        </div>
+
+                        <div
+                            id="home-recent-news"
+                            class="home-news-list"
+                        >
+                            <div class="home-loading">최근 소식을 불러오는 중...</div>
+                        </div>
+                    </section>
+
+                    <section class="home-panel home-popular-panel">
+                        <div class="home-panel-heading">
+                            <div>
+                                <span class="home-panel-kicker">POPULAR</span>
+                                <h2>많이 본 소식</h2>
+                            </div>
+                        </div>
+
+                        <div
+                            id="home-popular-news"
+                            class="home-news-list"
+                        >
+                            <div class="home-loading">많이 본 소식을 불러오는 중...</div>
+                        </div>
+                    </section>
+
                 </div>
 
-                <div class="home-window-body">
+                <section class="home-panel home-quick-panel">
+                    <div class="home-panel-heading">
+                        <div>
+                            <span class="home-panel-kicker">QUICK MENU</span>
+                            <h2>바로가기</h2>
+                        </div>
+                    </div>
 
-                    <h1>
-                        까치치킨사장님 공식 홈페이지
-                    </h1>
+                    <div class="home-quick-grid">
 
-                    <p>
-                        홈페이지에 오신 것을 환영합니다.
-                    </p>
+                        <button
+                            id="home-quick-news"
+                            class="home-quick-card"
+                            type="button"
+                        >
+                            <span class="home-quick-number">01</span>
+                            <strong>소식</strong>
+                            <span>공지사항과 새로운 소식을 확인합니다.</span>
+                        </button>
 
-                    <a
-                        class="youtube-link"
-                        href="https://www.youtube.com/@magpie-chicken"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        까치치킨사장님 유튜브 링크
-                    </a>
+                        <button
+                            id="home-quick-sports"
+                            class="home-quick-card"
+                            type="button"
+                        >
+                            <span class="home-quick-number">02</span>
+                            <strong>스포츠소식</strong>
+                            <span>스포츠 관련 소식을 확인합니다.</span>
+                        </button>
 
-                </div>
+                        <button
+                            id="home-quick-community"
+                            class="home-quick-card"
+                            type="button"
+                        >
+                            <span class="home-quick-number">03</span>
+                            <strong>관리자 커뮤니티</strong>
+                            <span>관리자 커뮤니티 안내와 채팅으로 이동합니다.</span>
+                        </button>
+
+                        <button
+                            id="home-quick-donation"
+                            class="home-quick-card"
+                            type="button"
+                        >
+                            <span class="home-quick-number">04</span>
+                            <strong>후원</strong>
+                            <span>후원 페이지로 이동합니다.</span>
+                        </button>
+
+                    </div>
+                </section>
 
             </div>
 
@@ -725,7 +837,7 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./script.js?v=79"></script>
+<script src="./script.js?v=80"></script>
 
 </body>
 </html>
