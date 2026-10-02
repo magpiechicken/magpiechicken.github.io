@@ -98,6 +98,9 @@ const videoUploadProgressBar =
 const videoUploadProgressText =
     document.getElementById("video-upload-progress-text");
 
+const videoUploadBox =
+    document.querySelector(".video-preview-upload-box");
+
 const videoPreviewList =
     document.getElementById("video-preview-list");
 
@@ -405,6 +408,28 @@ function updateAdminOnlyMenus() {
     }
 }
 
+function updateVideoUploadUI() {
+    const adminCanUpload = isAdmin === true;
+
+    if (videoUploadBox) {
+        videoUploadBox.classList.toggle("hidden", !adminCanUpload);
+    }
+
+    if (videoUploadButton) {
+        videoUploadButton.disabled = !adminCanUpload;
+    }
+
+    if (videoFileInput) {
+        videoFileInput.disabled = !adminCanUpload;
+    }
+
+    if (videoUploadStatus && !adminCanUpload) {
+        videoUploadStatus.textContent =
+            "관리자만 영상을 업로드할 수 있습니다. 멤버십 인증 회원은 시청만 가능합니다.";
+        videoUploadStatus.classList.remove("error", "success");
+    }
+}
+
 function scrollTop() {
     const main =
         document.querySelector(".main-content");
@@ -416,6 +441,7 @@ function scrollTop() {
 
 function updateAuthUI() {
     updateAdminOnlyMenus();
+    updateVideoUploadUI();
     updateCommunityComposer();
 
     if (membershipAdminPanel && !isAdmin) {
@@ -1483,14 +1509,19 @@ async function loadVideoPreviews() {
                     ${escapeHTML(video.file_name || "영상")} · ${formatFileSize(Number(video.file_size) || 0)}${dateText ? ` · ${escapeHTML(dateText)}` : ""}
                 </div>
 
-                <button
-                    type="button"
-                    class="video-delete-button"
-                    data-video-id="${escapeAttribute(video.id)}"
-                    data-video-path="${escapeAttribute(video.storage_path)}"
-                >
-                    영상 삭제
-                </button>
+                ${isAdmin
+                    ? `
+                        <button
+                            type="button"
+                            class="video-delete-button"
+                            data-video-id="${escapeAttribute(video.id)}"
+                            data-video-path="${escapeAttribute(video.storage_path)}"
+                        >
+                            영상 삭제
+                        </button>
+                      `
+                    : ""
+                }
             </div>
         `;
 
@@ -1527,7 +1558,7 @@ async function uploadVideo() {
     }
 
     if (!isAdmin) {
-        alert("관리자만 영상을 업로드할 수 있습니다.");
+        alert("영상 업로드는 관리자만 할 수 있습니다. 멤버십 인증 회원은 시청만 가능합니다.");
         return;
     }
 
