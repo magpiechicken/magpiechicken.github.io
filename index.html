@@ -297,8 +297,8 @@
 
         <section
             id="screen-news-intro"
-            class="screen category-intro-screen" aria-hidden="true"
-        >
+            class="screen category-intro-screen"
+         hidden aria-hidden="true">
 
             <h1 class="page-heading">
                 소식
@@ -348,8 +348,8 @@
 
         <section
             id="screen-news-list"
-            class="screen" aria-hidden="true"
-        >
+            class="screen"
+         hidden aria-hidden="true">
 
             <div class="list-header">
 
@@ -383,8 +383,8 @@
 
         <section
             id="screen-news-detail"
-            class="screen" aria-hidden="true"
-        >
+            class="screen"
+         hidden aria-hidden="true">
 
             <button
                 id="back-to-list"
@@ -489,8 +489,8 @@
 
         <section
             id="screen-write"
-            class="screen" aria-hidden="true"
-        >
+            class="screen"
+         hidden aria-hidden="true">
 
             <button
                 id="back-from-write"
@@ -577,8 +577,8 @@
 
         <section
             id="screen-auth"
-            class="screen" aria-hidden="true"
-        >
+            class="screen"
+         hidden aria-hidden="true">
 
             <div class="auth-box">
 
@@ -734,8 +734,8 @@
 
         <section
             id="screen-donation"
-            class="screen" aria-hidden="true"
-        >
+            class="screen"
+         hidden aria-hidden="true">
 
             <h1 class="page-heading">
                 후원
@@ -816,8 +816,8 @@
 
         <section
             id="screen-membership"
-            class="screen membership-screen" aria-hidden="true"
-        >
+            class="screen membership-screen"
+         hidden aria-hidden="true">
 
             <h1 class="page-heading">
                 멤버십 인증하기
@@ -934,8 +934,8 @@
 
         <section
             id="screen-admin-community"
-            class="screen" aria-hidden="true"
-        >
+            class="screen"
+         hidden aria-hidden="true">
 
             <h1 class="page-heading">
                 관리자 커뮤니티
@@ -996,8 +996,8 @@
 
         <section
             id="screen-advanced-news"
-            class="screen" aria-hidden="true"
-        >
+            class="screen"
+         hidden aria-hidden="true">
 
             <h1 class="page-heading">
                 고급소식
@@ -1019,8 +1019,8 @@
 
         <section
             id="screen-video-preview"
-            class="screen" aria-hidden="true"
-        >
+            class="screen"
+         hidden aria-hidden="true">
 
             <div class="list-header">
 
@@ -1131,31 +1131,35 @@
 </div>
 
 <script>
-/* 루트(index.html)로 직접 들어오면 항상 홈 화면 표시 */
+/* 첫 화면은 홈만 표시 */
 document.addEventListener("DOMContentLoaded", function () {
-    if (!window.location.hash) {
-        document.querySelectorAll(".screen").forEach(function (screen) {
-            screen.classList.remove("visible");
-            screen.setAttribute("aria-hidden", "true");
+    document.querySelectorAll(".main-content > .screen").forEach(function (screen) {
+        screen.hidden = true;
+        screen.classList.remove("visible");
+        screen.setAttribute("aria-hidden", "true");
+    });
+
+    var home = document.getElementById("screen-home");
+    var homeMenu = document.getElementById("menu-home");
+
+    if (home) {
+        home.hidden = false;
+        home.classList.add("visible");
+        home.setAttribute("aria-hidden", "false");
+    }
+
+    if (homeMenu) {
+        document.querySelectorAll(".menu-item").forEach(function (menu) {
+            menu.classList.remove("active");
         });
-
-        var home = document.getElementById("screen-home");
-        var homeMenu = document.getElementById("menu-home");
-
-        if (home) { home.classList.add("visible"); home.setAttribute("aria-hidden", "false"); }
-        if (homeMenu) {
-            document.querySelectorAll(".menu-item").forEach(function (menu) {
-                menu.classList.remove("active");
-            });
-            homeMenu.classList.add("active");
-        }
+        homeMenu.classList.add("active");
     }
 });
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
-<script src="./script.js?v=94"></script>
+<script src="./script.js?v=96"></script>
 
 </body>
 </html>
