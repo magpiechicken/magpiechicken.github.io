@@ -668,6 +668,8 @@ async function renderIntroRecentNews(
                 ? "advanced"
                 : "general";
 
+    container.dataset.category = normalizedCategory;
+
     container.innerHTML = `
         <div class="intro-recent-loading">
             최근 소식을 불러오는 중...
@@ -770,6 +772,25 @@ function activateCategoryMenu(category) {
         activateAdminCommunityMenu();
     } else {
         activateNewsMenu();
+    }
+}
+
+
+function setRouteHash(route) {
+    const map = {
+        home: "#home",
+        news: "#news",
+        sports: "#sports",
+        community: "#community",
+        donation: "#donation",
+        membership: "#membership",
+        advanced: "#advanced",
+        video: "#video"
+    };
+
+    const nextHash = map[route] || "#home";
+    if (window.location.hash !== nextHash) {
+        history.replaceState(null, "", nextHash);
     }
 }
 
@@ -895,6 +916,7 @@ function renderHomeNewsList(
 }
 
 async function openHome() {
+    setRouteHash("home");
     hideAllScreens();
 
     if (homeScreen) {
@@ -911,6 +933,7 @@ async function openHome() {
 }
 
 async function openNewsIntro() {
+    setRouteHash("news");
     await openCategoryIntro("general");
 }
 
@@ -1010,10 +1033,12 @@ async function openNewsList() {
 }
 
 async function openSportsNews() {
+    setRouteHash("sports");
     await openCategoryIntro("sports");
 }
 
 async function openAdvancedNews() {
+    setRouteHash("advanced");
     if (!currentUser) {
         alert("고급소식은 멤버십 인증 후 이용할 수 있습니다.");
         openAuthScreen("login");
@@ -1030,6 +1055,7 @@ async function openAdvancedNews() {
 }
 
 function openAdminCommunity() {
+    setRouteHash("community");
     openCategoryIntro("community");
 }
 
@@ -2239,6 +2265,7 @@ async function reviewMembershipRequest(requestId, status) {
 }
 
 async function openMembership() {
+    setRouteHash("membership");
     if (!currentUser) {
         openAuthScreen("login");
         return;
@@ -2480,6 +2507,7 @@ async function saveDonationRanking(rank) {
 }
 
 async function openDonation() {
+    setRouteHash("donation");
     hideAllScreens();
     donationScreen.classList.add("visible");
     activateDonationMenu();
@@ -4928,48 +4956,24 @@ if (sidebar) {
         event.preventDefault();
         event.stopPropagation();
 
-        const route = menu.dataset.route || menu.id;
+        const route = menu.dataset.route;
 
-        switch (route) {
-            case "home":
-            case "menu-home":
-                openHome();
-                break;
-
-            case "news":
-            case "menu-news":
-                openNewsIntro();
-                break;
-
-            case "sports":
-            case "menu-sports-news":
-                openSportsNews();
-                break;
-
-            case "community":
-            case "menu-admin-community":
-                openAdminCommunity();
-                break;
-
-            case "donation":
-            case "menu-donation":
-                openDonation();
-                break;
-
-            case "membership":
-            case "menu-membership":
-                openMembership();
-                break;
-
-            case "video":
-            case "menu-video-preview":
-                openVideoPreview();
-                break;
-
-            case "advanced":
-            case "menu-advanced-news":
-                openAdvancedNews();
-                break;
+        if (route === "home") {
+            openHome();
+        } else if (route === "news") {
+            openNewsIntro();
+        } else if (route === "sports") {
+            openSportsNews();
+        } else if (route === "community") {
+            openAdminCommunity();
+        } else if (route === "donation") {
+            openDonation();
+        } else if (route === "membership") {
+            openMembership();
+        } else if (route === "video") {
+            openVideoPreview();
+        } else if (route === "advanced") {
+            openAdvancedNews();
         }
     });
 }
