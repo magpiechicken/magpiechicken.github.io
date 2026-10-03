@@ -1,6 +1,6 @@
 "use strict";
 
-// Updated: category menus, admin-only video preview, intro-first navigation, community intro, comment usernames, large video uploads
+// Updated: category menus, category intro recent 3, admin community direct chat, comment usernames, large video uploads
 
 const SUPABASE_URL =
     "https://kxrjevmxayolcqcgmixz.supabase.co";
@@ -651,11 +651,8 @@ function categoryName(category) {
     return "소식";
 }
 
-async function renderIntroRecentNews(
-    category = currentCategory,
-    containerId = "intro-recent-news"
-) {
-    const container = document.getElementById(containerId);
+async function renderIntroRecentNews(category = currentCategory) {
+    const container = document.getElementById("intro-recent-news");
 
     if (!container) {
         return;
@@ -667,14 +664,14 @@ async function renderIntroRecentNews(
         </div>
     `;
 
-    const targetCategory =
-        category === "sports"
-            ? "sports"
-            : category === "advanced"
-                ? "advanced"
-                : "general";
-
     try {
+        const targetCategory =
+            category === "sports"
+                ? "sports"
+                : category === "advanced"
+                    ? "advanced"
+                    : "general";
+
         const { data: newsList, error } = await supabaseClient
             .from("news")
             .select("id, author, title, created_at, category")
@@ -683,13 +680,10 @@ async function renderIntroRecentNews(
             .limit(3);
 
         if (error) {
-            console.error(
-                `소개 화면 ${targetCategory} 최근 소식 조회 오류:`,
-                error
-            );
+            console.error("소개 화면 최근 소식 조회 오류:", error);
             container.innerHTML = `
                 <div class="intro-recent-empty">
-                    없음
+                    최근 소식을 불러오지 못했습니다.
                 </div>
             `;
             return;
@@ -708,9 +702,7 @@ async function renderIntroRecentNews(
 
         container.innerHTML = rows
             .map(function(news, index) {
-                const categoryLabel = categoryName(
-                    news.category || "general"
-                );
+                const categoryLabel = categoryName(targetCategory);
 
                 return `
                     <button
@@ -758,139 +750,6 @@ async function renderIntroRecentNews(
             </div>
         `;
     }
-}
-
-function activateCategoryMenu(category) {
-    if (category === "sports") {
-        activateSportsNewsMenu();
-    } else if (category === "advanced") {
-        activateAdvancedNewsMenu();
-    } else if (category === "community") {
-        activateAdminCommunityMenu();
-    } else {
-        activateNewsMenu();
-    }
-}
-
-async function renderHomeDashboard() {
-    const recentContainer =
-        document.getElementById("home-recent-news");
-
-    const popularContainer =
-        document.getElementById("home-popular-news");
-
-    if (!recentContainer || !popularContainer) {
-        return;
-    }
-
-    recentContainer.innerHTML =
-        '<div class="home-loading">최근 소식을 불러오는 중...</div>';
-
-    popularContainer.innerHTML =
-        '<div class="home-loading">많이 본 소식을 불러오는 중...</div>';
-
-    const publicCategories = ["general", "sports"];
-
-    const [recentResult, popularResult] =
-        await Promise.all([
-            supabaseClient
-                .from("news")
-                .select(
-                    "id, author, title, created_at, view_count, category"
-                )
-                .in("category", publicCategories)
-                .order("created_at", { ascending: false })
-                .limit(3),
-
-            supabaseClient
-                .from("news")
-                .select(
-                    "id, author, title, created_at, view_count, category"
-                )
-                .in("category", publicCategories)
-                .order("view_count", { ascending: false })
-                .order("created_at", { ascending: false })
-                .limit(3)
-        ]);
-
-    if (recentResult.error) {
-        console.error("홈 최근 소식 조회 오류:", recentResult.error);
-    }
-
-    if (popularResult.error) {
-        console.error("홈 인기 소식 조회 오류:", popularResult.error);
-    }
-
-    renderHomeNewsList(
-        recentContainer,
-        recentResult.data || [],
-        "최근 등록된 소식이 없습니다."
-    );
-
-    renderHomeNewsList(
-        popularContainer,
-        popularResult.data || [],
-        "조회된 소식이 없습니다."
-    );
-}
-
-function renderHomeNewsList(
-    container,
-    newsList,
-    emptyMessage
-) {
-    if (!newsList || newsList.length === 0) {
-        container.innerHTML = `
-            <div class="home-empty">
-                ${escapeHTML(emptyMessage)}
-            </div>
-        `;
-        return;
-    }
-
-    container.innerHTML = newsList
-        .map(function(news, index) {
-            const category = news.category || "general";
-            const categoryLabel = categoryName(category);
-            const viewCount = Number(news.view_count) || 0;
-
-            return `
-                <button
-                    class="home-news-item"
-                    type="button"
-                    data-home-news-id="${escapeHTML(String(news.id))}"
-                >
-                    <span class="home-news-rank">
-                        ${String(index + 1).padStart(2, "0")}
-                    </span>
-
-                    <span class="home-news-main">
-                        <span class="home-news-meta">
-                            ${escapeHTML(categoryLabel)} · ${escapeHTML(formatDate(news.created_at))}
-                        </span>
-                        <strong>
-                            ${escapeHTML(news.title || "제목 없음")}
-                        </strong>
-                        <span class="home-news-author">
-                            ${escapeHTML(news.author || "작성자 없음")}
-                        </span>
-                    </span>
-
-                    <span class="home-news-views">
-                        ${viewCount.toLocaleString("ko-KR")}회
-                    </span>
-                </button>
-            `;
-        })
-        .join("");
-
-    container
-        .querySelectorAll("[data-home-news-id]")
-        .forEach(function(button) {
-            button.addEventListener("click", function() {
-                openNewsDetail(button.dataset.homeNewsId);
-            });
-        });
 }
 
 async function openHome() {
@@ -949,24 +808,7 @@ function openCategoryIntro(category) {
 
     resetDetailUI();
     updateAuthUI();
-
-    const recentPanel = introScreen.querySelector(".intro-recent-panel");
-
-    if (category === "community") {
-        if (recentPanel) {
-            recentPanel.classList.add("hidden");
-        }
-        const recentContainer = document.getElementById("intro-recent-news");
-        if (recentContainer) {
-            recentContainer.innerHTML = "";
-        }
-    } else {
-        if (recentPanel) {
-            recentPanel.classList.remove("hidden");
-        }
-        renderIntroRecentNews(category, "intro-recent-news");
-    }
-
+    renderIntroRecentNews(category);
     scrollTop();
 }
 
@@ -1022,7 +864,7 @@ async function openAdvancedNews() {
 }
 
 function openAdminCommunity() {
-    openCategoryIntro("community");
+    openAdminCommunityChat();
 }
 
 async function openAdminCommunityChat() {
