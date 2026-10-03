@@ -4443,3 +4443,108 @@ button:disabled {
         margin-bottom: 24px !important;
     }
 }
+
+/* ==========================================================
+   모바일 홈 + 후원 전체 스크롤 최종 수정
+   콘텐츠가 화면 높이에 잘리지 않고 실제 끝까지 내려가도록 처리
+========================================================== */
+@media (max-width: 700px) {
+    html,
+    body {
+        height: 100% !important;
+        min-height: 100% !important;
+        overflow: hidden !important;
+    }
+
+    .site-layout {
+        width: 100% !important;
+        height: calc(100vh - 74px) !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+    }
+
+    .main-content {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding-bottom: 64px !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: auto !important;
+        touch-action: pan-y !important;
+    }
+
+    .screen.visible {
+        width: 100% !important;
+        height: auto !important;
+        min-height: max-content !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* 홈 */
+    #screen-home.visible,
+    #screen-home.home-screen {
+        width: 100% !important;
+        height: auto !important;
+        min-height: max-content !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    #screen-home .home-dashboard {
+        width: 100% !important;
+        height: auto !important;
+        min-height: max-content !important;
+        overflow: visible !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    #screen-home .home-hero,
+    #screen-home .home-section-grid,
+    #screen-home .home-panel,
+    #screen-home .home-quick-panel,
+    #screen-home .home-quick-grid,
+    #screen-home .home-quick-card {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    #screen-home .home-quick-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* 후원 */
+    #screen-donation.visible,
+    #screen-donation {
+        width: 100% !important;
+        height: auto !important;
+        min-height: max-content !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    #screen-donation .donation-layout,
+    #screen-donation .donation-box,
+    #screen-donation .donation-ranking-box,
+    #screen-donation .donation-ranking-list,
+    #screen-donation .donation-ranking-admin,
+    #screen-donation .donation-ranking-editor {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    #screen-donation .donation-layout {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        align-items: start !important;
+        margin-bottom: 40px !important;
+    }
+}
