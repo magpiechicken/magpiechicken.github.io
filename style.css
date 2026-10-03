@@ -2825,6 +2825,20 @@ button:disabled {
     }
 }
 
+/* 후원 닉네임 안내문 */
+.donation-nickname-notice {
+    margin: 10px 0 0;
+    color: #777;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+    .donation-nickname-notice {
+        font-size: 12px;
+    }
+}
+
 /* ==========================================================
    영상 미리보기
 ========================================================== */
@@ -4351,5 +4365,81 @@ button:disabled {
     .donation-ranking-save-button {
         grid-column: 1 / -1;
         width: 100%;
+    }
+}
+
+/* ==========================================================
+   후원 페이지 모바일 스크롤 최종 수정
+   랭킹이 화면 아래까지 전부 내려가도록
+========================================================== */
+@media (max-width: 700px) {
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden !important;
+    }
+
+    .site-layout {
+        display: block !important;
+        width: 100% !important;
+        height: calc(100vh - 74px) !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+    }
+
+    .main-content {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: contain !important;
+        padding-bottom: 40px !important;
+    }
+
+    #screen-donation.visible {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: max-content !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    #screen-donation .donation-layout {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        align-items: start !important;
+        margin-bottom: 24px !important;
+    }
+
+    #screen-donation .donation-box,
+    #screen-donation .donation-ranking-box {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    #screen-donation .donation-ranking-list,
+    #screen-donation .donation-ranking-admin,
+    #screen-donation .donation-ranking-editor {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    #screen-donation .donation-ranking-box {
+        margin-bottom: 24px !important;
     }
 }
