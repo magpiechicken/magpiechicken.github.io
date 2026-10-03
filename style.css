@@ -4961,32 +4961,25 @@ button:disabled {
 }
 
 /* ==========================================================
-   모바일 스크롤 최종 수정
-   기존에 스크롤이 필요한 탭만 콘텐츠 끝까지 내려가도록 처리
-   소개 화면처럼 원래 스크롤하지 않는 탭은 건드리지 않음
+   모바일: 홈 / 멤버십 인증 화면 전체 스크롤 보장
+   중첩 스크롤을 만들지 않고 .main-content가 끝까지 스크롤하도록 처리
 ========================================================== */
 @media (max-width: 700px) {
     .main-content {
+        height: calc(100vh - 74px) !important;
+        max-height: calc(100vh - 74px) !important;
+        min-height: 0 !important;
         overflow-x: hidden !important;
         overflow-y: auto !important;
-        min-height: 0 !important;
-        max-height: none !important;
-        padding-bottom: 64px !important;
         -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior: auto !important;
         touch-action: pan-y !important;
+        padding-bottom: 80px !important;
     }
 
-    /* 실제로 콘텐츠가 길어질 수 있는 탭들 */
-    #screen-home.visible,
-    #screen-news-list.visible,
-    #screen-news-detail.visible,
-    #screen-write.visible,
-    #screen-auth.visible,
-    #screen-donation.visible,
-    #screen-membership.visible,
-    #screen-admin-community.visible,
-    #screen-advanced-news.visible,
-    #screen-video-preview.visible {
+    /* 홈: 내용 전체가 부모 스크롤 영역의 높이를 정확히 차지 */
+    #screen-home.visible {
+        display: block !important;
         width: 100% !important;
         height: auto !important;
         min-height: 0 !important;
@@ -4994,45 +4987,72 @@ button:disabled {
         overflow: visible !important;
     }
 
-    /* 홈 내부에서 높이를 강제로 잡아 스크롤을 막는 규칙 해제 */
-    #screen-home .home-dashboard,
+    #screen-home .home-dashboard {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
     #screen-home .home-hero,
     #screen-home .home-section-grid,
     #screen-home .home-panel,
     #screen-home .home-quick-panel,
     #screen-home .home-quick-grid,
-    #screen-home .home-quick-card,
-    #screen-home .home-recent-panel,
-    #screen-home .home-news-list {
+    #screen-home .home-quick-card {
         height: auto !important;
         min-height: 0 !important;
         max-height: none !important;
         overflow: visible !important;
     }
 
-    /* 후원 내부도 전체 페이지 스크롤을 사용 */
-    #screen-donation .donation-layout,
-    #screen-donation .donation-box,
-    #screen-donation .donation-ranking-box,
-    #screen-donation .donation-ranking-list,
-    #screen-donation .donation-ranking-admin,
-    #screen-donation .donation-ranking-editor {
+    #screen-home .home-section-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    #screen-home .home-quick-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+    }
+
+    /* 멤버십: 신청 폼 + 관리자 영역이 전부 부모 스크롤에 포함 */
+    #screen-membership.visible,
+    #screen-membership.membership-screen {
+        display: block !important;
+        width: 100% !important;
         height: auto !important;
         min-height: 0 !important;
         max-height: none !important;
         overflow: visible !important;
+        padding-bottom: 80px !important;
     }
 
-    /* 나머지 긴 탭도 내부 잘림 방지 */
-    #screen-news-list .news-list,
-    #screen-news-detail .detail-box,
-    #screen-news-detail .news-interactions,
-    #screen-write .write-box,
     #screen-membership .membership-box,
     #screen-membership .membership-admin-panel,
-    #screen-admin-community .community-messages,
-    #screen-advanced-news .advanced-news-list,
-    #screen-video-preview .video-preview-list {
+    #screen-membership .membership-form,
+    #screen-membership .membership-admin-list,
+    #screen-membership .membership-admin-card,
+    #screen-membership .membership-screenshot-preview,
+    #screen-membership .membership-admin-content {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    #screen-membership .membership-box,
+    #screen-membership .membership-admin-panel {
+        position: relative !important;
+        flex: none !important;
+    }
+
+    #screen-membership .membership-screenshot-preview img,
+    #screen-membership .membership-admin-content img {
+        height: auto !important;
         max-height: none !important;
     }
 }
