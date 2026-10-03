@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="./style.css?v=95">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
      crossorigin="anonymous"></script>
+<style>
+/* 각 탭은 자신의 visible 상태일 때만 표시 */
+.screen:not(.visible) {
+    display: none !important;
+}
+.screen.visible {
+    display: block !important;
+}
+</style>
 </head>
 
 <body>
@@ -288,7 +297,7 @@
 
         <section
             id="screen-news-intro"
-            class="screen category-intro-screen"
+            class="screen category-intro-screen" aria-hidden="true"
         >
 
             <h1 class="page-heading">
@@ -339,7 +348,7 @@
 
         <section
             id="screen-news-list"
-            class="screen"
+            class="screen" aria-hidden="true"
         >
 
             <div class="list-header">
@@ -374,7 +383,7 @@
 
         <section
             id="screen-news-detail"
-            class="screen"
+            class="screen" aria-hidden="true"
         >
 
             <button
@@ -480,7 +489,7 @@
 
         <section
             id="screen-write"
-            class="screen"
+            class="screen" aria-hidden="true"
         >
 
             <button
@@ -568,7 +577,7 @@
 
         <section
             id="screen-auth"
-            class="screen"
+            class="screen" aria-hidden="true"
         >
 
             <div class="auth-box">
@@ -725,7 +734,7 @@
 
         <section
             id="screen-donation"
-            class="screen"
+            class="screen" aria-hidden="true"
         >
 
             <h1 class="page-heading">
@@ -807,7 +816,7 @@
 
         <section
             id="screen-membership"
-            class="screen membership-screen"
+            class="screen membership-screen" aria-hidden="true"
         >
 
             <h1 class="page-heading">
@@ -925,7 +934,7 @@
 
         <section
             id="screen-admin-community"
-            class="screen"
+            class="screen" aria-hidden="true"
         >
 
             <h1 class="page-heading">
@@ -987,7 +996,7 @@
 
         <section
             id="screen-advanced-news"
-            class="screen"
+            class="screen" aria-hidden="true"
         >
 
             <h1 class="page-heading">
@@ -1010,7 +1019,7 @@
 
         <section
             id="screen-video-preview"
-            class="screen"
+            class="screen" aria-hidden="true"
         >
 
             <div class="list-header">
@@ -1127,12 +1136,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!window.location.hash) {
         document.querySelectorAll(".screen").forEach(function (screen) {
             screen.classList.remove("visible");
+            screen.setAttribute("aria-hidden", "true");
         });
 
         var home = document.getElementById("screen-home");
         var homeMenu = document.getElementById("menu-home");
 
-        if (home) home.classList.add("visible");
+        if (home) { home.classList.add("visible"); home.setAttribute("aria-hidden", "false"); }
         if (homeMenu) {
             document.querySelectorAll(".menu-item").forEach(function (menu) {
                 menu.classList.remove("active");
