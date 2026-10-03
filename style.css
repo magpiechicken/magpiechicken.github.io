@@ -5184,7 +5184,7 @@ button:disabled {
             transparent 55%
         ),
         linear-gradient(
-            118deg,
+            300deg,
             rgba(255, 170, 30, 0.18) 0%,
             rgba(255, 94, 0, 0.12) 42%,
             rgba(0, 0, 0, 0.08) 72%,
@@ -5224,7 +5224,7 @@ button:disabled {
 }
 
 #screen-home .home-hero {
-  background: linear-gradient(118deg, #ff9d00 0%, #f57f00 24%, #cf5700 48%, #5b2608 74%, #111111 100%) !important;
+  background: linear-gradient(300deg, #ff9d00 0%, #f57f00 24%, #cf5700 48%, #5b2608 74%, #111111 100%) !important;
 }
 #screen-home .home-hero::before {
   background:
