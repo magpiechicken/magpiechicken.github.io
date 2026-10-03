@@ -287,28 +287,28 @@ function toggleSidebarDrawer() {
     }
 }
 
+function showScreen(screen) {
+    if (!screen) {
+        return;
+    }
+
+    screen.hidden = false;
+    screen.setAttribute("aria-hidden", "false");
+    screen.classList.add("visible");
+}
+
 function hideAllScreens() {
     closeSidebarDrawer();
 
     stopCommunityPolling();
 
-    if (homeScreen) {
-        homeScreen.classList.remove("visible");
-    }
-    introScreen.classList.remove("visible");
-    listScreen.classList.remove("visible");
-    detailScreen.classList.remove("visible");
-    writeScreen.classList.remove("visible");
-    authScreen.classList.remove("visible");
-    donationScreen.classList.remove("visible");
-    if (membershipScreen) {
-        membershipScreen.classList.remove("visible");
-    }
-    if (adminCommunityScreen) {
-        adminCommunityScreen.classList.remove("visible");
-    }
-    advancedNewsScreen.classList.remove("visible");
-    videoPreviewScreen.classList.remove("visible");
+    document
+        .querySelectorAll(".main-content > .screen")
+        .forEach(function(screen) {
+            screen.classList.remove("visible");
+            screen.hidden = true;
+            screen.setAttribute("aria-hidden", "true");
+        });
 }
 
 function clearMenuActive() {
@@ -901,7 +901,7 @@ async function openHome() {
     hideAllScreens();
 
     if (homeScreen) {
-        homeScreen.classList.add("visible");
+        showScreen(homeScreen);
     }
 
     currentCategory = null;
@@ -920,7 +920,7 @@ function openNewsIntro() {
 function openCategoryIntro(category) {
     currentCategory = category;
     hideAllScreens();
-    introScreen.classList.add("visible");
+    showScreen(introScreen);
 
     activateCategoryMenu(category);
 
@@ -960,7 +960,7 @@ function openCategoryIntro(category) {
 async function openCategoryList(category) {
     currentCategory = category;
     hideAllScreens();
-    listScreen.classList.add("visible");
+    showScreen(listScreen);
     activateCategoryMenu(category);
     resetDetailUI();
     updateAuthUI();
@@ -1019,7 +1019,7 @@ async function openAdminCommunityChat() {
         return;
     }
 
-    adminCommunityScreen.classList.add("visible");
+    showScreen(adminCommunityScreen);
     activateAdminCommunityMenu();
     updateCommunityComposer();
     communityInitialLoad = true;
@@ -1780,7 +1780,7 @@ function openVideoPreview() {
     }
 
     hideAllScreens();
-    videoPreviewScreen.classList.add("visible");
+    showScreen(videoPreviewScreen);
     activateVideoPreviewMenu();
     scrollTop();
 
@@ -1802,7 +1802,7 @@ function openWriteScreen() {
     editingNewsId = null;
 
     hideAllScreens();
-    writeScreen.classList.add("visible");
+    showScreen(writeScreen);
     activateCategoryMenu(currentCategory);
 
     const heading = writeScreen.querySelector(".write-box h1");
@@ -2224,7 +2224,7 @@ async function openMembership() {
     }
 
     hideAllScreens();
-    membershipScreen.classList.add("visible");
+    showScreen(membershipScreen);
     activateMembershipMenu();
     scrollTop();
 
@@ -2460,7 +2460,7 @@ async function saveDonationRanking(rank) {
 
 async function openDonation() {
     hideAllScreens();
-    donationScreen.classList.add("visible");
+    showScreen(donationScreen);
     activateDonationMenu();
     scrollTop();
     await loadDonationRankings();
