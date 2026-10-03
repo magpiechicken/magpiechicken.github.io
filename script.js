@@ -287,28 +287,28 @@ function toggleSidebarDrawer() {
     }
 }
 
-function showScreen(screen) {
-    if (!screen) {
-        return;
-    }
-
-    screen.hidden = false;
-    screen.setAttribute("aria-hidden", "false");
-    screen.classList.add("visible");
-}
-
 function hideAllScreens() {
     closeSidebarDrawer();
 
     stopCommunityPolling();
 
-    document
-        .querySelectorAll(".main-content > .screen")
-        .forEach(function(screen) {
-            screen.classList.remove("visible");
-            screen.hidden = true;
-            screen.setAttribute("aria-hidden", "true");
-        });
+    if (homeScreen) {
+        homeScreen.classList.remove("visible");
+    }
+    introScreen.classList.remove("visible");
+    listScreen.classList.remove("visible");
+    detailScreen.classList.remove("visible");
+    writeScreen.classList.remove("visible");
+    authScreen.classList.remove("visible");
+    donationScreen.classList.remove("visible");
+    if (membershipScreen) {
+        membershipScreen.classList.remove("visible");
+    }
+    if (adminCommunityScreen) {
+        adminCommunityScreen.classList.remove("visible");
+    }
+    advancedNewsScreen.classList.remove("visible");
+    videoPreviewScreen.classList.remove("visible");
 }
 
 function clearMenuActive() {
@@ -664,18 +664,30 @@ async function renderIntroRecentNews(category = currentCategory) {
         </div>
     `;
 
+    const targetCategory =
+        category === "sports"
+            ? "sports"
+            : category === "advanced"
+                ? "advanced"
+                : "general";
+
     try {
         const { data: newsList, error } = await supabaseClient
             .from("news")
             .select("id, author, title, created_at, category")
+            .eq("category", targetCategory)
             .order("created_at", { ascending: false })
-            .limit(30);
+            .limit(3);
 
         if (error) {
-            console.error("소개 화면 최근 소식 조회 오류:", error);
+            console.error(
+                `소개 화면 ${targetCategory} 최근 소식 조회 오류:`,
+                error
+            );
+
             container.innerHTML = `
                 <div class="intro-recent-empty">
-                    최근 소식을 불러오지 못했습니다.
+                    없음
                 </div>
             `;
             return;
@@ -683,37 +695,19 @@ async function renderIntroRecentNews(category = currentCategory) {
 
         const rows = Array.isArray(newsList) ? newsList : [];
 
-        const filtered = rows.filter(function(news) {
-            const newsCategory = news.category || "general";
-
-            if (category === "advanced") {
-                return newsCategory === "advanced";
-            }
-
-            if (category === "sports") {
-                return newsCategory === "sports";
-            }
-
-            if (category === "community") {
-                return newsCategory === "general" || newsCategory === "sports";
-            }
-
-            return newsCategory === "general";
-        }).slice(0, 3);
-
-        if (filtered.length === 0) {
+        if (rows.length === 0) {
             container.innerHTML = `
                 <div class="intro-recent-empty">
-                    아직 등록된 소식이 없습니다.
+                    없음
                 </div>
             `;
             return;
         }
 
-        container.innerHTML = filtered
+        container.innerHTML = rows
             .map(function(news, index) {
                 const categoryLabel = categoryName(
-                    news.category || "general"
+                    news.category || targetCategory
                 );
 
                 return `
@@ -754,11 +748,14 @@ async function renderIntroRecentNews(category = currentCategory) {
                 });
             });
     } catch (error) {
-        console.error("소개 화면 최근 소식 예외:", error);
+        console.error(
+            `소개 화면 ${targetCategory} 최근 소식 예외:`,
+            error
+        );
 
         container.innerHTML = `
             <div class="intro-recent-empty">
-                최근 소식을 불러오지 못했습니다.
+                없음
             </div>
         `;
     }
@@ -901,7 +898,7 @@ async function openHome() {
     hideAllScreens();
 
     if (homeScreen) {
-        showScreen(homeScreen);
+        homeScreen.classList.add("visible");
     }
 
     currentCategory = null;
@@ -920,7 +917,7 @@ function openNewsIntro() {
 function openCategoryIntro(category) {
     currentCategory = category;
     hideAllScreens();
-    showScreen(introScreen);
+    introScreen.classList.add("visible");
 
     activateCategoryMenu(category);
 
@@ -960,7 +957,7 @@ function openCategoryIntro(category) {
 async function openCategoryList(category) {
     currentCategory = category;
     hideAllScreens();
-    showScreen(listScreen);
+    listScreen.classList.add("visible");
     activateCategoryMenu(category);
     resetDetailUI();
     updateAuthUI();
@@ -1019,7 +1016,7 @@ async function openAdminCommunityChat() {
         return;
     }
 
-    showScreen(adminCommunityScreen);
+    adminCommunityScreen.classList.add("visible");
     activateAdminCommunityMenu();
     updateCommunityComposer();
     communityInitialLoad = true;
@@ -1780,7 +1777,7 @@ function openVideoPreview() {
     }
 
     hideAllScreens();
-    showScreen(videoPreviewScreen);
+    videoPreviewScreen.classList.add("visible");
     activateVideoPreviewMenu();
     scrollTop();
 
@@ -1802,7 +1799,7 @@ function openWriteScreen() {
     editingNewsId = null;
 
     hideAllScreens();
-    showScreen(writeScreen);
+    writeScreen.classList.add("visible");
     activateCategoryMenu(currentCategory);
 
     const heading = writeScreen.querySelector(".write-box h1");
@@ -2224,7 +2221,7 @@ async function openMembership() {
     }
 
     hideAllScreens();
-    showScreen(membershipScreen);
+    membershipScreen.classList.add("visible");
     activateMembershipMenu();
     scrollTop();
 
@@ -2460,7 +2457,7 @@ async function saveDonationRanking(rank) {
 
 async function openDonation() {
     hideAllScreens();
-    showScreen(donationScreen);
+    donationScreen.classList.add("visible");
     activateDonationMenu();
     scrollTop();
     await loadDonationRankings();
