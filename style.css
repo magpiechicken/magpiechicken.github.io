@@ -4959,3 +4959,80 @@ button:disabled {
         font-size: 11px;
     }
 }
+
+/* ==========================================================
+   모바일 스크롤 최종 수정
+   기존에 스크롤이 필요한 탭만 콘텐츠 끝까지 내려가도록 처리
+   소개 화면처럼 원래 스크롤하지 않는 탭은 건드리지 않음
+========================================================== */
+@media (max-width: 700px) {
+    .main-content {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding-bottom: 64px !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: pan-y !important;
+    }
+
+    /* 실제로 콘텐츠가 길어질 수 있는 탭들 */
+    #screen-home.visible,
+    #screen-news-list.visible,
+    #screen-news-detail.visible,
+    #screen-write.visible,
+    #screen-auth.visible,
+    #screen-donation.visible,
+    #screen-membership.visible,
+    #screen-admin-community.visible,
+    #screen-advanced-news.visible,
+    #screen-video-preview.visible {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* 홈 내부에서 높이를 강제로 잡아 스크롤을 막는 규칙 해제 */
+    #screen-home .home-dashboard,
+    #screen-home .home-hero,
+    #screen-home .home-section-grid,
+    #screen-home .home-panel,
+    #screen-home .home-quick-panel,
+    #screen-home .home-quick-grid,
+    #screen-home .home-quick-card,
+    #screen-home .home-recent-panel,
+    #screen-home .home-news-list {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* 후원 내부도 전체 페이지 스크롤을 사용 */
+    #screen-donation .donation-layout,
+    #screen-donation .donation-box,
+    #screen-donation .donation-ranking-box,
+    #screen-donation .donation-ranking-list,
+    #screen-donation .donation-ranking-admin,
+    #screen-donation .donation-ranking-editor {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* 나머지 긴 탭도 내부 잘림 방지 */
+    #screen-news-list .news-list,
+    #screen-news-detail .detail-box,
+    #screen-news-detail .news-interactions,
+    #screen-write .write-box,
+    #screen-membership .membership-box,
+    #screen-membership .membership-admin-panel,
+    #screen-admin-community .community-messages,
+    #screen-advanced-news .advanced-news-list,
+    #screen-video-preview .video-preview-list {
+        max-height: none !important;
+    }
+}
