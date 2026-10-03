@@ -5286,3 +5286,4 @@ button:disabled {
     opacity: 1 !important;
   }
 }
+\n\n/* FINAL NAVIGATION STATE */\n.menu-item.active {\n    background: #FF9400 !important;\n    color: #ffffff !important;\n}\n\n.menu-item.active.locked {\n    background: #FF9400 !important;\n    color: #ffffff !important;\n}\n
