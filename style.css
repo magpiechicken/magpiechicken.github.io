@@ -4064,3 +4064,292 @@ button:disabled {
         padding: 4px 9px !important;
     }
 }
+
+
+/* ==========================================================
+   후원 랭킹
+========================================================== */
+.donation-layout {
+    width: min(1180px, 100%);
+    margin: 24px auto 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 430px);
+    gap: 22px;
+    align-items: start;
+}
+
+.donation-layout .donation-box {
+    width: 100%;
+    margin: 0;
+    min-height: 100%;
+}
+
+.donation-ranking-box {
+    width: 100%;
+    box-sizing: border-box;
+    border: 2px solid #111;
+    border-radius: 18px;
+    background: #fff;
+    padding: 22px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+
+.donation-ranking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.donation-ranking-title {
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.donation-ranking-description {
+    margin-top: 4px;
+    color: #777;
+    font-size: 13px;
+}
+
+.donation-ranking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.donation-ranking-row {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+    min-height: 64px;
+    padding: 8px 12px 8px 8px;
+    box-sizing: border-box;
+    border: 2px solid #111;
+    border-radius: 13px;
+    background: #fff;
+}
+
+.donation-ranking-rank {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 2px solid #111;
+    box-sizing: border-box;
+    font-size: 19px;
+    font-weight: 900;
+}
+
+.donation-ranking-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.donation-ranking-amount {
+    white-space: nowrap;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.rank-1 .donation-ranking-rank,
+.donation-ranking-edit-rank.rank-1 {
+    background: #ffd700;
+    color: #7a4d00;
+}
+
+.rank-2 .donation-ranking-rank,
+.donation-ranking-edit-rank.rank-2 {
+    background: #d9dce1;
+    color: #3f4650;
+}
+
+.rank-3 .donation-ranking-rank,
+.donation-ranking-edit-rank.rank-3 {
+    background: #cd7f32;
+    color: #fff;
+}
+
+.rank-4 .donation-ranking-rank,
+.donation-ranking-edit-rank.rank-4 {
+    background: #68a8ff;
+    color: #083b73;
+}
+
+.rank-5 .donation-ranking-rank,
+.donation-ranking-edit-rank.rank-5 {
+    background: #b18cff;
+    color: #35106d;
+}
+
+.donation-ranking-loading,
+.donation-ranking-error {
+    padding: 26px 10px;
+    text-align: center;
+    line-height: 1.6;
+    color: #777;
+}
+
+.donation-ranking-error {
+    color: #c00;
+}
+
+.donation-ranking-admin {
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 2px dashed #bbb;
+}
+
+.donation-ranking-admin-title {
+    margin-bottom: 11px;
+    font-size: 17px;
+    font-weight: 900;
+}
+
+.donation-ranking-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.donation-ranking-edit-row {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) 120px 54px;
+    gap: 7px;
+    align-items: center;
+}
+
+.donation-ranking-edit-rank {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #111;
+    border-radius: 9px;
+    box-sizing: border-box;
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.donation-ranking-nickname-input,
+.donation-ranking-amount-input {
+    width: 100%;
+    min-width: 0;
+    height: 40px;
+    padding: 0 9px;
+    box-sizing: border-box;
+    border: 2px solid #bbb;
+    border-radius: 9px;
+    background: #fff;
+    color: #111;
+    font: inherit;
+    font-size: 13px;
+    outline: none;
+}
+
+.donation-ranking-nickname-input:focus,
+.donation-ranking-amount-input:focus {
+    border-color: #111;
+}
+
+.donation-ranking-amount-wrap {
+    min-width: 0;
+    position: relative;
+}
+
+.donation-ranking-amount-wrap span {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 11px;
+    color: #777;
+}
+
+.donation-ranking-amount-input {
+    padding-right: 23px;
+}
+
+.donation-ranking-save-button {
+    height: 40px;
+    border: 2px solid #111;
+    border-radius: 9px;
+    background: #ff9400;
+    color: #111;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.donation-ranking-save-button:hover {
+    filter: brightness(1.05);
+}
+
+.donation-ranking-save-button:disabled {
+    opacity: .55;
+    cursor: wait;
+}
+
+@media (max-width: 850px) {
+    .donation-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .donation-layout .donation-box {
+        min-height: 0;
+    }
+}
+
+@media (max-width: 560px) {
+    .donation-ranking-box {
+        padding: 15px 12px;
+        border-radius: 14px;
+    }
+
+    .donation-ranking-title {
+        font-size: 21px;
+    }
+
+    .donation-ranking-description {
+        font-size: 11px;
+    }
+
+    .donation-ranking-row {
+        grid-template-columns: 36px minmax(0, 1fr) auto;
+        min-height: 56px;
+        gap: 8px;
+        padding: 6px 8px 6px 6px;
+    }
+
+    .donation-ranking-rank {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+
+    .donation-ranking-name {
+        font-size: 15px;
+    }
+
+    .donation-ranking-amount {
+        font-size: 12px;
+    }
+
+    .donation-ranking-edit-row {
+        grid-template-columns: 42px minmax(0, 1fr) 100px;
+    }
+
+    .donation-ranking-save-button {
+        grid-column: 1 / -1;
+        width: 100%;
+    }
+}
