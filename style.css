@@ -5243,3 +5243,46 @@ button:disabled {
     radial-gradient(circle at 18% 42%, rgba(255,196,82,.20) 0%, rgba(255,148,0,.12) 25%, transparent 55%),
     linear-gradient(298deg, rgba(255,170,30,.10) 0%, rgba(255,94,0,.07) 42%, rgba(0,0,0,.07) 72%, rgba(0,0,0,.16) 100%) !important;
 }
+
+/* FINAL FIX: category intro recent news must be visible on desktop */
+@media screen and (min-width: 701px) {
+  .category-intro-screen.visible {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .category-intro-screen.visible .intro-recent-panel {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 300px !important;
+    max-height: none !important;
+    flex: none !important;
+    overflow: visible !important;
+    box-sizing: border-box !important;
+  }
+
+  .category-intro-screen.visible .intro-recent-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 220px !important;
+    flex: none !important;
+    overflow: visible !important;
+  }
+
+  .category-intro-screen.visible .intro-recent-card {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 220px !important;
+    height: auto !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+}
