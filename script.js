@@ -1,3 +1,4 @@
+"use strict";
 
 // Updated: category menus, admin-only video preview, intro-first navigation, community intro, comment usernames, large video uploads
 
@@ -57,6 +58,15 @@ const authScreen =
 
 const donationScreen =
     document.getElementById("screen-donation");
+
+const donationRankingList =
+    document.getElementById("donation-ranking-list");
+
+const donationRankingAdmin =
+    document.getElementById("donation-ranking-admin");
+
+const donationRankingEditor =
+    document.getElementById("donation-ranking-editor");
 
 const membershipScreen =
     document.getElementById("screen-membership");
@@ -2228,11 +2238,232 @@ async function openMembership() {
     }
 }
 
-function openDonation() {
+async function loadDonationRankings() {
+    if (!donationRankingList) {
+        return;
+    }
+
+    donationRankingList.innerHTML = `
+        <div class="donation-ranking-loading">
+            후원 랭킹을 불러오는 중...
+        </div>
+    `;
+
+    const {
+        data: rankings,
+        error
+    } = await supabaseClient
+        .from("donation_rankings")
+        .select("rank, nickname, amount")
+        .order("rank", { ascending: true });
+
+    if (error) {
+        console.error("후원 랭킹 조회 오류:", error);
+        donationRankingList.innerHTML = `
+            <div class="donation-ranking-error">
+                후원 랭킹을 불러오지 못했습니다.<br>
+                Supabase의 후원 랭킹 SQL을 먼저 실행해주세요.
+            </div>
+        `;
+        return;
+    }
+
+    const map = new Map(
+        (rankings || []).map(function(item) {
+            return [Number(item.rank), item];
+        })
+    );
+
+    const rows = [];
+
+    for (let rank = 1; rank <= 5; rank += 1) {
+        const item = map.get(rank) || {
+            rank: rank,
+            nickname: "아직 없음",
+            amount: 0
+        };
+
+        const amount = Number(item.amount) || 0;
+        const nickname = item.nickname || "아직 없음";
+        const rankClass = `rank-${rank}`;
+
+        rows.push(`
+            <div class="donation-ranking-row ${rankClass}">
+                <div class="donation-ranking-rank">
+                    ${rank}
+                </div>
+                <div class="donation-ranking-name">
+                    ${escapeHTML(nickname)}
+                </div>
+                <div class="donation-ranking-amount">
+                    ${amount.toLocaleString("ko-KR")}원
+                </div>
+            </div>
+        `);
+    }
+
+    donationRankingList.innerHTML = rows.join("");
+
+    if (donationRankingAdmin) {
+        donationRankingAdmin.classList.toggle(
+            "hidden",
+            !isAdmin
+        );
+    }
+
+    if (isAdmin) {
+        renderDonationRankingEditor(map);
+    }
+}
+
+function renderDonationRankingEditor(rankingMap) {
+    if (!donationRankingEditor) {
+        return;
+    }
+
+    const rows = [];
+
+    for (let rank = 1; rank <= 5; rank += 1) {
+        const item = rankingMap.get(rank) || {
+            rank: rank,
+            nickname: "",
+            amount: 0
+        };
+
+        rows.push(`
+            <div class="donation-ranking-edit-row">
+                <div class="donation-ranking-edit-rank rank-${rank}">
+                    ${rank}위
+                </div>
+
+                <input
+                    class="donation-ranking-nickname-input"
+                    type="text"
+                    maxlength="30"
+                    data-ranking-rank="${rank}"
+                    data-ranking-field="nickname"
+                    value="${escapeAttribute(item.nickname || "")}"\n                    placeholder="닉네임"
+                >
+
+                <div class="donation-ranking-amount-wrap">
+                    <input
+                        class="donation-ranking-amount-input"
+                        type="number"
+                        min="0"
+                        step="1000"
+                        inputmode="numeric"
+                        data-ranking-rank="${rank}"
+                        data-ranking-field="amount"
+                        value="${Number(item.amount) || 0}"
+                        placeholder="후원금액"
+                    >
+                    <span>원</span>
+                </div>
+
+                <button
+                    class="donation-ranking-save-button"
+                    type="button"
+                    data-ranking-save="${rank}"
+                >
+                    저장
+                </button>
+            </div>
+        `);
+    }
+
+    donationRankingEditor.innerHTML = rows.join("");
+
+    donationRankingEditor
+        .querySelectorAll("[data-ranking-save]")
+        .forEach(function(button) {
+            button.addEventListener(
+                "click",
+                function() {
+                    saveDonationRanking(
+                        Number(button.dataset.rankingSave)
+                    );
+                }
+            );
+        });
+}
+
+async function saveDonationRanking(rank) {
+    if (!currentUser || !isAdmin) {
+        alert("관리자만 후원 랭킹을 수정할 수 있습니다.");
+        return;
+    }
+
+    if (!Number.isInteger(rank) || rank < 1 || rank > 5) {
+        return;
+    }
+
+    const nicknameInput = donationRankingEditor?.querySelector(
+        `[data-ranking-rank="${rank}"][data-ranking-field="nickname"]`
+    );
+
+    const amountInput = donationRankingEditor?.querySelector(
+        `[data-ranking-rank="${rank}"][data-ranking-field="amount"]`
+    );
+
+    if (!nicknameInput || !amountInput) {
+        return;
+    }
+
+    const nickname = nicknameInput.value.trim() || "익명";
+    const amount = Math.max(
+        0,
+        Math.floor(Number(amountInput.value) || 0)
+    );
+
+    const button = donationRankingEditor.querySelector(
+        `[data-ranking-save="${rank}"]`
+    );
+
+    if (button) {
+        button.disabled = true;
+        button.textContent = "저장 중...";
+    }
+
+    try {
+        const { error } = await supabaseClient.rpc(
+            "update_donation_ranking",
+            {
+                p_rank: rank,
+                p_nickname: nickname,
+                p_amount: amount
+            }
+        );
+
+        if (error) {
+            throw error;
+        }
+
+        await loadDonationRankings();
+        alert(`${rank}위 후원 랭킹이 저장되었습니다.`);
+    } catch (error) {
+        console.error("후원 랭킹 저장 오류:", error);
+        alert(
+            "후원 랭킹 저장 오류:\n" +
+            error.message
+        );
+    } finally {
+        const currentButton = donationRankingEditor?.querySelector(
+            `[data-ranking-save="${rank}"]`
+        );
+
+        if (currentButton) {
+            currentButton.disabled = false;
+            currentButton.textContent = "저장";
+        }
+    }
+}
+
+async function openDonation() {
     hideAllScreens();
     donationScreen.classList.add("visible");
     activateDonationMenu();
     scrollTop();
+    await loadDonationRankings();
 }
 
 function openAuthScreen(
@@ -4992,6 +5223,13 @@ supabaseClient.auth.onAuthStateChange(
                     communityInitialLoad = true;
                     await loadCommunityMessages();
                 }
+
+                if (
+                    donationScreen &&
+                    donationScreen.classList.contains("visible")
+                ) {
+                    await loadDonationRankings();
+                }
             }, 0);
 
             return;
@@ -5024,6 +5262,13 @@ supabaseClient.auth.onAuthStateChange(
                 ) {
                     communityInitialLoad = true;
                     await loadCommunityMessages();
+                }
+
+                if (
+                    donationScreen &&
+                    donationScreen.classList.contains("visible")
+                ) {
+                    await loadDonationRankings();
                 }
             }, 0);
         }
