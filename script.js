@@ -651,8 +651,11 @@ function categoryName(category) {
     return "소식";
 }
 
-async function renderIntroRecentNews(category = currentCategory) {
-    const container = document.getElementById("intro-recent-news");
+async function renderIntroRecentNews(
+    category = currentCategory,
+    containerId = "intro-recent-news"
+) {
+    const container = document.getElementById(containerId);
 
     if (!container) {
         return;
@@ -684,7 +687,6 @@ async function renderIntroRecentNews(category = currentCategory) {
                 `소개 화면 ${targetCategory} 최근 소식 조회 오류:`,
                 error
             );
-
             container.innerHTML = `
                 <div class="intro-recent-empty">
                     없음
@@ -707,7 +709,7 @@ async function renderIntroRecentNews(category = currentCategory) {
         container.innerHTML = rows
             .map(function(news, index) {
                 const categoryLabel = categoryName(
-                    news.category || targetCategory
+                    news.category || "general"
                 );
 
                 return `
@@ -748,14 +750,11 @@ async function renderIntroRecentNews(category = currentCategory) {
                 });
             });
     } catch (error) {
-        console.error(
-            `소개 화면 ${targetCategory} 최근 소식 예외:`,
-            error
-        );
+        console.error("소개 화면 최근 소식 예외:", error);
 
         container.innerHTML = `
             <div class="intro-recent-empty">
-                없음
+                최근 소식을 불러오지 못했습니다.
             </div>
         `;
     }
@@ -950,7 +949,24 @@ function openCategoryIntro(category) {
 
     resetDetailUI();
     updateAuthUI();
-    renderIntroRecentNews(category);
+
+    const recentPanel = introScreen.querySelector(".intro-recent-panel");
+
+    if (category === "community") {
+        if (recentPanel) {
+            recentPanel.classList.add("hidden");
+        }
+        const recentContainer = document.getElementById("intro-recent-news");
+        if (recentContainer) {
+            recentContainer.innerHTML = "";
+        }
+    } else {
+        if (recentPanel) {
+            recentPanel.classList.remove("hidden");
+        }
+        renderIntroRecentNews(category, "intro-recent-news");
+    }
+
     scrollTop();
 }
 
