@@ -4960,25 +4960,68 @@ button:disabled {
     }
 }
 
+
 /* ==========================================================
-   모바일: 홈 / 멤버십 인증 화면 전체 스크롤 보장
-   중첩 스크롤을 만들지 않고 .main-content가 끝까지 스크롤하도록 처리
+   모바일 스크롤 구조 완전 재설정
+   - 홈 / 멤버십 인증만 안정적으로 끝까지 스크롤
+   - 멤버십 신청 후 관리자 영역이 추가되어도 전체 높이 재계산
 ========================================================== */
 @media (max-width: 700px) {
-    .main-content {
-        height: calc(100vh - 74px) !important;
-        max-height: calc(100vh - 74px) !important;
+    html,
+    body {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+    }
+
+    .site-layout {
+        position: fixed !important;
+        left: 0 !important;
+        right: 0 !important;
+        top: 116px !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: auto !important;
         min-height: 0 !important;
+        max-height: none !important;
+        display: block !important;
+        overflow: hidden !important;
+    }
+
+    .main-content {
+        position: absolute !important;
+        inset: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 18px 14px 80px !important;
         overflow-x: hidden !important;
-        overflow-y: auto !important;
+        overflow-y: scroll !important;
         -webkit-overflow-scrolling: touch !important;
         overscroll-behavior: auto !important;
         touch-action: pan-y !important;
-        padding-bottom: 80px !important;
+        scrollbar-gutter: stable !important;
     }
 
-    /* 홈: 내용 전체가 부모 스크롤 영역의 높이를 정확히 차지 */
-    #screen-home.visible {
+    /* 모든 화면의 기본 고정 높이 해제 */
+    .screen.visible {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        transform: none !important;
+    }
+
+    /* 홈 */
+    #screen-home.home-screen,
+    #screen-home.home-screen.visible {
         display: block !important;
         width: 100% !important;
         height: auto !important;
@@ -4988,13 +5031,14 @@ button:disabled {
     }
 
     #screen-home .home-dashboard {
+        display: flex !important;
+        flex-direction: column !important;
         width: 100% !important;
         height: auto !important;
         min-height: 0 !important;
         max-height: none !important;
+        gap: 16px !important;
         overflow: visible !important;
-        display: flex !important;
-        flex-direction: column !important;
     }
 
     #screen-home .home-hero,
@@ -5003,6 +5047,7 @@ button:disabled {
     #screen-home .home-quick-panel,
     #screen-home .home-quick-grid,
     #screen-home .home-quick-card {
+        width: 100% !important;
         height: auto !important;
         min-height: 0 !important;
         max-height: none !important;
@@ -5019,25 +5064,23 @@ button:disabled {
         grid-template-columns: 1fr !important;
     }
 
-    /* 멤버십: 신청 폼 + 관리자 영역이 전부 부모 스크롤에 포함 */
-    #screen-membership.visible,
-    #screen-membership.membership-screen {
+    /* 멤버십 인증 */
+    #screen-membership.membership-screen,
+    #screen-membership.membership-screen.visible {
         display: block !important;
         width: 100% !important;
         height: auto !important;
         min-height: 0 !important;
         max-height: none !important;
         overflow: visible !important;
-        padding-bottom: 80px !important;
+        padding-bottom: 100px !important;
     }
 
     #screen-membership .membership-box,
     #screen-membership .membership-admin-panel,
     #screen-membership .membership-form,
-    #screen-membership .membership-admin-list,
-    #screen-membership .membership-admin-card,
-    #screen-membership .membership-screenshot-preview,
-    #screen-membership .membership-admin-content {
+    #screen-membership .membership-admin-list {
+        width: 100% !important;
         height: auto !important;
         min-height: 0 !important;
         max-height: none !important;
@@ -5046,24 +5089,32 @@ button:disabled {
 
     #screen-membership .membership-box,
     #screen-membership .membership-admin-panel {
-        position: relative !important;
         flex: none !important;
     }
 
+    #screen-membership .membership-screenshot-preview,
     #screen-membership .membership-screenshot-preview img,
+    #screen-membership .membership-admin-card,
+    #screen-membership .membership-admin-content,
     #screen-membership .membership-admin-content img {
-        height: auto !important;
         max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
     }
-}
 
-/* ==========================================================
-   모바일 홈 / 멤버십 하단 여유 공간 추가
-   콘텐츠 마지막 부분까지 손가락으로 더 내려갈 수 있게 처리
-========================================================== */
-@media (max-width: 700px) {
-    #screen-home.visible,
-    #screen-membership.membership-screen {
-        padding-bottom: 180px !important;
+    /* 신청 후 관리자 패널이 나타나도 본문 높이가 자동으로 늘어남 */
+    #screen-membership .membership-admin-panel:not(.hidden) {
+        display: block !important;
+        margin-bottom: 40px !important;
+    }
+
+    /* 맨 아래에서 손가락이 컨텐츠 끝을 확실히 넘을 수 있게 여유 공간 */
+    #screen-home::after,
+    #screen-membership::after {
+        content: "";
+        display: block;
+        width: 100%;
+        height: 120px;
+        flex: none;
     }
 }
