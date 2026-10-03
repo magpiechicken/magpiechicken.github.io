@@ -4,18 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=95">
+    <link rel="stylesheet" href="./style.css?v=88">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
      crossorigin="anonymous"></script>
-<style>
-/* 각 탭은 자신의 visible 상태일 때만 표시 */
-.screen:not(.visible) {
-    display: none !important;
-}
-.screen.visible {
-    display: block !important;
-}
-</style>
 </head>
 
 <body>
@@ -298,7 +289,7 @@
         <section
             id="screen-news-intro"
             class="screen category-intro-screen"
-         hidden aria-hidden="true">
+        >
 
             <h1 class="page-heading">
                 소식
@@ -349,7 +340,7 @@
         <section
             id="screen-news-list"
             class="screen"
-         hidden aria-hidden="true">
+        >
 
             <div class="list-header">
 
@@ -384,7 +375,7 @@
         <section
             id="screen-news-detail"
             class="screen"
-         hidden aria-hidden="true">
+        >
 
             <button
                 id="back-to-list"
@@ -490,7 +481,7 @@
         <section
             id="screen-write"
             class="screen"
-         hidden aria-hidden="true">
+        >
 
             <button
                 id="back-from-write"
@@ -578,7 +569,7 @@
         <section
             id="screen-auth"
             class="screen"
-         hidden aria-hidden="true">
+        >
 
             <div class="auth-box">
 
@@ -735,80 +726,30 @@
         <section
             id="screen-donation"
             class="screen"
-         hidden aria-hidden="true">
+        >
 
             <h1 class="page-heading">
                 후원
             </h1>
 
-            <div class="donation-layout">
+            <div class="donation-box">
 
-                <div class="donation-box">
-
-                    <div class="donation-box-title">
-                        까치치킨사장님 후원
-                    </div>
-
-                    <p class="donation-box-description">
-                        까치치킨사장님을 응원하고 싶다면 아래 버튼을 눌러 후원 페이지로 이동해 주세요.
-                    </p>
-
-                    <a
-                        class="donation-button"
-                        href="https://ctee.kr/place/chicken_official"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        까치치킨 사장님 후원하러 가기
-                    </a>
-
-                    <p class="donation-nickname-notice">
-                        닉네임은 후원 사이트 닉네임으로 정해집니다.
-                    </p>
-
-                    <p class="donation-update-notice">
-                        랭킹 업데이트 시간은 오후 5시입니다.
-                    </p>
-
+                <div class="donation-box-title">
+                    까치치킨사장님 후원
                 </div>
 
-                <aside class="donation-ranking-box">
+                <p class="donation-box-description">
+                    까치치킨사장님을 응원하고 싶다면 아래 버튼을 눌러 후원 페이지로 이동해 주세요.
+                </p>
 
-                    <div class="donation-ranking-header">
-                        <div>
-                            <div class="donation-ranking-title">
-                                🏆 후원 랭킹
-                            </div>
-                            <div class="donation-ranking-description">
-                                현재 후원 랭킹 1~5위
-                            </div>
-                        </div>
-                    </div>
-
-                    <div
-                        id="donation-ranking-list"
-                        class="donation-ranking-list"
-                    >
-                        <div class="donation-ranking-loading">
-                            후원 랭킹을 불러오는 중...
-                        </div>
-                    </div>
-
-                    <div
-                        id="donation-ranking-admin"
-                        class="donation-ranking-admin hidden"
-                    >
-                        <div class="donation-ranking-admin-title">
-                            관리자 랭킹 수정
-                        </div>
-
-                        <div
-                            id="donation-ranking-editor"
-                            class="donation-ranking-editor"
-                        ></div>
-                    </div>
-
-                </aside>
+                <a
+                    class="donation-button"
+                    href="https://ctee.kr/place/chicken_official"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    까치치킨 사장님 후원하러 가기
+                </a>
 
             </div>
 
@@ -817,7 +758,7 @@
         <section
             id="screen-membership"
             class="screen membership-screen"
-         hidden aria-hidden="true">
+        >
 
             <h1 class="page-heading">
                 멤버십 인증하기
@@ -935,7 +876,7 @@
         <section
             id="screen-admin-community"
             class="screen"
-         hidden aria-hidden="true">
+        >
 
             <h1 class="page-heading">
                 관리자 커뮤니티
@@ -997,7 +938,7 @@
         <section
             id="screen-advanced-news"
             class="screen"
-         hidden aria-hidden="true">
+        >
 
             <h1 class="page-heading">
                 고급소식
@@ -1020,7 +961,7 @@
         <section
             id="screen-video-preview"
             class="screen"
-         hidden aria-hidden="true">
+        >
 
             <div class="list-header">
 
@@ -1131,35 +1072,30 @@
 </div>
 
 <script>
-/* 첫 화면은 홈만 표시 */
+/* 루트(index.html)로 직접 들어오면 항상 홈 화면 표시 */
 document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".main-content > .screen").forEach(function (screen) {
-        screen.hidden = true;
-        screen.classList.remove("visible");
-        screen.setAttribute("aria-hidden", "true");
-    });
-
-    var home = document.getElementById("screen-home");
-    var homeMenu = document.getElementById("menu-home");
-
-    if (home) {
-        home.hidden = false;
-        home.classList.add("visible");
-        home.setAttribute("aria-hidden", "false");
-    }
-
-    if (homeMenu) {
-        document.querySelectorAll(".menu-item").forEach(function (menu) {
-            menu.classList.remove("active");
+    if (!window.location.hash) {
+        document.querySelectorAll(".screen").forEach(function (screen) {
+            screen.classList.remove("visible");
         });
-        homeMenu.classList.add("active");
+
+        var home = document.getElementById("screen-home");
+        var homeMenu = document.getElementById("menu-home");
+
+        if (home) home.classList.add("visible");
+        if (homeMenu) {
+            document.querySelectorAll(".menu-item").forEach(function (menu) {
+                menu.classList.remove("active");
+            });
+            homeMenu.classList.add("active");
+        }
     }
 });
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
-<script src="./script.js?v=96"></script>
+<script src="./script.js?v=93"></script>
 
 </body>
 </html>
