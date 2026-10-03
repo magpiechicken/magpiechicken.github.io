@@ -5056,3 +5056,14 @@ button:disabled {
         max-height: none !important;
     }
 }
+
+/* ==========================================================
+   모바일 홈 / 멤버십 하단 여유 공간 추가
+   콘텐츠 마지막 부분까지 손가락으로 더 내려갈 수 있게 처리
+========================================================== */
+@media (max-width: 700px) {
+    #screen-home.visible,
+    #screen-membership.membership-screen {
+        padding-bottom: 180px !important;
+    }
+}
