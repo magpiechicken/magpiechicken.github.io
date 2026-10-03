@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=90">
+    <link rel="stylesheet" href="./style.css?v=94">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
      crossorigin="anonymous"></script>
 </head>
@@ -732,24 +732,70 @@
                 후원
             </h1>
 
-            <div class="donation-box">
+            <div class="donation-layout">
 
-                <div class="donation-box-title">
-                    까치치킨사장님 후원
+                <div class="donation-box">
+
+                    <div class="donation-box-title">
+                        까치치킨사장님 후원
+                    </div>
+
+                    <p class="donation-box-description">
+                        까치치킨사장님을 응원하고 싶다면 아래 버튼을 눌러 후원 페이지로 이동해 주세요.
+                    </p>
+
+                    <a
+                        class="donation-button"
+                        href="https://ctee.kr/place/chicken_official"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        까치치킨 사장님 후원하러 가기
+                    </a>
+
+                    <p class="donation-nickname-notice">
+                        닉네임은 후원 사이트 닉네임으로 정해집니다.
+                    </p>
+
                 </div>
 
-                <p class="donation-box-description">
-                    까치치킨사장님을 응원하고 싶다면 아래 버튼을 눌러 후원 페이지로 이동해 주세요.
-                </p>
+                <aside class="donation-ranking-box">
 
-                <a
-                    class="donation-button"
-                    href="https://ctee.kr/place/chicken_official"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    까치치킨 사장님 후원하러 가기
-                </a>
+                    <div class="donation-ranking-header">
+                        <div>
+                            <div class="donation-ranking-title">
+                                🏆 후원 랭킹
+                            </div>
+                            <div class="donation-ranking-description">
+                                현재 후원 랭킹 1~5위
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        id="donation-ranking-list"
+                        class="donation-ranking-list"
+                    >
+                        <div class="donation-ranking-loading">
+                            후원 랭킹을 불러오는 중...
+                        </div>
+                    </div>
+
+                    <div
+                        id="donation-ranking-admin"
+                        class="donation-ranking-admin hidden"
+                    >
+                        <div class="donation-ranking-admin-title">
+                            관리자 랭킹 수정
+                        </div>
+
+                        <div
+                            id="donation-ranking-editor"
+                            class="donation-ranking-editor"
+                        ></div>
+                    </div>
+
+                </aside>
 
             </div>
 
@@ -1095,7 +1141,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
-<script src="./script.js?v=95"></script>
+<script src="./script.js?v=94"></script>
 
 </body>
 </html>
