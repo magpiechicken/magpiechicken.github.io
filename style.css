@@ -5220,3 +5220,8 @@ button:disabled {
         pointer-events: auto !important;
     }
 }
+
+    .sidebar-overlay.open {
+        pointer-events: auto !important;
+    }
+}
