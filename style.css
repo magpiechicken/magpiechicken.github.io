@@ -5075,3 +5075,46 @@ button:disabled {
     }
 }
 
+
+/* ==========================================================
+   화면 전환 최종 고정
+   숨겨진 탭은 절대 렌더링하지 않고, 현재 탭만 표시
+========================================================== */
+.main-content > .screen[hidden] {
+    display: none !important;
+}
+
+.main-content > .screen:not(.visible):not([hidden]) {
+    display: none !important;
+}
+
+.main-content > .screen.visible {
+    display: block !important;
+}
+
+@media (max-width: 700px) {
+    .main-content {
+        height: calc(100dvh - 74px) !important;
+        max-height: none !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: auto !important;
+        touch-action: pan-y !important;
+    }
+
+    .main-content > .screen {
+        width: 100% !important;
+        height: auto !important;
+        max-height: none !important;
+        min-height: 0 !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+    }
+
+    #screen-home.visible,
+    #screen-membership.visible {
+        min-height: max-content !important;
+        padding-bottom: 80px !important;
+    }
+}
