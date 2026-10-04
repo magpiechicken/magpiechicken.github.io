@@ -7016,3 +7016,175 @@ body {
         padding: 0 14px !important;
     }
 }
+
+/* ==========================================================
+   v101 - 흰 배경 대비용 강한 윤곽선
+   - 전체 카드/패널의 경계를 선명하게
+   - 주황 포인트는 유지, 파란색은 사용하지 않음
+========================================================== */
+
+:root {
+    --strong-line: #2b2b2b;
+    --medium-line: #555555;
+    --soft-line: #8a8a8a;
+}
+
+/* 흰 배경 위 주요 영역 */
+.intro-box,
+.detail-box,
+.write-box,
+.auth-box,
+.membership-box,
+.membership-admin-panel,
+.video-preview-upload-box,
+.video-preview-card,
+.empty-box,
+.donation-box,
+.donation-ranking-box,
+.intro-recent-panel,
+.home-panel,
+.home-quick-panel,
+.admin-community-panel,
+.community-panel,
+.news-card,
+.news-list-item,
+.news-item,
+.video-preview-item {
+    border: 2px solid var(--strong-line) !important;
+    background: #ffffff !important;
+}
+
+/* 최근 소식 바깥 박스는 주황 상단선 + 진한 외곽선 */
+.category-intro-screen .intro-recent-panel {
+    border: 2px solid var(--strong-line) !important;
+    border-top: 4px solid var(--accent) !important;
+    box-shadow: none !important;
+}
+
+/* 최근 소식 01/02/03 카드 */
+.category-intro-screen .intro-recent-card,
+.intro-recent-card {
+    border: 2px solid var(--strong-line) !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+}
+
+.category-intro-screen .intro-recent-card:hover,
+.intro-recent-card:hover {
+    border-color: var(--accent) !important;
+    box-shadow: 0 3px 0 rgba(0,0,0,.08) !important;
+}
+
+/* 홈의 개별 빠른메뉴 카드도 구분되게 */
+#screen-home .home-quick-card {
+    border: 2px solid var(--strong-line) !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+}
+
+#screen-home .home-quick-card:hover {
+    border-color: var(--accent) !important;
+}
+
+/* 섹션 헤더/리스트가 흰색 바탕에서 묻히지 않도록 */
+.list-header,
+.home-panel-heading,
+.intro-recent-heading,
+.section-heading,
+.page-section-heading {
+    border-color: var(--strong-line) !important;
+}
+
+/* 입력창은 더 확실하게 */
+input,
+textarea,
+select,
+.auth-box input,
+.membership-form input[type="text"],
+.membership-form input[type="file"],
+.video-preview-upload-box input[type="text"],
+.video-preview-upload-box textarea,
+.donation-ranking-nickname-input,
+.donation-ranking-amount-input,
+.community-composer textarea,
+#comment-input {
+    border: 2px solid var(--medium-line) !important;
+    background: #ffffff !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+.auth-box input:focus,
+.membership-form input[type="text"]:focus,
+.membership-form input[type="file"]:focus,
+.video-preview-upload-box input[type="text"]:focus,
+.video-preview-upload-box textarea:focus,
+.donation-ranking-nickname-input:focus,
+.donation-ranking-amount-input:focus,
+.community-composer textarea:focus,
+#comment-input:focus {
+    border-color: var(--accent) !important;
+    outline: 2px solid rgba(255,148,0,.18) !important;
+    outline-offset: 0 !important;
+}
+
+/* 흰색 보조 버튼도 테두리를 확실하게 */
+.white-button,
+.video-delete-button,
+.delete-button,
+.info-button,
+.home-text-button {
+    border: 2px solid var(--strong-line) !important;
+    background: #ffffff !important;
+    color: #222222 !important;
+}
+
+.white-button:hover,
+.video-delete-button:hover,
+.delete-button:hover,
+.info-button:hover,
+.home-text-button:hover {
+    border-color: var(--accent) !important;
+}
+
+/* 주황 버튼은 내부 테두리 없이 깔끔하게 유지 */
+.orange-button,
+.orange-small-button,
+.login-button,
+.donation-button,
+.donation-ranking-save-button,
+.edit-news-button {
+    border: 2px solid #a85f00 !important;
+}
+
+/* 홈 배너 자체도 윤곽을 분명하게 */
+#screen-home .home-hero {
+    border: 2px solid #1c1c1c !important;
+}
+
+/* 모바일에서 선이 너무 답답해 보이지 않도록 카드만 1.5px */
+@media screen and (max-width: 700px) {
+    .intro-box,
+    .detail-box,
+    .write-box,
+    .auth-box,
+    .membership-box,
+    .membership-admin-panel,
+    .video-preview-upload-box,
+    .video-preview-card,
+    .empty-box,
+    .donation-box,
+    .donation-ranking-box,
+    .intro-recent-panel,
+    .home-panel,
+    .home-quick-panel {
+        border-width: 2px !important;
+    }
+
+    .category-intro-screen .intro-recent-card,
+    .intro-recent-card,
+    #screen-home .home-quick-card {
+        border-width: 1.5px !important;
+    }
+}
