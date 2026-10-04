@@ -5390,3 +5390,344 @@ button, input, textarea, select {
 #screen-home .home-hero::before {
     background: radial-gradient(circle at 18% 42%, rgba(255,190,70,.22) 0%, rgba(255,148,0,.12) 24%, transparent 52%), linear-gradient(298deg, rgba(255,148,0,.14) 0%, rgba(255,94,0,.07) 38%, rgba(0,0,0,.08) 70%, rgba(0,0,0,.18) 100%) !important;
 }
+
+
+/* ==========================================================
+   FINAL MOBILE / RESPONSIVE FIX v97
+   1) 로그인/닉네임을 상단 배너 밖 별도 줄로 이동
+   2) 소식/스포츠/고급소식 최근 글 카드가 화면 밖으로
+      튀어나가지 않도록 폭/그리드/높이를 자연스럽게 처리
+   3) 카테고리 소개 화면과 홈의 모바일 스크롤을
+      .main-content 하나로 통일
+========================================================== */
+
+.account-bar {
+    width: 100% !important;
+    height: 46px !important;
+    min-height: 46px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    padding: 5px 20px !important;
+    box-sizing: border-box !important;
+    background: #ffffff !important;
+    border-bottom: 2px solid #000000 !important;
+    position: relative !important;
+    z-index: 1000 !important;
+}
+
+.account-bar .header-actions {
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    max-width: 100% !important;
+}
+
+.account-bar .admin-button {
+    max-width: min(280px, 70vw) !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+}
+
+/* 배너 안에서 로그인 버튼이 절대 떠다니지 않게 */
+.top-bar .header-actions {
+    display: none !important;
+}
+
+/* PC */
+@media screen and (min-width: 701px) {
+    .site-layout {
+        height: calc(100dvh - 11.111111vh - 3px - 46px) !important;
+        min-height: 0 !important;
+    }
+
+    .main-content {
+        height: 100% !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        box-sizing: border-box !important;
+    }
+
+    .account-bar {
+        height: 46px !important;
+        min-height: 46px !important;
+    }
+
+    /* 소개 화면은 내용 높이만큼 늘어나고 부모가 스크롤 */
+    .category-intro-screen.visible {
+        display: block !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    .category-intro-screen.visible .intro-recent-panel {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        display: block !important;
+        box-sizing: border-box !important;
+    }
+
+    .category-intro-screen.visible .intro-recent-grid {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        box-sizing: border-box !important;
+        align-items: stretch !important;
+    }
+
+    .category-intro-screen.visible .intro-recent-card {
+        width: 100% !important;
+        min-width: 0 !important;
+        min-height: 165px !important;
+        height: auto !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+}
+
+/* 모바일/태블릿: 세로 화면에서는 카드가 절대로 옆으로 넘치지 않게 */
+@media screen and (max-width: 700px) {
+    html,
+    body {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 100% !important;
+        overflow: hidden !important;
+    }
+
+    .account-bar {
+        height: 42px !important;
+        min-height: 42px !important;
+        padding: 4px 10px !important;
+        border-bottom: 1px solid #000 !important;
+    }
+
+    .account-bar .admin-button {
+        max-width: 190px !important;
+        min-width: 0 !important;
+        padding: 6px 10px !important;
+        border-width: 2px !important;
+        font-size: 10px !important;
+        line-height: 1.1 !important;
+    }
+
+    .top-bar {
+        height: 72px !important;
+        min-height: 72px !important;
+    }
+
+    .header-line {
+        height: 2px !important;
+        min-height: 2px !important;
+    }
+
+    .menu-toggle {
+        width: 42px !important;
+        height: 42px !important;
+        min-height: 42px !important;
+        display: block !important;
+    }
+
+    .sidebar {
+        top: calc(72px + 2px + 42px + 42px) !important;
+        bottom: 0 !important;
+        height: auto !important;
+    }
+
+    .site-layout {
+        width: 100% !important;
+        height: calc(100dvh - 72px - 2px - 42px - 42px) !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        display: block !important;
+        overflow: visible !important;
+    }
+
+    .main-content {
+        width: 100% !important;
+        height: 100% !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding: 16px 12px 56px !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        overscroll-behavior-y: auto !important;
+        touch-action: pan-y !important;
+    }
+
+    .main-content > .screen:not(.visible) {
+        display: none !important;
+    }
+
+    .main-content > .screen.visible {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 소식 / 스포츠 / 고급소식 소개 화면 */
+    .category-intro-screen.visible {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+    }
+
+    .category-intro-screen .category-intro-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin-top: 8px !important;
+    }
+
+    .category-intro-screen .intro-recent-panel {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        flex: none !important;
+        overflow: visible !important;
+        box-sizing: border-box !important;
+        margin-top: 10px !important;
+    }
+
+    .category-intro-screen .intro-recent-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+        box-sizing: border-box !important;
+        align-items: stretch !important;
+    }
+
+    .category-intro-screen .intro-recent-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        min-height: 84px !important;
+        height: auto !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        padding: 9px !important;
+        gap: 7px !important;
+    }
+
+    .category-intro-screen .intro-recent-card-main {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+
+    .category-intro-screen .intro-recent-card-title {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        font-size: 13px !important;
+        line-height: 1.3 !important;
+        -webkit-line-clamp: 2 !important;
+        overflow-wrap: anywhere !important;
+        word-break: break-word !important;
+    }
+
+    .category-intro-screen .intro-recent-card-meta,
+    .category-intro-screen .intro-recent-card-author {
+        max-width: 100% !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        font-size: 8px !important;
+    }
+
+    .category-intro-screen .intro-recent-number {
+        flex: 0 0 auto !important;
+        font-size: 13px !important;
+    }
+
+    .category-intro-screen .intro-recent-arrow {
+        flex: 0 0 auto !important;
+        font-size: 13px !important;
+    }
+
+    /* 홈/멤버십도 내부 고정 높이 때문에 스크롤이 끊기지 않게 */
+    #screen-home.visible,
+    #screen-membership.visible,
+    #screen-donation.visible,
+    #screen-news-intro.visible,
+    #screen-news-list.visible,
+    #screen-news-detail.visible,
+    #screen-news-write.visible,
+    #screen-auth.visible,
+    #screen-admin-community.visible,
+    #screen-advanced-news.visible,
+    #screen-video-preview.visible {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    #screen-home .home-dashboard,
+    #screen-home .home-section-grid,
+    #screen-home .home-panel,
+    #screen-home .home-quick-panel,
+    #screen-home .home-quick-grid,
+    #screen-membership .membership-box,
+    #screen-membership .membership-admin-panel {
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
+
+/* 아주 좁은 화면에서는 카드/버튼의 내부도 폭을 넘지 않게 */
+@media screen and (max-width: 420px) {
+    .main-content {
+        padding-left: 9px !important;
+        padding-right: 9px !important;
+    }
+
+    .account-bar {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .account-bar .admin-button {
+        max-width: 165px !important;
+    }
+}
+
+/* 가로로 긴 태블릿/휴대폰은 카드 2~3열을 사용하되 절대 넘치지 않게 */
+@media screen and (orientation: landscape) and (min-width: 701px) and (max-width: 1100px) {
+    .category-intro-screen .intro-recent-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
