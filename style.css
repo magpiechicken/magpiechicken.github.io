@@ -7188,3 +7188,632 @@ select:focus,
         border-width: 1.5px !important;
     }
 }
+
+/* ==========================================================
+   v102 - Dark Mode / 오렌지 포인트
+   - 바깥 배경은 딥 블랙
+   - 본문은 눈이 편한 다크 그레이
+   - 주황색은 강조 요소에만 사용
+   - 기존 디자인 구조와 기능은 유지
+========================================================== */
+
+:root {
+    color-scheme: dark;
+    --dark-bg: #090a0c;
+    --dark-surface: #111317;
+    --dark-surface-2: #17191e;
+    --dark-surface-3: #1d2026;
+    --dark-border: #353941;
+    --dark-border-strong: #555a63;
+    --dark-text: #f3f4f6;
+    --dark-text-soft: #b9bec7;
+    --dark-text-muted: #8e949e;
+    --dark-input: #0e1014;
+    --dark-hover: #21252c;
+    --accent-dark: #ff9400;
+}
+
+html,
+body {
+    background: var(--dark-bg) !important;
+    color: var(--dark-text) !important;
+}
+
+body {
+    color-scheme: dark;
+}
+
+.site-layout {
+    background: var(--dark-bg) !important;
+}
+
+.main-content {
+    background: var(--dark-bg) !important;
+    color: var(--dark-text) !important;
+}
+
+.screen,
+.screen.visible {
+    color: var(--dark-text) !important;
+}
+
+/* 상단 바는 기존 오렌지 계열을 유지하되 조금 차분하게 */
+.top-bar {
+    background-color: #d97900 !important;
+    background-image:
+        linear-gradient(90deg, rgba(0,0,0,.18), rgba(0,0,0,.04)),
+        url("./airplane1.png") !important;
+}
+
+.header-line {
+    background: #000000 !important;
+}
+
+/* 데스크톱 사이드바 */
+.sidebar {
+    background: var(--dark-surface) !important;
+    border-right: 1px solid var(--dark-border) !important;
+}
+
+.menu-item {
+    background: var(--dark-surface) !important;
+    color: var(--dark-text) !important;
+    border-bottom: 1px solid var(--dark-border) !important;
+}
+
+.menu-item:hover:not(:disabled) {
+    background: var(--dark-hover) !important;
+}
+
+.menu-item.active,
+.menu-item.active.locked {
+    background: var(--accent-dark) !important;
+    color: #ffffff !important;
+    border-bottom-color: var(--accent-dark) !important;
+}
+
+.menu-item.locked {
+    background: #15171b !important;
+    color: var(--dark-text-muted) !important;
+}
+
+.menu-membership-divider {
+    background: #0d0f12 !important;
+    color: #7f858f !important;
+    border-top-color: var(--dark-border) !important;
+    border-bottom-color: var(--dark-border) !important;
+}
+
+/* 상단 로그인/닉네임 */
+.admin-button,
+.info-button {
+    background: #17191d !important;
+    border-color: #636872 !important;
+    color: var(--dark-text) !important;
+}
+
+.admin-button:hover,
+.info-button:hover {
+    background: var(--dark-hover) !important;
+    border-color: var(--accent-dark) !important;
+}
+
+.admin-button.logged-in {
+    background: var(--accent-dark) !important;
+    border-color: #b96800 !important;
+    color: #ffffff !important;
+}
+
+/* 제목 / 설명 */
+.page-heading,
+.category-intro-screen .page-heading,
+.list-header .page-heading {
+    color: var(--dark-text) !important;
+}
+
+.page-subtitle,
+.category-intro-screen .intro-box p,
+.auth-description,
+.community-description span,
+.donation-box-description {
+    color: var(--dark-text-soft) !important;
+}
+
+/* 기본 박스류 */
+.intro-box,
+.detail-box,
+.write-box,
+.auth-box,
+.membership-box,
+.membership-admin-panel,
+.video-preview-upload-box,
+.video-preview-card,
+.empty-box,
+.donation-box,
+.donation-ranking-box,
+.intro-recent-panel,
+.home-panel,
+.home-quick-panel,
+.admin-community-panel,
+.community-panel,
+.news-card,
+.news-list-item,
+.news-item,
+.video-preview-item {
+    background: var(--dark-surface) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+/* 소개 화면 */
+.intro-box h2,
+.intro-recent-heading h2,
+.home-panel-heading h2,
+.section-heading,
+.page-section-heading {
+    color: var(--dark-text) !important;
+}
+
+.category-intro-screen .intro-recent-panel {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border-strong) !important;
+    border-top-color: var(--accent-dark) !important;
+}
+
+.category-intro-screen .intro-recent-card,
+.intro-recent-card {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text) !important;
+    border-color: #4a4f58 !important;
+}
+
+.category-intro-screen .intro-recent-card:hover,
+.intro-recent-card:hover {
+    background: #20242a !important;
+    border-color: var(--accent-dark) !important;
+    box-shadow: 0 4px 0 rgba(0,0,0,.28) !important;
+}
+
+.intro-recent-card-title,
+.intro-recent-card-main strong {
+    color: var(--dark-text) !important;
+}
+
+.intro-recent-card-meta,
+.intro-recent-card-author,
+.intro-recent-description {
+    color: var(--dark-text-muted) !important;
+}
+
+.intro-recent-number,
+.intro-recent-arrow,
+.intro-recent-kicker {
+    color: var(--accent-dark) !important;
+}
+
+.intro-recent-loading,
+.intro-recent-empty {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text-muted) !important;
+    border-color: var(--dark-border) !important;
+}
+
+/* 홈 */
+#screen-home .home-dashboard,
+#screen-home .home-section-grid {
+    color: var(--dark-text) !important;
+}
+
+#screen-home .home-panel {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+#screen-home .home-panel-kicker,
+#screen-home .home-news-rank {
+    color: var(--accent-dark) !important;
+}
+
+#screen-home .home-text-button {
+    color: var(--dark-text-soft) !important;
+}
+
+#screen-home .home-text-button:hover {
+    color: var(--accent-dark) !important;
+}
+
+#screen-home .home-news-item {
+    background: transparent !important;
+    color: var(--dark-text) !important;
+    border-top-color: #2b2e34 !important;
+}
+
+#screen-home .home-news-item:hover {
+    background: #1b1e23 !important;
+}
+
+#screen-home .home-news-item strong {
+    color: var(--dark-text) !important;
+}
+
+#screen-home .home-news-meta,
+#screen-home .home-news-author,
+#screen-home .home-news-views {
+    color: var(--dark-text-muted) !important;
+}
+
+#screen-home .home-loading,
+#screen-home .home-empty {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text-muted) !important;
+}
+
+#screen-home .home-quick-card {
+    background: var(--dark-surface-2) !important;
+    border-color: #4a4f58 !important;
+    color: var(--dark-text) !important;
+}
+
+#screen-home .home-quick-card:hover {
+    background: var(--accent-dark) !important;
+    border-color: #b96800 !important;
+    color: #ffffff !important;
+}
+
+#screen-home .home-quick-card > span:last-child {
+    color: var(--dark-text-muted) !important;
+}
+
+#screen-home .home-quick-card:hover > span:last-child {
+    color: #fff7eb !important;
+}
+
+/* 소식 목록 */
+.list-header {
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+
+.news-list {
+    background: var(--dark-surface) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+.news-row {
+    background: var(--dark-surface) !important;
+    color: var(--dark-text) !important;
+    border-bottom-color: var(--dark-border) !important;
+}
+
+.news-row:hover {
+    background: var(--dark-hover) !important;
+}
+
+.news-row.unread {
+    background: #1c1914 !important;
+}
+
+.news-author,
+.news-date,
+.detail-author,
+.detail-date {
+    color: var(--dark-text-muted) !important;
+}
+
+.news-title,
+.detail-title,
+.detail-content,
+.detail-title-line {
+    color: var(--dark-text) !important;
+}
+
+.news-unread {
+    color: var(--accent-dark) !important;
+}
+
+.news-stats,
+.detail-stats {
+    color: var(--dark-text-soft) !important;
+}
+
+/* 글 상세 / 댓글 */
+.news-interactions,
+.comments-container,
+.comment-form,
+.comment-login-notice {
+    color: var(--dark-text) !important;
+}
+
+.comment-item,
+.comment-box {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text) !important;
+}
+
+.comment-author,
+.comment-date,
+.comment-meta,
+.comment-length {
+    color: var(--dark-text-muted) !important;
+}
+
+.like-button,
+.comment-count {
+    color: var(--dark-text) !important;
+}
+
+/* 인증/작성/입력 */
+input,
+textarea,
+select,
+.auth-box input,
+.membership-form input[type="text"],
+.membership-form input[type="file"],
+.video-preview-upload-box input[type="text"],
+.video-preview-upload-box textarea,
+.donation-ranking-nickname-input,
+.donation-ranking-amount-input,
+.community-composer textarea,
+#comment-input,
+.write-box input,
+.write-box textarea {
+    background: var(--dark-input) !important;
+    color: var(--dark-text) !important;
+    border-color: #5b616b !important;
+    caret-color: var(--accent-dark) !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #747a84 !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+.auth-box input:focus,
+.membership-form input[type="text"]:focus,
+.membership-form input[type="file"]:focus,
+.video-preview-upload-box input[type="text"]:focus,
+.video-preview-upload-box textarea:focus,
+.donation-ranking-nickname-input:focus,
+.donation-ranking-amount-input:focus,
+.community-composer textarea:focus,
+#comment-input:focus,
+.write-box input:focus,
+.write-box textarea:focus {
+    border-color: var(--accent-dark) !important;
+    outline: 2px solid rgba(255,148,0,.16) !important;
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+    background: #17191d !important;
+    color: #676d76 !important;
+}
+
+/* 탭 */
+.auth-tabs,
+.auth-tab {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text-soft) !important;
+    border-color: var(--dark-border) !important;
+}
+
+.auth-tab.active {
+    background: var(--accent-dark) !important;
+    color: #ffffff !important;
+    border-color: #b96800 !important;
+}
+
+.auth-panel h1 {
+    color: var(--dark-text) !important;
+}
+
+/* 버튼류 */
+.white-button,
+.video-delete-button,
+.delete-button,
+.info-button,
+.home-text-button {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text) !important;
+    border-color: #5a6069 !important;
+}
+
+.white-button:hover,
+.video-delete-button:hover,
+.delete-button:hover,
+.info-button:hover,
+.home-text-button:hover {
+    background: var(--dark-hover) !important;
+    border-color: var(--accent-dark) !important;
+    color: #ffffff !important;
+}
+
+.orange-button,
+.orange-small-button,
+.login-button,
+.donation-button,
+.donation-ranking-save-button,
+.edit-news-button,
+.home-primary-button,
+.home-youtube-button {
+    background: var(--accent-dark) !important;
+    color: #ffffff !important;
+}
+
+.orange-button:hover,
+.orange-small-button:hover,
+.login-button:hover,
+.donation-button:hover,
+.donation-ranking-save-button:hover,
+.edit-news-button:hover,
+.home-primary-button:hover,
+.home-youtube-button:hover {
+    background: #e38400 !important;
+}
+
+/* 커뮤니티 */
+.community-shell,
+.community-description,
+.community-messages,
+.community-composer {
+    background: var(--dark-surface) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border-strong) !important;
+}
+
+.community-description strong,
+.community-name {
+    color: var(--dark-text) !important;
+}
+
+.community-description span,
+.community-time,
+.community-empty,
+.community-loading,
+.community-readonly-notice,
+.community-message-length {
+    color: var(--dark-text-muted) !important;
+}
+
+.community-bubble {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text) !important;
+    border-color: #494e57 !important;
+}
+
+.community-message.self .community-bubble {
+    background: #3a270f !important;
+    border-color: #8b570f !important;
+    color: #fff6e8 !important;
+}
+
+.community-composer textarea:disabled {
+    background: #17191d !important;
+    color: #676d76 !important;
+}
+
+/* 후원 / 멤버십 / 영상 */
+.donation-ranking-list,
+.donation-ranking-item,
+.membership-request-item,
+.video-preview-meta,
+.video-preview-info,
+.video-preview-player-wrap {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text) !important;
+    border-color: var(--dark-border) !important;
+}
+
+.donation-ranking-item strong,
+.membership-request-item strong,
+.video-preview-info strong {
+    color: var(--dark-text) !important;
+}
+
+.donation-ranking-item span,
+.membership-request-item span,
+.video-preview-meta,
+.video-preview-info span {
+    color: var(--dark-text-muted) !important;
+}
+
+/* 이미지 영역은 어두운 틀을 사용 */
+.news-images {
+    background: transparent !important;
+}
+
+.news-image {
+    border-color: var(--dark-border-strong) !important;
+    background: #050608 !important;
+}
+
+/* 빈 상태 / 로딩 */
+.empty-box,
+.home-empty,
+.intro-recent-empty,
+.intro-recent-loading,
+.community-empty,
+.community-loading {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text-muted) !important;
+}
+
+/* 모바일 배경도 완전히 검게 유지 */
+@media screen and (max-width: 700px) {
+    body,
+    .site-layout,
+    .main-content {
+        background: #050608 !important;
+    }
+
+    .main-content {
+        padding-top: 14px !important;
+    }
+
+    .sidebar {
+        background: #0d0f12 !important;
+        border-right-color: #2e3239 !important;
+        box-shadow: 10px 0 28px rgba(0,0,0,.35) !important;
+    }
+
+    .menu-item {
+        background: #0d0f12 !important;
+        border-bottom-color: #2e3239 !important;
+    }
+
+    .menu-item:hover:not(:disabled) {
+        background: #181b20 !important;
+    }
+
+    .menu-item.active,
+    .menu-item.active.locked {
+        background: var(--accent-dark) !important;
+        color: #ffffff !important;
+    }
+
+    .menu-membership-divider {
+        background: #090a0c !important;
+        border-color: #252930 !important;
+    }
+
+    .intro-box,
+    .detail-box,
+    .write-box,
+    .auth-box,
+    .membership-box,
+    .membership-admin-panel,
+    .video-preview-upload-box,
+    .video-preview-card,
+    .empty-box,
+    .donation-box,
+    .donation-ranking-box,
+    .intro-recent-panel,
+    .home-panel,
+    .home-quick-panel,
+    .admin-community-panel,
+    .community-panel,
+    .news-card,
+    .news-list-item,
+    .news-item,
+    .video-preview-item {
+        background: var(--dark-surface) !important;
+        border-color: #4a4f58 !important;
+    }
+
+    .category-intro-screen .intro-recent-card,
+    .intro-recent-card,
+    #screen-home .home-quick-card {
+        background: var(--dark-surface-2) !important;
+        border-color: #4b5059 !important;
+    }
+
+    .top-bar {
+        background-color: #c86e00 !important;
+    }
+}
