@@ -6633,3 +6633,386 @@ body {
         min-height: 132px !important;
     }
 }
+
+
+/* ==========================================================
+   MODERN ORANGE REFRESH v100
+   - 모바일 햄버거 사이드바를 짧고 компакт하게
+   - 내부 스크롤 없이 메뉴 전체가 한 화면에 보이도록
+   - 기존 주황색/흰색/검정 계열은 유지하면서 더 모던하게
+========================================================== */
+
+/* 기본적으로 새 디자인의 강한 색은 주황색 하나만 사용 */
+:root {
+    --accent: #ff9400;
+    --accent-dark: #df7f00;
+    --ink: #1f1f1f;
+    --muted: #737373;
+    --line: #dedede;
+    --surface: #ffffff;
+    --surface-soft: #f7f7f7;
+}
+
+body {
+    background: #f4f4f4 !important;
+    color: var(--ink) !important;
+}
+
+.header-line {
+    height: 2px !important;
+    background: #161616 !important;
+}
+
+.account-bar {
+    background: #ffffff !important;
+    border-bottom: 1px solid #e3e3e3 !important;
+    box-shadow: 0 1px 0 rgba(0,0,0,.03) !important;
+}
+
+.account-bar .admin-button,
+.admin-button,
+.info-button {
+    border: 1.5px solid #202020 !important;
+    border-radius: 7px !important;
+    transition: background .16s ease, transform .16s ease, box-shadow .16s ease !important;
+}
+
+.account-bar .admin-button:hover,
+.admin-button:hover,
+.info-button:hover {
+    background: #f6f6f6 !important;
+    box-shadow: 0 3px 10px rgba(0,0,0,.08) !important;
+}
+
+.account-bar .admin-button.logged-in,
+.admin-button.logged-in {
+    background: #202020 !important;
+    color: #ffffff !important;
+}
+
+.menu-toggle {
+    width: 44px !important;
+    height: 44px !important;
+    border-right: 1px solid #d8d8d8 !important;
+    border-bottom: 1px solid #d8d8d8 !important;
+    background: #ffffff !important;
+    transition: background .15s ease !important;
+}
+
+.menu-toggle:hover {
+    background: #fafafa !important;
+}
+
+.menu-toggle::before {
+    width: 23px !important;
+    height: 17px !important;
+}
+
+.main-content {
+    background: #f4f4f4 !important;
+}
+
+.page-heading {
+    letter-spacing: -0.02em !important;
+}
+
+.page-subtitle {
+    color: #777777 !important;
+    letter-spacing: -0.01em !important;
+}
+
+.intro-box,
+.detail-box,
+.write-box,
+.auth-box,
+.membership-box,
+.membership-admin-panel,
+.video-preview-upload-box,
+.video-preview-card,
+.empty-box,
+.donation-box,
+.donation-ranking-box,
+.intro-recent-panel {
+    border-color: #d8d8d8 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 18px rgba(0,0,0,.05) !important;
+}
+
+.intro-box {
+    padding: 32px !important;
+    background: #ffffff !important;
+}
+
+.intro-box h2 {
+    letter-spacing: -0.03em !important;
+}
+
+.orange-button,
+.orange-small-button,
+.login-button,
+.donation-button,
+.donation-ranking-save-button,
+.edit-news-button {
+    background: var(--accent) !important;
+    border: 0 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 3px 0 rgba(0,0,0,.12) !important;
+    transition: background .16s ease, transform .16s ease, box-shadow .16s ease !important;
+}
+
+.orange-button:hover,
+.orange-small-button:hover,
+.login-button:hover,
+.donation-button:hover,
+.donation-ranking-save-button:hover,
+.edit-news-button:hover {
+    background: var(--accent-dark) !important;
+    box-shadow: 0 4px 11px rgba(0,0,0,.12) !important;
+    transform: translateY(-1px) !important;
+}
+
+.orange-button:active,
+.orange-small-button:active,
+.login-button:active,
+.donation-button:active,
+.donation-ranking-save-button:active,
+.edit-news-button:active {
+    transform: translateY(1px) !important;
+    box-shadow: 0 1px 0 rgba(0,0,0,.12) !important;
+}
+
+.white-button,
+.video-delete-button,
+.delete-button {
+    border: 1px solid #d3d3d3 !important;
+    border-radius: 8px !important;
+    transition: background .16s ease, border-color .16s ease !important;
+}
+
+.white-button:hover,
+.video-delete-button:hover,
+.delete-button:hover {
+    background: #f7f7f7 !important;
+    border-color: #bcbcbc !important;
+}
+
+.category-intro-screen .intro-recent-panel {
+    border: 1px solid #d8d8d8 !important;
+    border-top: 3px solid var(--accent) !important;
+    background: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 18px rgba(0,0,0,.05) !important;
+}
+
+.category-intro-screen .intro-recent-card {
+    border: 1px solid #dddddd !important;
+    border-radius: 9px !important;
+    background: #ffffff !important;
+    transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease, background .16s ease !important;
+}
+
+.category-intro-screen .intro-recent-card:hover {
+    background: #fffaf3 !important;
+    border-color: #f0b15a !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,.07) !important;
+    transform: translateY(-1px) !important;
+}
+
+.category-intro-screen .intro-recent-number {
+    color: var(--accent) !important;
+}
+
+.category-intro-screen .intro-recent-arrow {
+    color: #555555 !important;
+}
+
+.news-row {
+    border: 1px solid #dedede !important;
+    border-radius: 10px !important;
+    box-shadow: 0 3px 14px rgba(0,0,0,.04) !important;
+    transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease !important;
+}
+
+.news-row:hover {
+    background: #fffaf3 !important;
+    border-color: #f0b15a !important;
+    box-shadow: 0 5px 15px rgba(0,0,0,.06) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* 홈 패널도 기존 구조를 유지하면서 선과 여백을 가볍게 */
+#screen-home .home-panel,
+#screen-home .home-quick-panel {
+    border-radius: 12px !important;
+    border-color: #d8d8d8 !important;
+    box-shadow: 0 4px 18px rgba(0,0,0,.05) !important;
+    background: #ffffff !important;
+}
+
+#screen-home .home-quick-card {
+    border-radius: 9px !important;
+    border-color: #dddddd !important;
+    transition: border-color .16s ease, box-shadow .16s ease, transform .16s ease !important;
+}
+
+#screen-home .home-quick-card:hover {
+    border-color: #f0b15a !important;
+    box-shadow: 0 5px 14px rgba(0,0,0,.06) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* 홈 배너: 기존 주황/검정 느낌 유지 + 과한 그라데이션만 완화 */
+#screen-home .home-hero {
+    border: 0 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 8px 26px rgba(0,0,0,.12) !important;
+    background: linear-gradient(115deg, #ff9d00 0%, #e87808 48%, #252525 100%) !important;
+}
+
+#screen-home .home-hero::before {
+    opacity: .72 !important;
+}
+
+/* ===== 모바일 햄버거 사이드바 ===== */
+@media screen and (max-width: 700px) {
+    .menu-toggle {
+        width: 42px !important;
+        height: 42px !important;
+    }
+
+    .account-bar {
+        height: 40px !important;
+        min-height: 40px !important;
+        padding: 4px 10px !important;
+    }
+
+    .account-bar .admin-button {
+        max-width: 190px !important;
+        padding: 6px 10px !important;
+        border-radius: 7px !important;
+        font-size: 10px !important;
+    }
+
+    /* 햄버거 아래에 뜨는 메뉴는 한 화면에 전부 표시 */
+    .sidebar {
+        top: calc(72px + 2px + 40px + 42px) !important;
+        bottom: auto !important;
+        width: min(250px, 78vw) !important;
+        max-width: 250px !important;
+        height: auto !important;
+        max-height: calc(100dvh - (72px + 2px + 40px + 42px) - 10px) !important;
+        overflow: hidden !important;
+        border-right: 1px solid #d9d9d9 !important;
+        border-bottom: 1px solid #d9d9d9 !important;
+        border-radius: 0 12px 12px 0 !important;
+        box-shadow: 8px 10px 24px rgba(0,0,0,.12) !important;
+        background: rgba(255,255,255,.98) !important;
+    }
+
+    .menu-item {
+        width: 100% !important;
+        height: 49px !important;
+        min-height: 49px !important;
+        padding: 0 16px !important;
+        gap: 8px !important;
+        border-bottom: 1px solid #ececec !important;
+        font-size: 18px !important;
+        line-height: 1 !important;
+        letter-spacing: -0.02em !important;
+        font-weight: 700 !important;
+        color: #222222 !important;
+        background: #ffffff !important;
+    }
+
+    .menu-item:hover:not(:disabled) {
+        background: #fafafa !important;
+    }
+
+    .menu-item.active,
+    .menu-item.active.locked {
+        background: var(--accent) !important;
+        color: #ffffff !important;
+        border-bottom-color: var(--accent) !important;
+    }
+
+    .menu-item.locked {
+        background: #f7f7f7 !important;
+        color: #777777 !important;
+    }
+
+    .menu-membership-divider {
+        height: 25px !important;
+        min-height: 25px !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 0 16px !important;
+        background: #fafafa !important;
+        color: #999999 !important;
+        border-top: 1px solid #ececec !important;
+        border-bottom: 1px solid #ececec !important;
+        font-size: 10px !important;
+        letter-spacing: .08em !important;
+    }
+
+    /* 세로 모바일에서는 메뉴 전체가 들어가므로 사이드바 스크롤 제거 */
+    .sidebar.open {
+        overflow: hidden !important;
+    }
+
+    .main-content {
+        padding: 14px 10px 30px !important;
+    }
+
+    .page-heading {
+        font-size: 27px !important;
+        font-weight: 800 !important;
+    }
+
+    .page-subtitle {
+        font-size: 12px !important;
+    }
+
+    .intro-box {
+        margin-top: 12px !important;
+        padding: 16px !important;
+        border-radius: 10px !important;
+    }
+
+    .category-intro-screen .intro-recent-panel {
+        margin: 10px 0 24px !important;
+        padding: 10px !important;
+        border-radius: 10px !important;
+        border-top-width: 3px !important;
+    }
+
+    .category-intro-screen .intro-recent-card {
+        min-height: 70px !important;
+        padding: 9px !important;
+        border-radius: 8px !important;
+    }
+
+    /* 01/02/03은 항상 최근 소식 박스 안에서 1열 */
+    .category-intro-screen .intro-recent-grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 7px !important;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .sidebar {
+        width: 238px !important;
+    }
+
+    .menu-item {
+        height: 46px !important;
+        min-height: 46px !important;
+        padding: 0 14px !important;
+        font-size: 16px !important;
+    }
+
+    .menu-membership-divider {
+        height: 23px !important;
+        min-height: 23px !important;
+        padding: 0 14px !important;
+    }
+}
