@@ -7864,3 +7864,123 @@ select:focus,
         border-radius: 14px !important;
     }
 }
+
+/* ==========================================================
+   FINAL BANNER SEPARATION FIX v105
+   PC banner  : airplane1.png
+   Mobile     : airplane.png
+   두 배너를 하나로 합치지 않고 화면 크기에 따라 각각 사용
+========================================================== */
+
+/* 공통: 상단 배너 자체 */
+.top-bar {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    position: relative !important;
+    z-index: 1000 !important;
+    background-color: #ff9400 !important;
+    background-repeat: no-repeat !important;
+}
+
+/* PC / 컴퓨터 전용 상단 배너 */
+@media screen and (min-width: 701px) {
+    .top-bar {
+        height: 11.111111vh !important;
+        min-height: 72px !important;
+        max-height: 120px !important;
+        background-image: url("./airplane1.png") !important;
+        background-position: center center !important;
+        background-size: cover !important;
+        border-radius: 0 !important;
+    }
+
+    /* PC에서는 로그인/닉네임을 배너 오른쪽에 표시 */
+    .account-bar {
+        position: absolute !important;
+        top: 0 !important;
+        right: 0 !important;
+        width: auto !important;
+        height: 11.111111vh !important;
+        min-height: 72px !important;
+        max-height: 120px !important;
+        padding: 0 28px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        z-index: 2000 !important;
+    }
+
+    .account-bar .header-actions {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 8px !important;
+    }
+
+    .account-bar .admin-button {
+        border: 1px solid rgba(0,0,0,.22) !important;
+        border-radius: 10px !important;
+        background: rgba(255,255,255,.94) !important;
+        color: #171717 !important;
+        box-shadow: 0 5px 16px rgba(0,0,0,.12) !important;
+        backdrop-filter: blur(5px) !important;
+        -webkit-backdrop-filter: blur(5px) !important;
+    }
+}
+
+/* 모바일 전용 상단 배너 */
+@media screen and (max-width: 700px) {
+    .top-bar {
+        height: 66px !important;
+        min-height: 66px !important;
+        max-height: 66px !important;
+        background-image: url("./airplane.png") !important;
+        background-position: center center !important;
+        background-size: cover !important;
+        border-radius: 0 !important;
+    }
+
+    /* 모바일은 로그인 영역을 배너 아래 별도 줄로 유지 */
+    .account-bar {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        width: 100% !important;
+        height: 38px !important;
+        min-height: 38px !important;
+        max-height: 38px !important;
+        padding: 4px 10px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        background: #ffffff !important;
+        border-bottom: 1px solid #d0d0d0 !important;
+        box-shadow: none !important;
+        z-index: 1000 !important;
+    }
+
+    .account-bar .header-actions {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 6px !important;
+        margin: 0 !important;
+    }
+
+    .account-bar .admin-button {
+        border: 1px solid #cfcfcf !important;
+        border-radius: 999px !important;
+        background: #ffffff !important;
+        color: #222222 !important;
+        padding: 6px 11px !important;
+        font-size: 11px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,.05) !important;
+    }
+}
