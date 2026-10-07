@@ -8264,3 +8264,39 @@ a:hover {
         font-size: clamp(27px, 8vw, 34px) !important;
     }
 }
+
+/* ==========================================================
+   관리자 커뮤니티 글씨 크기 최종 조정
+   - PC: 기존보다 약 1.5배 작게
+   - 모바일: 카카오톡 채팅과 비슷한 크기
+========================================================== */
+#screen-admin-community .community-messages .community-bubble {
+    font-size: 16px !important;
+    line-height: 1.45 !important;
+}
+
+#screen-admin-community .community-name {
+    font-size: 14px !important;
+    line-height: 1.25 !important;
+}
+
+#screen-admin-community .community-time {
+    font-size: 10px !important;
+}
+
+@media (max-width: 700px) {
+    #screen-admin-community .community-messages .community-bubble {
+        font-size: 14px !important;
+        line-height: 1.4 !important;
+        padding: 6px 10px !important;
+    }
+
+    #screen-admin-community .community-name {
+        font-size: 12px !important;
+        margin-bottom: 4px !important;
+    }
+
+    #screen-admin-community .community-time {
+        font-size: 9px !important;
+    }
+}
