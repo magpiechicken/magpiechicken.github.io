@@ -8305,13 +8305,16 @@ a:hover {
 
 /* ==========================================================
    관리자 커뮤니티 글씨 크기 강제 적용 - 최종
-   PC: 기존 16px -> 약 1.2배 = 19px
-   모바일: 기존보다 확실하게 축소 = 6px
+   PC: 기존 19px
+   모바일: 14px
+   모바일 단어 단위 줄바꿈 적용
 ========================================================== */
 #screen-admin-community #community-messages .community-bubble,
 #screen-admin-community .community-bubble {
     font-size: 19px !important;
     line-height: 1.4 !important;
+    word-break: keep-all !important;
+    overflow-wrap: break-word !important;
 }
 
 #screen-admin-community #community-messages .community-name,
@@ -8332,6 +8335,10 @@ a:hover {
         line-height: 2 !important;
         padding: 7px 12px !important;
         border-radius: 19px !important;
+
+        /* 단어 전체가 같이 줄바꿈되게 */
+        word-break: keep-all !important;
+        overflow-wrap: break-word !important;
     }
 
     #screen-admin-community #community-messages .community-name,
@@ -8339,6 +8346,9 @@ a:hover {
         font-size: 14px !important;
         line-height: 3 !important;
         margin: 0 10px 3px !important;
+
+        word-break: keep-all !important;
+        overflow-wrap: break-word !important;
     }
 
     #screen-admin-community #community-messages .community-time,
