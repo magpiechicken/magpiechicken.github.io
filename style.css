@@ -8302,3 +8302,47 @@ a:hover {
         font-size: 7px !important;
     }
 }
+
+/* ==========================================================
+   관리자 커뮤니티 글씨 크기 강제 적용 - 최종
+   PC: 기존 16px -> 약 1.2배 = 19px
+   모바일: 기존보다 확실하게 축소 = 6px
+========================================================== */
+#screen-admin-community #community-messages .community-bubble,
+#screen-admin-community .community-bubble {
+    font-size: 19px !important;
+    line-height: 1.4 !important;
+}
+
+#screen-admin-community #community-messages .community-name,
+#screen-admin-community .community-name {
+    font-size: 16px !important;
+    line-height: 1.2 !important;
+}
+
+#screen-admin-community #community-messages .community-time,
+#screen-admin-community .community-time {
+    font-size: 12px !important;
+}
+
+@media screen and (max-width: 700px) {
+    #screen-admin-community #community-messages .community-bubble,
+    #screen-admin-community .community-bubble {
+        font-size: 6px !important;
+        line-height: 1.25 !important;
+        padding: 3px 5px !important;
+        border-radius: 8px !important;
+    }
+
+    #screen-admin-community #community-messages .community-name,
+    #screen-admin-community .community-name {
+        font-size: 6px !important;
+        line-height: 1.1 !important;
+        margin: 0 4px 1px !important;
+    }
+
+    #screen-admin-community #community-messages .community-time,
+    #screen-admin-community .community-time {
+        font-size: 5px !important;
+    }
+}
