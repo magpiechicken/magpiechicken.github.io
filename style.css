@@ -8440,3 +8440,96 @@ a:hover {
         box-shadow: 0 1px 4px rgba(0,0,0,.05) !important;
     }
 }
+
+
+/* ==========================================================
+   FINAL MOBILE ACCOUNT ROW v109
+   - 햄버거와 로그인/닉네임을 같은 줄에 배치
+   - 별도의 계정 줄 높이를 만들지 않음
+   - 사이트 본문은 그 아래에서 시작
+========================================================== */
+@media screen and (max-width: 700px) {
+    /* 햄버거가 있는 42px 행 */
+    .menu-toggle {
+        position: relative !important;
+        display: block !important;
+        width: 42px !important;
+        height: 42px !important;
+        min-height: 42px !important;
+        margin: 0 !important;
+        float: left !important;
+        border-right: 1px solid #d8d8d8 !important;
+        border-bottom: 1px solid #d8d8d8 !important;
+        box-shadow: none !important;
+        z-index: 1004 !important;
+    }
+
+    /* 메뉴 버튼과 같은 줄의 오른쪽 계정 영역 */
+    .account-bar {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+        width: calc(100% - 42px) !important;
+        height: 42px !important;
+        min-height: 42px !important;
+        max-height: 42px !important;
+        margin: 0 0 0 42px !important;
+        padding: 0 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        box-sizing: border-box !important;
+        background: #ffffff !important;
+        border-top: 0 !important;
+        border-bottom: 1px solid #d8d8d8 !important;
+        box-shadow: none !important;
+        z-index: 1003 !important;
+    }
+
+    .account-bar .header-actions {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 6px !important;
+        width: auto !important;
+        margin: 0 !important;
+    }
+
+    .account-bar .admin-button {
+        max-width: calc(100vw - 62px) !important;
+        min-width: 0 !important;
+        padding: 6px 11px !important;
+        border: 1px solid #cfcfcf !important;
+        border-radius: 999px !important;
+        font-size: 11px !important;
+        line-height: 1.1 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    /* 사이트 본문은 햄버거/계정 행 아래에서 시작 */
+    .site-layout {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        display: block !important;
+        overflow: visible !important;
+        clear: both !important;
+    }
+
+    .sidebar {
+        top: calc(72px + 2px + 42px) !important;
+    }
+}
+
+@media screen and (min-width: 701px) {
+    /* PC 왼쪽 메뉴는 끝까지 고정, 자체 스크롤 없음 */
+    .sidebar {
+        overflow-y: hidden !important;
+        overflow-x: hidden !important;
+    }
+}
