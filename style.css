@@ -8333,12 +8333,21 @@ a:hover {
     #screen-admin-community .community-bubble {
         font-size: 14px !important;
         line-height: 2 !important;
+
+        /* 말풍선 크기를 내용에 맞춤 */
+        width: fit-content !important;
+        max-width: calc(100vw - 95px) !important;
+        min-width: 0 !important;
+
         padding: 7px 12px !important;
         border-radius: 19px !important;
 
-        /* 단어 전체가 같이 줄바꿈되게 */
+        /* 단어 단위 줄바꿈 */
+        white-space: pre-wrap !important;
         word-break: keep-all !important;
         overflow-wrap: break-word !important;
+
+        box-sizing: border-box !important;
     }
 
     #screen-admin-community #community-messages .community-name,
