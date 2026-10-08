@@ -5338,3 +5338,10 @@ async function initialize() {
 }
 
 initialize();
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("*").forEach(el => {
+        if (el.textContent === "관리자 전용 고급소식과 공지사항이 이곳에 표시됩니다.") {
+            el.textContent = "멤버십 전용 고급소식과 공지사항이 이곳에 표시됩니다.";
+        }
+    });
+});
