@@ -8271,7 +8271,7 @@ a:hover {
    - 모바일: 카카오톡 채팅과 비슷한 크기
 ========================================================== */
 #screen-admin-community .community-messages .community-bubble {
-    font-size: 15px !important;
+    font-size: 16px !important;
     line-height: 1.45 !important;
 }
 
@@ -8287,34 +8287,31 @@ a:hover {
 @media (max-width: 700px) {
     /* 관리자 커뮤니티 모바일: 아주 작고 컴팩트하게 */
     #screen-admin-community .community-messages .community-bubble {
-        font-size: 23px !important;
+        font-size: 10px !important;
         line-height: 1.3 !important;
         padding: 4px 7px !important;
     }
 
     #screen-admin-community .community-name {
-        font-size: 18px !important;
+        font-size: 9px !important;
         line-height: 1.15 !important;
         margin-bottom: 2px !important;
     }
 
     #screen-admin-community .community-time {
-        font-size: 15px !important;
+        font-size: 7px !important;
     }
 }
 
 /* ==========================================================
    관리자 커뮤니티 글씨 크기 강제 적용 - 최종
-   PC: 기존 19px
-   모바일: 14px
-   모바일 단어 단위 줄바꿈 적용
+   PC: 기존 16px -> 약 1.2배 = 19px
+   모바일: 기존보다 확실하게 축소 = 6px
 ========================================================== */
 #screen-admin-community #community-messages .community-bubble,
 #screen-admin-community .community-bubble {
     font-size: 19px !important;
     line-height: 1.4 !important;
-    word-break: keep-all !important;
-    overflow-wrap: break-word !important;
 }
 
 #screen-admin-community #community-messages .community-name,
@@ -8331,37 +8328,115 @@ a:hover {
 @media screen and (max-width: 700px) {
     #screen-admin-community #community-messages .community-bubble,
     #screen-admin-community .community-bubble {
-        font-size: 14px !important;
-        line-height: 2 !important;
-
-        /* 말풍선 크기를 내용에 맞춤 */
-        width: fit-content !important;
-        max-width: calc(100vw - 95px) !important;
-        min-width: 0 !important;
-
-        padding: 7px 12px !important;
-        border-radius: 19px !important;
-
-        /* 단어 단위 줄바꿈 */
-        white-space: pre-wrap !important;
-        word-break: keep-all !important;
-        overflow-wrap: break-word !important;
-
-        box-sizing: border-box !important;
+        font-size: 6px !important;
+        line-height: 1.25 !important;
+        padding: 3px 5px !important;
+        border-radius: 8px !important;
     }
 
     #screen-admin-community #community-messages .community-name,
     #screen-admin-community .community-name {
-        font-size: 14px !important;
-        line-height: 3 !important;
-        margin: 0 10px 3px !important;
-
-        word-break: keep-all !important;
-        overflow-wrap: break-word !important;
+        font-size: 6px !important;
+        line-height: 1.1 !important;
+        margin: 0 4px 1px !important;
     }
 
     #screen-admin-community #community-messages .community-time,
     #screen-admin-community .community-time {
-        font-size: 12px !important;
+        font-size: 5px !important;
+    }
+}
+
+/* ==========================================================
+   FINAL MOBILE ACCOUNT POSITION + DESKTOP SIDEBAR SCROLL FIX v108
+   - 모바일: 로그인/닉네임 영역을 사이트 화면 아래로 이동
+   - 기존 배너와 사이트 화면 사이의 계정 줄 제거
+   - PC: 왼쪽 메뉴 자체 스크롤 제거
+========================================================== */
+
+@media screen and (min-width: 701px) {
+    .sidebar {
+        overflow-y: hidden !important;
+        overflow-x: hidden !important;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    html,
+    body {
+        min-height: 100% !important;
+        height: auto !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+    }
+
+    /* 배너 아래에는 계정 줄 없이 구분선만 유지 */
+    .header-line {
+        height: 1px !important;
+        min-height: 1px !important;
+    }
+
+    /* 사이트 화면이 페이지 흐름을 차지하도록 변경 */
+    .site-layout {
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        display: block !important;
+        overflow: visible !important;
+    }
+
+    .main-content {
+        width: 100% !important;
+        height: auto !important;
+        min-height: calc(100dvh - 67px) !important;
+        max-height: none !important;
+        padding-bottom: 28px !important;
+        overflow-x: hidden !important;
+        overflow-y: visible !important;
+    }
+
+    /* 모바일 로그인/닉네임: 사이트 화면 바로 아래 */
+    .account-bar {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 46px !important;
+        max-height: none !important;
+        margin: 0 !important;
+        padding: 8px 12px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        background: #ffffff !important;
+        border-top: 1px solid #e1e1e1 !important;
+        border-bottom: 0 !important;
+        box-shadow: 0 -1px 4px rgba(0,0,0,.04) !important;
+        z-index: 10 !important;
+    }
+
+    .account-bar .header-actions {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 6px !important;
+        margin: 0 !important;
+        width: auto !important;
+    }
+
+    .account-bar .admin-button {
+        border: 1px solid #cfcfcf !important;
+        border-radius: 999px !important;
+        background: #ffffff !important;
+        color: #222222 !important;
+        padding: 7px 12px !important;
+        font-size: 11px !important;
+        line-height: 1.1 !important;
+        box-shadow: 0 1px 4px rgba(0,0,0,.05) !important;
     }
 }
