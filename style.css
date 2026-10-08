@@ -8589,3 +8589,91 @@ a:hover {
         font-size: 7px !important;
     }
 }
+
+/* ==========================================================
+   FINAL SIDEBAR FIT v110
+   - PC: 왼쪽 메뉴 전체를 화면 높이에 맞춰 균등 분배
+   - 모바일: 햄버거 메뉴를 화면 전체 높이에 맞춰 표시
+   - 스크롤 없이 홈~고급소식까지 한 번에 표시
+========================================================== */
+
+/* PC / 태블릿 가로 */
+@media screen and (min-width: 701px) {
+    .site-layout > .sidebar,
+    .sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+        overflow-y: hidden !important;
+        overflow-x: hidden !important;
+        min-height: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .sidebar .menu-item {
+        flex: 1 1 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .sidebar .menu-membership-divider {
+        flex: 0 0 auto !important;
+        height: auto !important;
+        min-height: 24px !important;
+        max-height: 24px !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* 모바일 햄버거 메뉴 */
+@media screen and (max-width: 700px) {
+    .sidebar,
+    .sidebar.open {
+        position: fixed !important;
+        top: 116px !important;
+        left: 0 !important;
+        right: auto !important;
+        bottom: 0 !important;
+        width: min(270px, 82vw) !important;
+        height: calc(100dvh - 116px) !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
+        overflow-y: hidden !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    .sidebar .menu-item {
+        flex: 1 1 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        padding: 0 14px !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        white-space: nowrap !important;
+    }
+
+    .sidebar .menu-membership-divider {
+        flex: 0 0 24px !important;
+        width: 100% !important;
+        height: 24px !important;
+        min-height: 24px !important;
+        max-height: 24px !important;
+        padding: 0 14px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+    }
+}
