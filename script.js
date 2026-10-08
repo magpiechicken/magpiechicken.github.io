@@ -777,20 +777,17 @@ function activateCategoryMenu(category) {
 
 
 function setRouteHash(route) {
-    const map = {
-        home: "#home",
-        news: "#news",
-        sports: "#sports",
-        community: "#community",
-        donation: "#donation",
-        membership: "#membership",
-        advanced: "#advanced",
-        video: "#video"
-    };
+    // 메뉴를 이동해도 URL에 #home, #news 같은 해시가 붙지 않도록 합니다.
+    // 기존 해시 링크로 직접 들어오는 경우의 initialize() 처리는 그대로 유지합니다.
+    const cleanUrl =
+        window.location.pathname +
+        window.location.search;
 
-    const nextHash = map[route] || "#home";
-    if (window.location.hash !== nextHash) {
-        history.replaceState(null, "", nextHash);
+    if (
+        window.location.pathname + window.location.search + window.location.hash !==
+        cleanUrl
+    ) {
+        history.replaceState(null, "", cleanUrl);
     }
 }
 
