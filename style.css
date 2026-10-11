@@ -9024,3 +9024,403 @@ a:hover {
         font-size: 21px !important;
     }
 }
+
+/* =========================================================
+   ADMIN USER MANAGEMENT v1
+   관리자 전용 유저 목록 / 채팅 기록 / 밴 / 타임아웃
+========================================================= */
+
+.user-management-button {
+    padding: 11px 16px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    background: #ffffff;
+    color: #222222;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.user-management-button:hover {
+    background: #fff7ec;
+    border-color: #ff9400;
+}
+
+.user-management-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.user-management-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.44);
+    backdrop-filter: blur(3px);
+}
+
+.user-management-panel {
+    position: relative;
+    z-index: 1;
+    width: min(1100px, 100%);
+    max-height: min(84vh, 900px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #dedede;
+    border-radius: 16px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+}
+
+.user-management-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 24px 26px 18px;
+    border-bottom: 1px solid #e7e7e7;
+}
+
+.user-management-kicker {
+    display: block;
+    margin-bottom: 4px;
+    color: #ff9400;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
+.user-management-header h2 {
+    margin: 0;
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+.user-management-header p {
+    margin: 8px 0 0;
+    color: #666666;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.user-management-close {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #333333;
+    font-size: 28px;
+    line-height: 1;
+}
+
+.user-management-close:hover {
+    background: #f5f5f5;
+}
+
+.user-management-toolbar {
+    display: flex;
+    gap: 10px;
+    padding: 16px 26px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.user-management-toolbar input {
+    flex: 1;
+    min-width: 0;
+    padding: 11px 13px;
+    border: 1px solid #d7d7d7;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+.user-management-toolbar input:focus {
+    border-color: #ff9400;
+    box-shadow: 0 0 0 3px rgba(255, 148, 0, 0.12);
+}
+
+.user-management-refresh {
+    margin: 0 !important;
+    padding: 10px 14px !important;
+    border-width: 1px !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+}
+
+.user-management-status {
+    min-height: 0;
+    padding: 0 26px;
+    color: #b3261e;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.user-management-status:not(:empty) {
+    padding-top: 12px;
+}
+
+.user-management-list,
+.user-chat-history-list {
+    min-height: 180px;
+    overflow-y: auto;
+    padding: 16px 26px 26px;
+}
+
+.user-management-card {
+    display: grid;
+    grid-template-columns: minmax(180px, 1.4fr) minmax(130px, 0.9fr) minmax(180px, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid #e2e2e2;
+    border-radius: 12px;
+    background: #ffffff;
+}
+
+.user-management-card + .user-management-card {
+    margin-top: 10px;
+}
+
+.user-management-user strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #222222;
+    font-size: 16px;
+    word-break: break-word;
+}
+
+.user-management-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.user-management-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #f3f3f3;
+    color: #555555;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.user-management-badge.admin {
+    background: #e8f1ff;
+    color: #1976d2;
+}
+
+.user-management-badge.membership {
+    background: #fff4c7;
+    color: #9c7400;
+}
+
+.user-management-badge.banned {
+    background: #ffe8e8;
+    color: #c62828;
+}
+
+.user-management-badge.timeout {
+    background: #fff0df;
+    color: #b85c00;
+}
+
+.user-management-date,
+.user-management-state {
+    color: #666666;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.user-management-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
+.user-management-action {
+    padding: 8px 10px;
+    border: 1px solid #d6d6d6;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #333333;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.user-management-action:hover {
+    border-color: #ff9400;
+    background: #fff8ef;
+}
+
+.user-management-action.danger {
+    border-color: #efb0b0;
+    color: #c62828;
+}
+
+.user-management-action.danger:hover {
+    background: #fff0f0;
+}
+
+.user-management-action:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.user-management-empty {
+    padding: 34px 16px;
+    color: #777777;
+    text-align: center;
+    font-size: 14px;
+}
+
+.user-chat-history-panel {
+    width: min(900px, 100%);
+}
+
+.user-chat-history-item {
+    padding: 14px 15px;
+    border: 1px solid #e4e4e4;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.user-chat-history-item + .user-chat-history-item {
+    margin-top: 9px;
+}
+
+.user-chat-history-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #777777;
+    font-size: 12px;
+}
+
+.user-chat-history-type {
+    color: #ff9400;
+    font-weight: 800;
+}
+
+.user-chat-history-content {
+    color: #333333;
+    font-size: 14px;
+    line-height: 1.65;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+}
+
+.user-chat-history-context {
+    margin-top: 7px;
+    color: #888888;
+    font-size: 12px;
+}
+
+.user-chat-history-delete {
+    margin-top: 10px;
+    padding: 6px 9px;
+    border: 1px solid #efb0b0;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #c62828;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.community-admin-delete-button {
+    margin-left: 6px;
+    padding: 4px 7px;
+    border: 1px solid #e2b0b0;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #c62828;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+@media screen and (max-width: 700px) {
+    .header-actions {
+        gap: 6px !important;
+    }
+
+    .user-management-button {
+        max-width: 82px;
+        padding: 7px 8px;
+        overflow: hidden;
+        border-radius: 7px;
+        font-size: 10px;
+        text-overflow: ellipsis;
+    }
+
+    .user-management-modal {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .user-management-panel {
+        width: 100%;
+        max-height: 88dvh;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .user-management-header {
+        padding: 18px 16px 14px;
+    }
+
+    .user-management-header h2 {
+        font-size: 23px;
+    }
+
+    .user-management-header p {
+        font-size: 12px;
+    }
+
+    .user-management-toolbar {
+        padding: 12px 16px;
+    }
+
+    .user-management-status {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .user-management-list,
+    .user-chat-history-list {
+        padding: 12px 16px 20px;
+    }
+
+    .user-management-card {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 13px;
+    }
+
+    .user-management-actions {
+        justify-content: flex-start;
+    }
+
+    .user-management-action {
+        flex: 1 1 auto;
+        min-width: 95px;
+        text-align: center;
+    }
+}
