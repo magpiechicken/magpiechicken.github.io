@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=111">
+    <link rel="stylesheet" href="./style.css?v=112">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
      crossorigin="anonymous"></script>
 </head>
@@ -49,6 +49,16 @@
             type="button"
         >
             로그인
+        </button>
+
+        <button
+            id="user-management-button"
+            class="user-management-button hidden"
+            type="button"
+            aria-haspopup="dialog"
+            aria-controls="user-management-modal"
+        >
+            유저 목록
         </button>
     </div>
 </div>
@@ -1133,6 +1143,102 @@
 
 </div>
 
+<!-- 관리자 전용 유저 관리 모달 -->
+<div
+    id="user-management-modal"
+    class="user-management-modal hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="user-management-title"
+>
+    <div class="user-management-backdrop" data-user-management-close="true"></div>
+
+    <section class="user-management-panel">
+        <div class="user-management-header">
+            <div>
+                <span class="user-management-kicker">ADMIN</span>
+                <h2 id="user-management-title">유저 목록</h2>
+                <p>회원 상태와 가입일을 확인하고 밴·타임아웃을 관리할 수 있습니다.</p>
+            </div>
+
+            <button
+                id="user-management-close"
+                class="user-management-close"
+                type="button"
+                aria-label="유저 목록 닫기"
+            >
+                ×
+            </button>
+        </div>
+
+        <div class="user-management-toolbar">
+            <input
+                id="user-management-search"
+                type="search"
+                placeholder="닉네임 검색"
+                autocomplete="off"
+            >
+
+            <button
+                id="user-management-refresh"
+                class="white-button user-management-refresh"
+                type="button"
+            >
+                새로고침
+            </button>
+        </div>
+
+        <div
+            id="user-management-status"
+            class="user-management-status"
+        ></div>
+
+        <div
+            id="user-management-list"
+            class="user-management-list"
+        >
+            <div class="user-management-empty">유저 목록을 불러오는 중...</div>
+        </div>
+    </section>
+</div>
+
+<!-- 관리자 전용 유저 채팅 기록 모달 -->
+<div
+    id="user-chat-history-modal"
+    class="user-management-modal hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="user-chat-history-title"
+>
+    <div class="user-management-backdrop" data-user-chat-history-close="true"></div>
+
+    <section class="user-management-panel user-chat-history-panel">
+        <div class="user-management-header">
+            <div>
+                <span class="user-management-kicker">CHAT LOG</span>
+                <h2 id="user-chat-history-title">유저 채팅 기록</h2>
+                <p id="user-chat-history-subtitle">채팅 기록을 불러오는 중...</p>
+            </div>
+
+            <button
+                id="user-chat-history-close"
+                class="user-management-close"
+                type="button"
+                aria-label="채팅 기록 닫기"
+            >
+                ×
+            </button>
+        </div>
+
+        <div
+            id="user-chat-history-list"
+            class="user-chat-history-list"
+        >
+            <div class="user-management-empty">채팅 기록을 불러오는 중...</div>
+        </div>
+    </section>
+</div>
+
 <script>
 /* 루트(index.html)로 직접 들어오면 항상 홈 화면 표시 */
 document.addEventListener("DOMContentLoaded", function () {
@@ -1157,7 +1263,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
-<script src="./script.js?v=108"></script>
+<script src="./script.js?v=109"></script>
 
 </body>
 </html>
