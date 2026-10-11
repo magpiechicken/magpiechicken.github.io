@@ -149,6 +149,43 @@ const sidebarOverlay =
 const accountButton =
     document.getElementById("accountButton");
 
+const userManagementButton =
+    document.getElementById("user-management-button");
+
+const userManagementModal =
+    document.getElementById("user-management-modal");
+
+const userManagementClose =
+    document.getElementById("user-management-close");
+
+const userManagementRefresh =
+    document.getElementById("user-management-refresh");
+
+const userManagementSearch =
+    document.getElementById("user-management-search");
+
+const userManagementStatus =
+    document.getElementById("user-management-status");
+
+const userManagementList =
+    document.getElementById("user-management-list");
+
+const userChatHistoryModal =
+    document.getElementById("user-chat-history-modal");
+
+const userChatHistoryClose =
+    document.getElementById("user-chat-history-close");
+
+const userChatHistorySubtitle =
+    document.getElementById("user-chat-history-subtitle");
+
+const userChatHistoryList =
+    document.getElementById("user-chat-history-list");
+
+let adminUserRows = [];
+let currentHistoryUserId = null;
+let currentHistoryUsername = "";
+
 const showWriteButton =
     document.getElementById("show-write");
 
@@ -453,6 +490,15 @@ function updateAuthUI() {
     updateVideoUploadUI();
     updateCommunityComposer();
 
+    if (userManagementButton) {
+        userManagementButton.classList.toggle("hidden", !isAdmin);
+    }
+
+    if (!isAdmin) {
+        closeUserManagementModal();
+        closeUserChatHistoryModal();
+    }
+
     if (membershipAdminPanel && !isAdmin) {
         membershipAdminPanel.classList.add("hidden");
     }
@@ -537,7 +583,7 @@ async function loadCurrentProfile() {
         await supabaseClient
             .from("profiles")
             .select(
-                "id, username, can_manage_news, membership_verified"
+                "id, username, can_manage_news, membership_verified, banned, timeout_until"
             )
             .eq(
                 "id",
@@ -568,6 +614,17 @@ async function loadCurrentProfile() {
 
     isMembership =
         profile?.membership_verified === true;
+
+    if (profile?.banned === true && !isAdmin) {
+        updateAuthUI();
+
+        setTimeout(async function() {
+            alert("이 계정은 관리자에 의해 밴되었습니다.");
+            await supabaseClient.auth.signOut();
+        }, 0);
+
+        return;
+    }
 
     updateAuthUI();
 }
@@ -620,6 +677,452 @@ async function refreshAuthState() {
 
         updateAuthUI();
     }
+}
+
+function getTimeoutUntil() {
+    const value = currentProfile?.timeout_until;
+
+    if (!value) {
+        return null;
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime()) || date.getTime() <= Date.now()) {
+        return null;
+    }
+
+    return date;
+}
+
+function isCurrentUserTimedOut() {
+    return !!getTimeoutUntil();
+}
+
+function getTimeoutMessage() {
+    const until = getTimeoutUntil();
+
+    if (!until) {
+        return "";
+    }
+
+    return `이 계정은 ${formatDateTime(until.toISOString())}까지 타임아웃 상태입니다.`;
+}
+
+function closeUserManagementModal() {
+    if (userManagementModal) {
+        userManagementModal.classList.add("hidden");
+    }
+}
+
+function closeUserChatHistoryModal() {
+    if (userChatHistoryModal) {
+        userChatHistoryModal.classList.add("hidden");
+    }
+
+    currentHistoryUserId = null;
+    currentHistoryUsername = "";
+}
+
+function formatAdminDateTime(value) {
+    if (!value) {
+        return "-";
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return "-";
+    }
+
+    return date.toLocaleString("ko-KR", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
+function getUserModerationState(user) {
+    if (user.banned === true) {
+        return "밴됨";
+    }
+
+    if (user.timeout_until) {
+        const timeoutDate = new Date(user.timeout_until);
+        if (!Number.isNaN(timeoutDate.getTime()) && timeoutDate.getTime() > Date.now()) {
+            return `타임아웃 · ${formatAdminDateTime(user.timeout_until)}까지`;
+        }
+    }
+
+    return "정상";
+}
+
+function renderAdminUserList() {
+    if (!userManagementList) {
+        return;
+    }
+
+    const query = (userManagementSearch?.value || "")
+        .trim()
+        .toLowerCase();
+
+    const rows = adminUserRows.filter(function(user) {
+        if (!query) return true;
+        return String(user.username || "").toLowerCase().includes(query);
+    });
+
+    if (rows.length === 0) {
+        userManagementList.innerHTML = `
+            <div class="user-management-empty">
+                ${query ? "검색 결과가 없습니다." : "등록된 유저가 없습니다."}
+            </div>
+        `;
+        return;
+    }
+
+    userManagementList.innerHTML = rows.map(function(user) {
+        const isSelf = currentUser && String(currentUser.id) === String(user.id);
+        const protectedUser = isSelf || user.can_manage_news === true;
+        const timeoutActive = user.timeout_until && new Date(user.timeout_until).getTime() > Date.now();
+
+        const badges = [
+            user.can_manage_news === true
+                ? '<span class="user-management-badge admin">관리자</span>'
+                : user.membership_verified === true
+                    ? '<span class="user-management-badge membership">멤버십</span>'
+                    : '<span class="user-management-badge">일반 유저</span>',
+            user.banned === true
+                ? '<span class="user-management-badge banned">밴</span>'
+                : "",
+            timeoutActive
+                ? '<span class="user-management-badge timeout">타임아웃</span>'
+                : ""
+        ].join("");
+
+        return `
+            <article class="user-management-card" data-admin-user-id="${escapeAttribute(user.id)}">
+                <div class="user-management-user">
+                    <strong>${escapeHTML(user.username || "닉네임 없음")}</strong>
+                    <div class="user-management-badges">${badges}</div>
+                </div>
+
+                <div class="user-management-date">
+                    회원가입 날짜<br>
+                    <strong>${escapeHTML(formatAdminDateTime(user.created_at))}</strong>
+                </div>
+
+                <div class="user-management-state">
+                    상태<br>
+                    <strong>${escapeHTML(getUserModerationState(user))}</strong>
+                </div>
+
+                <div class="user-management-actions">
+                    <button
+                        class="user-management-action"
+                        type="button"
+                        data-admin-action="history"
+                        data-user-id="${escapeAttribute(user.id)}"
+                        data-username="${escapeAttribute(user.username || "닉네임 없음")}"
+                    >
+                        유저 채팅 기록 보기
+                    </button>
+
+                    <button
+                        class="user-management-action danger"
+                        type="button"
+                        data-admin-action="ban"
+                        data-user-id="${escapeAttribute(user.id)}"
+                        data-banned="${user.banned === true ? "true" : "false"}"
+                        ${protectedUser ? "disabled" : ""}
+                    >
+                        ${user.banned === true ? "밴 해제" : "유저 밴"}
+                    </button>
+
+                    <button
+                        class="user-management-action"
+                        type="button"
+                        data-admin-action="timeout"
+                        data-user-id="${escapeAttribute(user.id)}"
+                        ${protectedUser ? "disabled" : ""}
+                    >
+                        ${timeoutActive ? "타임아웃 변경" : "유저 타임아웃"}
+                    </button>
+                </div>
+            </article>
+        `;
+    }).join("");
+
+    userManagementList
+        .querySelectorAll("[data-admin-action]")
+        .forEach(function(button) {
+            button.addEventListener("click", async function() {
+                const action = button.dataset.adminAction;
+                const userId = button.dataset.userId;
+
+                if (action === "history") {
+                    await openUserChatHistory(
+                        userId,
+                        button.dataset.username || "유저"
+                    );
+                    return;
+                }
+
+                if (action === "ban") {
+                    await setUserBan(
+                        userId,
+                        button.dataset.banned !== "true"
+                    );
+                    return;
+                }
+
+                if (action === "timeout") {
+                    await setUserTimeout(userId);
+                }
+            });
+        });
+}
+
+async function loadAdminUsers() {
+    if (!isAdmin || !userManagementList) {
+        return;
+    }
+
+    userManagementStatus.textContent = "";
+    userManagementList.innerHTML = `
+        <div class="user-management-empty">유저 목록을 불러오는 중...</div>
+    `;
+
+    const { data, error } = await supabaseClient.rpc("admin_list_users");
+
+    if (error) {
+        console.error("관리자 유저 목록 조회 오류:", error);
+        userManagementStatus.textContent =
+            "유저 목록을 불러오지 못했습니다. admin-user-management.sql을 Supabase에서 먼저 실행해주세요.";
+        userManagementList.innerHTML = `
+            <div class="user-management-empty">${escapeHTML(error.message)}</div>
+        `;
+        return;
+    }
+
+    adminUserRows = Array.isArray(data) ? data : [];
+    renderAdminUserList();
+}
+
+async function openUserManagementModal() {
+    if (!currentUser || !isAdmin) {
+        alert("관리자만 유저 목록을 볼 수 있습니다.");
+        return;
+    }
+
+    if (!userManagementModal) {
+        return;
+    }
+
+    userManagementModal.classList.remove("hidden");
+    await loadAdminUsers();
+}
+
+async function setUserBan(userId, shouldBan) {
+    if (!isAdmin) return;
+
+    const message = shouldBan
+        ? "이 유저를 밴하시겠습니까? 밴된 계정은 다음 로그인/새로고침 때 로그아웃됩니다."
+        : "이 유저의 밴을 해제하시겠습니까?";
+
+    if (!window.confirm(message)) {
+        return;
+    }
+
+    const { error } = await supabaseClient.rpc("admin_set_user_ban", {
+        p_user_id: userId,
+        p_banned: shouldBan
+    });
+
+    if (error) {
+        console.error("유저 밴 처리 오류:", error);
+        alert("유저 밴 처리 오류:\n" + error.message);
+        return;
+    }
+
+    await loadAdminUsers();
+}
+
+async function setUserTimeout(userId) {
+    if (!isAdmin) return;
+
+    const input = window.prompt(
+        "타임아웃 기간을 일 단위 숫자로 입력해주세요.\n예: 1 = 1일, 7 = 7일\n0을 입력하면 타임아웃이 해제됩니다.",
+        "1"
+    );
+
+    if (input === null) {
+        return;
+    }
+
+    const days = Number(input);
+
+    if (!Number.isInteger(days) || days < 0 || days > 365) {
+        alert("0~365 사이의 정수로 입력해주세요.");
+        return;
+    }
+
+    const { error } = await supabaseClient.rpc("admin_set_user_timeout", {
+        p_user_id: userId,
+        p_days: days
+    });
+
+    if (error) {
+        console.error("유저 타임아웃 처리 오류:", error);
+        alert("유저 타임아웃 처리 오류:\n" + error.message);
+        return;
+    }
+
+    await loadAdminUsers();
+}
+
+async function openUserChatHistory(userId, username) {
+    if (!isAdmin || !userChatHistoryModal || !userChatHistoryList) {
+        return;
+    }
+
+    currentHistoryUserId = userId;
+    currentHistoryUsername = username;
+
+    userChatHistorySubtitle.textContent = `${username}님의 채팅/댓글 기록`;
+    userChatHistoryList.innerHTML = `
+        <div class="user-management-empty">채팅 기록을 불러오는 중...</div>
+    `;
+    userChatHistoryModal.classList.remove("hidden");
+
+    const { data, error } = await supabaseClient.rpc(
+        "admin_get_user_chat_history",
+        { p_user_id: userId }
+    );
+
+    if (error) {
+        console.error("유저 채팅 기록 조회 오류:", error);
+        userChatHistoryList.innerHTML = `
+            <div class="user-management-empty">${escapeHTML(error.message)}</div>
+        `;
+        return;
+    }
+
+    const rows = Array.isArray(data) ? data : [];
+
+    if (rows.length === 0) {
+        userChatHistoryList.innerHTML = `
+            <div class="user-management-empty">채팅/댓글 기록이 없습니다.</div>
+        `;
+        return;
+    }
+
+    userChatHistoryList.innerHTML = rows.map(function(row) {
+        const typeLabel = row.message_type === "community"
+            ? "커뮤니티 채팅"
+            : "소식 댓글";
+
+        return `
+            <article class="user-chat-history-item">
+                <div class="user-chat-history-meta">
+                    <span class="user-chat-history-type">${typeLabel}</span>
+                    <span>${escapeHTML(formatAdminDateTime(row.created_at))}</span>
+                </div>
+
+                <div class="user-chat-history-content">
+                    ${escapeHTML(row.content || "").replace(/\n/g, "<br>")}
+                </div>
+
+                ${row.context_label
+                    ? `<div class="user-chat-history-context">${escapeHTML(row.context_label)}</div>`
+                    : ""
+                }
+
+                <button
+                    class="user-chat-history-delete"
+                    type="button"
+                    data-history-delete="${escapeAttribute(row.message_type)}"
+                    data-history-id="${escapeAttribute(row.record_id)}"
+                >
+                    이 기록 삭제
+                </button>
+            </article>
+        `;
+    }).join("");
+
+    userChatHistoryList
+        .querySelectorAll("[data-history-delete]")
+        .forEach(function(button) {
+            button.addEventListener("click", async function() {
+                await adminDeleteUserRecord(
+                    button.dataset.historyDelete,
+                    button.dataset.historyId
+                );
+            });
+        });
+}
+
+async function adminDeleteUserRecord(messageType, recordId) {
+    if (!isAdmin) return;
+
+    if (!window.confirm("이 기록을 삭제하시겠습니까?")) {
+        return;
+    }
+
+    const functionName = messageType === "community"
+        ? "admin_delete_community_message"
+        : "admin_delete_news_comment";
+
+    const { error } = await supabaseClient.rpc(functionName, {
+        p_record_id: String(recordId)
+    });
+
+    if (error) {
+        console.error("관리자 메시지 삭제 오류:", error);
+        alert("삭제 오류:\n" + error.message);
+        return;
+    }
+
+    if (currentHistoryUserId) {
+        await openUserChatHistory(
+            currentHistoryUserId,
+            currentHistoryUsername || "유저"
+        );
+    }
+
+    if (
+        adminCommunityScreen &&
+        adminCommunityScreen.classList.contains("visible")
+    ) {
+        await loadCommunityMessages();
+    }
+
+    if (currentNewsId !== null) {
+        await loadComments(currentNewsId);
+    }
+}
+
+async function adminDeleteCommunityMessage(messageId) {
+    if (!isAdmin) return;
+
+    if (!window.confirm("이 메시지를 삭제하시겠습니까?")) {
+        return;
+    }
+
+    const { error } = await supabaseClient.rpc(
+        "admin_delete_community_message",
+        { p_record_id: String(messageId) }
+    );
+
+    if (error) {
+        console.error("커뮤니티 메시지 삭제 오류:", error);
+        alert("메시지 삭제 오류:\n" + error.message);
+        return;
+    }
+
+    communityInitialLoad = true;
+    await loadCommunityMessages();
 }
 
 function resetDetailUI() {
@@ -961,7 +1464,7 @@ async function openCategoryIntro(category) {
     } else if (category === "advanced") {
         if (heading) heading.textContent = "고급소식";
         if (introTitle) introTitle.textContent = "까치치킨사장님 고급소식";
-        if (introText) introText.textContent = "관리자 전용 고급소식과 공지사항이 이곳에 표시됩니다.";
+        if (introText) introText.textContent = "멤버십 전용 고급소식과 공지사항이 이곳에 표시됩니다.";
         if (detailButton) detailButton.textContent = "고급소식 자세히 보러가기";
     } else if (category === "community") {
         if (heading) heading.textContent = "관리자 커뮤니티";
@@ -1252,10 +1755,31 @@ async function loadCommunityMessages(isPolling = false) {
                         <span class="community-time">
                             ${formatDateTime(message.created_at)}
                         </span>
+
+                        ${isAdmin
+                            ? `<button
+                                class="community-admin-delete-button"
+                                type="button"
+                                data-community-delete-id="${escapeAttribute(message.id)}"
+                            >삭제</button>`
+                            : ""
+                        }
                     </div>
                 </div>
             `;
         }).join("");
+
+        if (isAdmin) {
+            communityMessages
+                .querySelectorAll("[data-community-delete-id]")
+                .forEach(function(button) {
+                    button.addEventListener("click", function() {
+                        adminDeleteCommunityMessage(
+                            button.dataset.communityDeleteId
+                        );
+                    });
+                });
+        }
     }
 
     if (communityInitialLoad || wasNearBottom) {
@@ -1266,6 +1790,11 @@ async function loadCommunityMessages(isPolling = false) {
 }
 
 async function sendCommunityMessage() {
+    if (isCurrentUserTimedOut() && !isAdmin) {
+        alert(getTimeoutMessage());
+        return;
+    }
+
     if (!currentUser || !isAdmin) {
         alert("관리자만 채팅할 수 있습니다.");
         return;
@@ -3775,7 +4304,10 @@ async function loadComments(newsId) {
 
         const canDelete =
             currentUser &&
-            String(currentUser.id) === String(comment.user_id);
+            (
+                isAdmin ||
+                String(currentUser.id) === String(comment.user_id)
+            );
 
         item.innerHTML = `
             <div class="comment-top">
@@ -3820,6 +4352,11 @@ async function loadComments(newsId) {
 }
 
 async function submitComment() {
+    if (isCurrentUserTimedOut() && !isAdmin) {
+        alert(getTimeoutMessage());
+        return;
+    }
+
     if (!currentUser) {
         alert(
             "댓글을 작성하려면 로그인해주세요."
@@ -3903,20 +4440,22 @@ async function deleteComment(
         return;
     }
 
-    const {
-        error
-    } =
-        await supabaseClient
+    let error = null;
+
+    if (isAdmin) {
+        const result = await supabaseClient.rpc(
+            "admin_delete_news_comment",
+            { p_record_id: String(commentId) }
+        );
+        error = result.error;
+    } else {
+        const result = await supabaseClient
             .from("news_comments")
             .delete()
-            .eq(
-                "id",
-                commentId
-            )
-            .eq(
-                "user_id",
-                currentUser.id
-            );
+            .eq("id", commentId)
+            .eq("user_id", currentUser.id);
+        error = result.error;
+    }
 
     if (error) {
         console.error(
@@ -4981,6 +5520,64 @@ accountButton.addEventListener(
 );
 
 
+if (userManagementButton) {
+    userManagementButton.addEventListener(
+        "click",
+        openUserManagementModal
+    );
+}
+
+if (userManagementClose) {
+    userManagementClose.addEventListener(
+        "click",
+        closeUserManagementModal
+    );
+}
+
+if (userManagementRefresh) {
+    userManagementRefresh.addEventListener(
+        "click",
+        loadAdminUsers
+    );
+}
+
+if (userManagementSearch) {
+    userManagementSearch.addEventListener(
+        "input",
+        renderAdminUserList
+    );
+}
+
+if (userManagementModal) {
+    userManagementModal.addEventListener(
+        "click",
+        function(event) {
+            if (event.target?.dataset?.userManagementClose === "true") {
+                closeUserManagementModal();
+            }
+        }
+    );
+}
+
+if (userChatHistoryClose) {
+    userChatHistoryClose.addEventListener(
+        "click",
+        closeUserChatHistoryModal
+    );
+}
+
+if (userChatHistoryModal) {
+    userChatHistoryModal.addEventListener(
+        "click",
+        function(event) {
+            if (event.target?.dataset?.userChatHistoryClose === "true") {
+                closeUserChatHistoryModal();
+            }
+        }
+    );
+}
+
+
 loginTab.addEventListener(
     "click",
     function() {
@@ -5195,6 +5792,8 @@ if (sidebarOverlay) {
 document.addEventListener("keydown", function(event) {
     if (event.key === "Escape") {
         closeSidebarDrawer();
+        closeUserChatHistoryModal();
+        closeUserManagementModal();
     }
 });
 
@@ -5338,10 +5937,3 @@ async function initialize() {
 }
 
 initialize();
-document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll("*").forEach(el => {
-        if (el.textContent === "관리자 전용 고급소식과 공지사항이 이곳에 표시됩니다.") {
-            el.textContent = "멤버십 전용 고급소식과 공지사항이 이곳에 표시됩니다.";
-        }
-    });
-});
