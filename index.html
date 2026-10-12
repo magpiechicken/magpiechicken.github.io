@@ -932,6 +932,26 @@
                     </button>
                 </div>
 
+                <div class="membership-admin-filter-tabs" role="tablist" aria-label="멤버십 신청 확인 상태">
+                    <button
+                        id="membership-admin-filter-unchecked"
+                        class="membership-admin-filter-button active"
+                        type="button"
+                        data-membership-admin-filter="unchecked"
+                    >
+                        확인안함 <span id="membership-admin-unchecked-count">0</span>
+                    </button>
+
+                    <button
+                        id="membership-admin-filter-checked"
+                        class="membership-admin-filter-button"
+                        type="button"
+                        data-membership-admin-filter="checked"
+                    >
+                        확인함 <span id="membership-admin-checked-count">0</span>
+                    </button>
+                </div>
+
                 <div
                     id="membership-admin-list"
                     class="membership-admin-list"
@@ -1186,6 +1206,13 @@
             >
                 새로고침
             </button>
+        </div>
+
+        <div class="user-management-role-filters" role="group" aria-label="유저 유형 필터">
+            <button type="button" class="user-management-role-filter active" data-user-role-filter="all">전체</button>
+            <button type="button" class="user-management-role-filter" data-user-role-filter="normal">일반멤버</button>
+            <button type="button" class="user-management-role-filter" data-user-role-filter="membership">멤버십</button>
+            <button type="button" class="user-management-role-filter" data-user-role-filter="admin">관리자</button>
         </div>
 
         <div
