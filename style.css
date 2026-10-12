@@ -9424,3 +9424,30 @@ a:hover {
         text-align: center;
     }
 }
+
+
+/* =========================================================
+   멤버십 신청 확인 상태 / 자세히보기 + 유저 유형 필터
+========================================================= */
+.membership-admin-filter-tabs { display:flex; gap:8px; margin:0 0 14px; padding:4px; border:1px solid #e3e3e3; border-radius:10px; background:#f7f7f7; }
+.membership-admin-filter-button { flex:1; min-height:40px; padding:8px 12px; border:1px solid transparent; border-radius:8px; background:transparent; color:#555; font-size:14px; font-weight:800; }
+.membership-admin-filter-button span { display:inline-flex; align-items:center; justify-content:center; min-width:22px; min-height:22px; margin-left:5px; padding:0 6px; border-radius:999px; background:#ececec; font-size:11px; }
+.membership-admin-filter-button.active { border-color:#ff9400; background:#fff; color:#d87500; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+.membership-admin-preview-text { display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:10px; color:#777; font-size:12px; line-height:1.5; }
+.membership-admin-detail-button { margin-top:12px; padding:8px 12px; border:1px solid #d8d8d8; border-radius:7px; background:#fff; color:#333; font-size:12px; font-weight:800; }
+.membership-admin-detail-button:hover { border-color:#ff9400; background:#fff8ef; }
+.membership-admin-details { margin-top:14px; padding-top:14px; border-top:1px solid #ececec; }
+.membership-admin-details .membership-admin-content { margin-top:0; }
+.membership-admin-details .membership-admin-content img { display:block; width:auto !important; max-width:min(100%,720px) !important; max-height:68vh !important; margin:0 auto; object-fit:contain !important; border:1px solid #dedede; border-radius:8px; background:#f7f7f7; }
+.membership-screenshot-loading,.membership-screenshot-missing { padding:26px 14px; border:1px dashed #d7d7d7; border-radius:8px; background:#fafafa; color:#777; text-align:center; font-size:13px; }
+.user-management-role-filters { display:flex; flex-wrap:wrap; gap:7px; padding:0 26px 14px; border-bottom:1px solid #eee; }
+.user-management-role-filter { padding:8px 12px; border:1px solid #ddd; border-radius:999px; background:#fff; color:#555; font-size:12px; font-weight:800; }
+.user-management-role-filter:hover { border-color:#ff9400; background:#fff8ef; }
+.user-management-role-filter.active { border-color:#ff9400; background:#ff9400; color:#fff; }
+@media screen and (max-width:700px) {
+  .membership-admin-filter-tabs { gap:5px; margin-bottom:10px; }
+  .membership-admin-filter-button { min-height:36px; padding:7px 8px; font-size:12px; }
+  .membership-admin-details .membership-admin-content img { max-height:58vh !important; }
+  .user-management-role-filters { gap:5px; padding:0 16px 12px; }
+  .user-management-role-filter { flex:1 1 calc(50% - 5px); padding:7px 9px; font-size:11px; text-align:center; }
+}
