@@ -183,6 +183,9 @@ const userChatHistoryList =
     document.getElementById("user-chat-history-list");
 
 let adminUserRows = [];
+let adminUserRoleFilter = "all";
+const userManagementRoleFilters =
+    document.querySelectorAll("[data-user-role-filter]");
 let currentHistoryUserId = null;
 let currentHistoryUsername = "";
 
@@ -287,6 +290,23 @@ const membershipAdminList =
 
 const membershipAdminRefresh =
     document.getElementById("membership-admin-refresh");
+
+const membershipAdminFilterUnchecked =
+    document.getElementById("membership-admin-filter-unchecked");
+
+const membershipAdminFilterChecked =
+    document.getElementById("membership-admin-filter-checked");
+
+const membershipAdminUncheckedCount =
+    document.getElementById("membership-admin-unchecked-count");
+
+const membershipAdminCheckedCount =
+    document.getElementById("membership-admin-checked-count");
+
+let membershipAdminRows = [];
+let membershipAdminView = "unchecked";
+const membershipExpandedRequestIds = new Set();
+const membershipScreenshotUrlCache = new Map();
 
 let communityPollTimer = null;
 let communityInitialLoad = true;
@@ -769,14 +789,33 @@ function renderAdminUserList() {
         .toLowerCase();
 
     const rows = adminUserRows.filter(function(user) {
-        if (!query) return true;
-        return String(user.username || "").toLowerCase().includes(query);
+        const usernameMatches =
+            !query ||
+            String(user.username || "").toLowerCase().includes(query);
+
+        if (!usernameMatches) {
+            return false;
+        }
+
+        if (adminUserRoleFilter === "admin") {
+            return user.can_manage_news === true;
+        }
+
+        if (adminUserRoleFilter === "membership") {
+            return user.can_manage_news !== true && user.membership_verified === true;
+        }
+
+        if (adminUserRoleFilter === "normal") {
+            return user.can_manage_news !== true && user.membership_verified !== true;
+        }
+
+        return true;
     });
 
     if (rows.length === 0) {
         userManagementList.innerHTML = `
             <div class="user-management-empty">
-                ${query ? "검색 결과가 없습니다." : "등록된 유저가 없습니다."}
+                ${query || adminUserRoleFilter !== "all" ? "조건에 맞는 유저가 없습니다." : "등록된 유저가 없습니다."}
             </div>
         `;
         return;
@@ -792,7 +831,7 @@ function renderAdminUserList() {
                 ? '<span class="user-management-badge admin">관리자</span>'
                 : user.membership_verified === true
                     ? '<span class="user-management-badge membership">멤버십</span>'
-                    : '<span class="user-management-badge">일반 유저</span>',
+                    : '<span class="user-management-badge">일반멤버</span>',
             user.banned === true
                 ? '<span class="user-management-badge banned">밴</span>'
                 : "",
@@ -2619,54 +2658,120 @@ async function submitMembershipRequest() {
     }
 }
 
-async function loadMembershipAdminRequests() {
+function updateMembershipAdminFilterUI() {
+    const uncheckedCount = membershipAdminRows.filter(function(request) {
+        return request.status === "pending" || !request.reviewed_at;
+    }).length;
+
+    const checkedCount = membershipAdminRows.length - uncheckedCount;
+
+    if (membershipAdminUncheckedCount) {
+        membershipAdminUncheckedCount.textContent = String(uncheckedCount);
+    }
+
+    if (membershipAdminCheckedCount) {
+        membershipAdminCheckedCount.textContent = String(checkedCount);
+    }
+
+    if (membershipAdminFilterUnchecked) {
+        membershipAdminFilterUnchecked.classList.toggle(
+            "active",
+            membershipAdminView === "unchecked"
+        );
+    }
+
+    if (membershipAdminFilterChecked) {
+        membershipAdminFilterChecked.classList.toggle(
+            "active",
+            membershipAdminView === "checked"
+        );
+    }
+}
+
+function setMembershipAdminView(view) {
+    membershipAdminView = view === "checked" ? "checked" : "unchecked";
+    updateMembershipAdminFilterUI();
+    renderMembershipAdminRequests();
+}
+
+async function getMembershipScreenshotUrl(request) {
+    if (!request?.screenshot_path) {
+        return null;
+    }
+
+    if (membershipScreenshotUrlCache.has(request.id)) {
+        return membershipScreenshotUrlCache.get(request.id);
+    }
+
+    const { data: signedData, error } =
+        await supabaseClient.storage
+            .from("membership-verification")
+            .createSignedUrl(
+                request.screenshot_path,
+                10 * 60
+            );
+
+    if (error) {
+        console.error("멤버십 인증 사진 URL 생성 오류:", error);
+        membershipScreenshotUrlCache.set(request.id, null);
+        return null;
+    }
+
+    const url = signedData?.signedUrl || null;
+    membershipScreenshotUrlCache.set(request.id, url);
+    return url;
+}
+
+async function toggleMembershipRequestDetails(requestId) {
+    const request = membershipAdminRows.find(function(item) {
+        return String(item.id) === String(requestId);
+    });
+
+    if (!request) {
+        return;
+    }
+
+    if (membershipExpandedRequestIds.has(String(requestId))) {
+        membershipExpandedRequestIds.delete(String(requestId));
+        renderMembershipAdminRequests();
+        return;
+    }
+
+    membershipExpandedRequestIds.add(String(requestId));
+    renderMembershipAdminRequests();
+
+    if (request.screenshot_path && !membershipScreenshotUrlCache.has(request.id)) {
+        await getMembershipScreenshotUrl(request);
+        renderMembershipAdminRequests();
+    }
+}
+
+function renderMembershipAdminRequests() {
     if (!membershipAdminList || !isAdmin) {
         return;
     }
 
-    membershipAdminList.innerHTML = `
-        <div class="membership-admin-loading">신청 목록을 불러오는 중...</div>
-    `;
+    updateMembershipAdminFilterUI();
 
-    const { data: requests, error } =
-        await supabaseClient
-            .from("membership_requests")
-            .select(
-                "id, user_id, website_nickname, youtube_handle, screenshot_path, status, admin_note, created_at, reviewed_at"
-            )
-            .order("status", { ascending: true })
-            .order("created_at", { ascending: false });
+    const filteredRequests = membershipAdminRows.filter(function(request) {
+        const unchecked = request.status === "pending" || !request.reviewed_at;
+        return membershipAdminView === "checked" ? !unchecked : unchecked;
+    });
 
-    if (error) {
-        console.error("멤버십 관리자 목록 조회 오류:", error);
+    if (filteredRequests.length === 0) {
         membershipAdminList.innerHTML = `
-            <div class="membership-admin-empty">신청 목록을 불러오지 못했습니다.<br>${escapeHTML(error.message)}</div>
+            <div class="membership-admin-empty">
+                ${membershipAdminView === "checked"
+                    ? "확인한 멤버십 신청이 없습니다."
+                    : "확인하지 않은 멤버십 신청이 없습니다."}
+            </div>
         `;
         return;
     }
 
-    if (!requests || requests.length === 0) {
-        membershipAdminList.innerHTML = `
-            <div class="membership-admin-empty">현재 멤버십 인증 신청이 없습니다.</div>
-        `;
-        return;
-    }
-
-    const cards = [];
-
-    for (const request of requests) {
-        let screenshotUrl = null;
-
-        if (request.screenshot_path) {
-            const { data: signedData } =
-                await supabaseClient.storage
-                    .from("membership-verification")
-                    .createSignedUrl(
-                        request.screenshot_path,
-                        10 * 60
-                    );
-            screenshotUrl = signedData?.signedUrl || null;
-        }
+    membershipAdminList.innerHTML = filteredRequests.map(function(request) {
+        const expanded = membershipExpandedRequestIds.has(String(request.id));
+        const screenshotUrl = membershipScreenshotUrlCache.get(request.id) || null;
 
         const statusLabel =
             request.status === "pending"
@@ -2675,51 +2780,74 @@ async function loadMembershipAdminRequests() {
                     ? "인증 완료"
                     : "반려";
 
-        const card = document.createElement("article");
-        card.className =
-            `membership-admin-card membership-status-${request.status}`;
-
-        card.innerHTML = `
-            <div class="membership-admin-card-top">
-                <div>
-                    <strong>${escapeHTML(request.website_nickname)}</strong>
-                    <span>${escapeHTML(request.youtube_handle)}</span>
-                </div>
-                <span class="membership-status-badge">${statusLabel}</span>
-            </div>
-
-            <div class="membership-admin-date">
-                신청일 · ${escapeHTML(formatDate(request.created_at))}
-            </div>
-
-            <div class="membership-admin-content">
-                ${screenshotUrl
-                    ? `<a href="${escapeAttribute(screenshotUrl)}" target="_blank" rel="noopener noreferrer" class="membership-screenshot-link"><img src="${escapeAttribute(screenshotUrl)}" alt="멤버십 인증 스크린샷"></a>`
-                    : `<div class="membership-screenshot-missing">스크린샷을 불러오지 못했습니다.</div>`
-                }
-            </div>
-
-            ${request.admin_note
-                ? `<div class="membership-admin-note">관리자 메모: ${escapeHTML(request.admin_note)}</div>`
-                : ""
-            }
-
-            ${request.status === "pending"
-                ? `
-                    <div class="membership-admin-actions">
-                        <button type="button" class="orange-small-button membership-approve-button" data-request-id="${escapeAttribute(request.id)}">인증 완료</button>
-                        <button type="button" class="white-button membership-reject-button" data-request-id="${escapeAttribute(request.id)}">반려</button>
+        const detailContent = expanded
+            ? `
+                <div class="membership-admin-details">
+                    <div class="membership-admin-content">
+                        ${request.screenshot_path
+                            ? screenshotUrl
+                                ? `<a href="${escapeAttribute(screenshotUrl)}" target="_blank" rel="noopener noreferrer" class="membership-screenshot-link"><img src="${escapeAttribute(screenshotUrl)}" alt="멤버십 인증 스크린샷"></a>`
+                                : `<div class="membership-screenshot-loading">인증 사진을 불러오는 중...</div>`
+                            : `<div class="membership-screenshot-missing">등록된 인증 사진이 없습니다.</div>`
+                        }
                     </div>
-                `
-                : ""
-            }
+
+                    ${request.admin_note
+                        ? `<div class="membership-admin-note">관리자 메모: ${escapeHTML(request.admin_note)}</div>`
+                        : ""
+                    }
+
+                    ${request.status === "pending"
+                        ? `
+                            <div class="membership-admin-actions">
+                                <button type="button" class="orange-small-button membership-approve-button" data-request-id="${escapeAttribute(request.id)}">인증 완료</button>
+                                <button type="button" class="white-button membership-reject-button" data-request-id="${escapeAttribute(request.id)}">반려</button>
+                            </div>
+                        `
+                        : ""
+                    }
+                </div>
+            `
+            : "";
+
+        return `
+            <article class="membership-admin-card membership-status-${request.status} ${expanded ? "expanded" : "compact"}">
+                <div class="membership-admin-card-top">
+                    <div>
+                        <strong>${escapeHTML(request.website_nickname || "닉네임 없음")}</strong>
+                        <span>${escapeHTML(request.youtube_handle || "유튜브 핸들 없음")}</span>
+                    </div>
+                    <span class="membership-status-badge">${statusLabel}</span>
+                </div>
+
+                <div class="membership-admin-preview-text">
+                    <span>신청일 · ${escapeHTML(formatDate(request.created_at))}</span>
+                    ${request.reviewed_at
+                        ? `<span>확인일 · ${escapeHTML(formatDate(request.reviewed_at))}</span>`
+                        : `<span>아직 확인하지 않음</span>`
+                    }
+                </div>
+
+                <button
+                    type="button"
+                    class="membership-admin-detail-button"
+                    data-membership-detail="${escapeAttribute(request.id)}"
+                >
+                    ${expanded ? "접기" : "자세히보기"}
+                </button>
+
+                ${detailContent}
+            </article>
         `;
+    }).join("");
 
-        cards.push(card);
-    }
-
-    membershipAdminList.innerHTML = "";
-    cards.forEach(card => membershipAdminList.appendChild(card));
+    membershipAdminList
+        .querySelectorAll("[data-membership-detail]")
+        .forEach(function(button) {
+            button.addEventListener("click", function() {
+                toggleMembershipRequestDetails(button.dataset.membershipDetail);
+            });
+        });
 
     membershipAdminList
         .querySelectorAll(".membership-approve-button")
@@ -2742,6 +2870,46 @@ async function loadMembershipAdminRequests() {
                 );
             });
         });
+}
+
+async function loadMembershipAdminRequests() {
+    if (!membershipAdminList || !isAdmin) {
+        return;
+    }
+
+    membershipAdminList.innerHTML = `
+        <div class="membership-admin-loading">신청 목록을 불러오는 중...</div>
+    `;
+
+    const { data: requests, error } =
+        await supabaseClient
+            .from("membership_requests")
+            .select(
+                "id, user_id, website_nickname, youtube_handle, screenshot_path, status, admin_note, created_at, reviewed_at"
+            )
+            .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("멤버십 관리자 목록 조회 오류:", error);
+        membershipAdminList.innerHTML = `
+            <div class="membership-admin-empty">신청 목록을 불러오지 못했습니다.<br>${escapeHTML(error.message)}</div>
+        `;
+        return;
+    }
+
+    membershipAdminRows = Array.isArray(requests) ? requests : [];
+
+    const validIds = new Set(membershipAdminRows.map(function(request) {
+        return String(request.id);
+    }));
+
+    Array.from(membershipExpandedRequestIds).forEach(function(requestId) {
+        if (!validIds.has(String(requestId))) {
+            membershipExpandedRequestIds.delete(String(requestId));
+        }
+    });
+
+    renderMembershipAdminRequests();
 }
 
 async function reviewMembershipRequest(requestId, status) {
@@ -5548,6 +5716,18 @@ if (userManagementSearch) {
     );
 }
 
+userManagementRoleFilters.forEach(function(button) {
+    button.addEventListener("click", function() {
+        adminUserRoleFilter = button.dataset.userRoleFilter || "all";
+
+        userManagementRoleFilters.forEach(function(item) {
+            item.classList.toggle("active", item === button);
+        });
+
+        renderAdminUserList();
+    });
+});
+
 if (userManagementModal) {
     userManagementModal.addEventListener(
         "click",
@@ -5683,6 +5863,18 @@ if (membershipAdminRefresh) {
         "click",
         loadMembershipAdminRequests
     );
+}
+
+if (membershipAdminFilterUnchecked) {
+    membershipAdminFilterUnchecked.addEventListener("click", function() {
+        setMembershipAdminView("unchecked");
+    });
+}
+
+if (membershipAdminFilterChecked) {
+    membershipAdminFilterChecked.addEventListener("click", function() {
+        setMembershipAdminView("checked");
+    });
 }
 
 if (likeButton) {
