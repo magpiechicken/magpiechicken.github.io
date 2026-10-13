@@ -9451,3 +9451,37 @@ a:hover {
   .user-management-role-filters { gap:5px; padding:0 16px 12px; }
   .user-management-role-filter { flex:1 1 calc(50% - 5px); padding:7px 9px; font-size:11px; text-align:center; }
 }
+
+/* ==========================================================
+   모바일 관리자 커뮤니티 말풍선 약 2.2배 확대
+   - PC에는 영향 없음
+   - 화면 밖으로 넘치지 않도록 최대 너비는 모바일 기준 유지
+========================================================== */
+@media (max-width: 700px) {
+    #screen-admin-community .community-bubble,
+    #screen-admin-community #community-messages .community-bubble {
+        font-size: 30px !important;
+        line-height: 1.35 !important;
+        padding: 15px 22px !important;
+        border-radius: 24px !important;
+        border-width: 2px !important;
+
+        width: fit-content !important;
+        max-width: min(84vw, 520px) !important;
+        min-width: 0 !important;
+        height: auto !important;
+
+        white-space: pre-wrap !important;
+        word-break: keep-all !important;
+        overflow-wrap: break-word !important;
+        box-sizing: border-box !important;
+    }
+
+    #screen-admin-community .community-message {
+        max-width: 96% !important;
+    }
+
+    #screen-admin-community .community-message-row {
+        max-width: 100% !important;
+    }
+}
