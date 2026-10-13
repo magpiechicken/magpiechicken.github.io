@@ -11,6 +11,9 @@ const SUPABASE_PUBLISHABLE_KEY =
 const NEWS_IMAGE_BUCKET =
     "news-images";
 
+const FEEDBACK_IMAGE_BUCKET =
+    "feedback-images";
+
 const MAX_IMAGES = 5;
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
@@ -40,6 +43,15 @@ let currentCategory = "general";
 
 const homeScreen =
     document.getElementById("screen-home");
+
+const feedbackListScreen =
+    document.getElementById("screen-feedback-list");
+
+const feedbackDetailScreen =
+    document.getElementById("screen-feedback-detail");
+
+const feedbackWriteScreen =
+    document.getElementById("screen-feedback-write");
 
 const introScreen =
     document.getElementById("screen-news-intro");
@@ -116,6 +128,9 @@ const videoPreviewList =
 const homeMenu =
     document.getElementById("menu-home");
 
+const feedbackMenu =
+    document.getElementById("menu-feedback");
+
 const newsMenu =
     document.getElementById("menu-news");
 
@@ -148,6 +163,78 @@ const sidebarOverlay =
 
 const accountButton =
     document.getElementById("accountButton");
+
+const feedbackWriteOpen =
+    document.getElementById("feedback-write-open");
+
+const feedbackListContainer =
+    document.getElementById("feedback-list-container");
+
+const feedbackBackToList =
+    document.getElementById("feedback-back-to-list");
+
+const feedbackDetailContainer =
+    document.getElementById("feedback-detail-container");
+
+const feedbackDetailImages =
+    document.getElementById("feedback-detail-images");
+
+const feedbackDeleteButton =
+    document.getElementById("feedback-delete-button");
+
+const feedbackLikeButton =
+    document.getElementById("feedback-like-button");
+
+const feedbackLikeCount =
+    document.getElementById("feedback-like-count");
+
+const feedbackCommentCount =
+    document.getElementById("feedback-comment-count");
+
+const feedbackCommentsContainer =
+    document.getElementById("feedback-comments-container");
+
+const feedbackCommentLoginNotice =
+    document.getElementById("feedback-comment-login-notice");
+
+const feedbackCommentForm =
+    document.getElementById("feedback-comment-form");
+
+const feedbackCommentInput =
+    document.getElementById("feedback-comment-input");
+
+const feedbackCommentLength =
+    document.getElementById("feedback-comment-length");
+
+const feedbackCommentSubmit =
+    document.getElementById("feedback-comment-submit");
+
+const feedbackBackFromWrite =
+    document.getElementById("feedback-back-from-write");
+
+const feedbackCancelWrite =
+    document.getElementById("feedback-cancel-write");
+
+const feedbackTitleInput =
+    document.getElementById("feedback-title-input");
+
+const feedbackContentInput =
+    document.getElementById("feedback-content-input");
+
+const feedbackImageInput =
+    document.getElementById("feedback-image-input");
+
+const feedbackImagePreview =
+    document.getElementById("feedback-image-preview");
+
+const feedbackImageHelp =
+    document.getElementById("feedback-image-help");
+
+const feedbackSaveButton =
+    document.getElementById("feedback-save-button");
+
+let selectedFeedbackImageFiles = [];
+let currentFeedbackId = null;
 
 const userManagementButton =
     document.getElementById("user-management-button");
@@ -352,6 +439,15 @@ function hideAllScreens() {
     if (homeScreen) {
         homeScreen.classList.remove("visible");
     }
+    if (feedbackListScreen) {
+        feedbackListScreen.classList.remove("visible");
+    }
+    if (feedbackDetailScreen) {
+        feedbackDetailScreen.classList.remove("visible");
+    }
+    if (feedbackWriteScreen) {
+        feedbackWriteScreen.classList.remove("visible");
+    }
     introScreen.classList.remove("visible");
     listScreen.classList.remove("visible");
     detailScreen.classList.remove("visible");
@@ -371,6 +467,7 @@ function hideAllScreens() {
 function clearMenuActive() {
     [
         homeMenu,
+        feedbackMenu,
         newsMenu,
         sportsNewsMenu,
         adminCommunityMenu,
@@ -390,6 +487,14 @@ function activateHomeMenu() {
     clearMenuActive();
     if (homeMenu) {
         homeMenu.classList.add("active");
+    }
+}
+
+function activateFeedbackMenu() {
+    closeSidebarDrawer();
+    clearMenuActive();
+    if (feedbackMenu) {
+        feedbackMenu.classList.add("active");
     }
 }
 
@@ -1060,7 +1165,9 @@ async function openUserChatHistory(userId, username) {
     userChatHistoryList.innerHTML = rows.map(function(row) {
         const typeLabel = row.message_type === "community"
             ? "커뮤니티 채팅"
-            : "소식 댓글";
+            : row.message_type === "feedback_comment"
+                ? "사이트 피드백 댓글"
+                : "소식 댓글";
 
         return `
             <article class="user-chat-history-item">
@@ -1111,7 +1218,9 @@ async function adminDeleteUserRecord(messageType, recordId) {
 
     const functionName = messageType === "community"
         ? "admin_delete_community_message"
-        : "admin_delete_news_comment";
+        : messageType === "feedback_comment"
+            ? "admin_delete_feedback_comment"
+            : "admin_delete_news_comment";
 
     const { error } = await supabaseClient.rpc(functionName, {
         p_record_id: String(recordId)
@@ -5480,6 +5589,618 @@ async function deleteCurrentNews() {
     await openCategoryList(deletedCategory);
 }
 
+
+/* =========================
+   사이트 피드백
+========================= */
+function renderFeedbackImagePreview() {
+    if (!feedbackImagePreview) return;
+
+    feedbackImagePreview.innerHTML = "";
+
+    selectedFeedbackImageFiles.forEach(function(file) {
+        const item = document.createElement("div");
+        item.className = "preview-item";
+
+        const img = document.createElement("img");
+        img.alt = "피드백 첨부 사진 미리보기";
+
+        const name = document.createElement("div");
+        name.className = "preview-name";
+        name.textContent = file.name;
+
+        item.appendChild(img);
+        item.appendChild(name);
+        feedbackImagePreview.appendChild(item);
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    if (feedbackImageHelp) {
+        feedbackImageHelp.textContent = selectedFeedbackImageFiles.length > 0
+            ? `${selectedFeedbackImageFiles.length}장 선택됨 · 최대 ${MAX_IMAGES}장`
+            : `최대 ${MAX_IMAGES}장 · 사진 1장당 최대 5MB`;
+    }
+}
+
+function handleFeedbackImageSelection(event) {
+    const files = Array.from(event.target.files || []);
+    const validation = validateSelectedImages(files);
+
+    if (!validation.valid) {
+        alert(validation.message);
+        event.target.value = "";
+        selectedFeedbackImageFiles = [];
+        renderFeedbackImagePreview();
+        return;
+    }
+
+    selectedFeedbackImageFiles = files;
+    renderFeedbackImagePreview();
+}
+
+function resetFeedbackWriteForm() {
+    if (feedbackTitleInput) feedbackTitleInput.value = "";
+    if (feedbackContentInput) feedbackContentInput.value = "";
+    if (feedbackImageInput) feedbackImageInput.value = "";
+    selectedFeedbackImageFiles = [];
+    renderFeedbackImagePreview();
+}
+
+function getFeedbackPublicImageUrl(path) {
+    if (!path) return null;
+    if (path.startsWith("http://") || path.startsWith("https://")) return path;
+
+    const { data } = supabaseClient.storage
+        .from(FEEDBACK_IMAGE_BUCKET)
+        .getPublicUrl(path);
+
+    return data?.publicUrl || null;
+}
+
+async function openFeedbackList() {
+    setRouteHash("feedback");
+    hideAllScreens();
+
+    if (!feedbackListScreen) return;
+
+    feedbackListScreen.classList.add("visible");
+    activateFeedbackMenu();
+    currentFeedbackId = null;
+    scrollTop();
+    await loadFeedbackList();
+}
+
+async function loadFeedbackList() {
+    if (!feedbackListContainer) return;
+
+    feedbackListContainer.innerHTML = `
+        <div class="empty-box feedback-loading-box">
+            <div class="empty-title">피드백을 불러오는 중...</div>
+        </div>
+    `;
+
+    const { data, error } = await supabaseClient
+        .from("site_feedback")
+        .select("id, author, title, created_at, view_count")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("사이트 피드백 조회 오류:", error);
+        feedbackListContainer.innerHTML = `
+            <div class="empty-box">
+                <div class="empty-title">피드백을 불러오지 못했습니다.</div>
+                <div class="empty-description">${escapeHTML(error.message)}</div>
+            </div>
+        `;
+        return;
+    }
+
+    const rows = Array.isArray(data) ? data : [];
+
+    if (rows.length === 0) {
+        feedbackListContainer.innerHTML = `
+            <div class="empty-box">
+                <div class="empty-title">아직 피드백이 없습니다.</div>
+                <div class="empty-description">첫 번째 피드백을 남겨보세요.</div>
+            </div>
+        `;
+        return;
+    }
+
+    const list = document.createElement("div");
+    list.className = "news-list feedback-list";
+
+    rows.forEach(function(row) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "news-row feedback-row";
+        button.innerHTML = `
+            <span class="news-author">(${escapeHTML(row.author || "회원")})</span>
+            <span class="news-title">
+                ${escapeHTML(row.title || "제목 없음")}
+                <span class="feedback-row-meta">${escapeHTML(formatDate(row.created_at))} · 조회수 ${Number(row.view_count) || 0}</span>
+            </span>
+        `;
+        button.addEventListener("click", function() {
+            openFeedbackDetail(row.id);
+        });
+        list.appendChild(button);
+    });
+
+    feedbackListContainer.innerHTML = "";
+    feedbackListContainer.appendChild(list);
+}
+
+async function openFeedbackWrite() {
+    if (!currentUser) {
+        alert("사이트 피드백을 작성하려면 로그인해주세요.");
+        openAuthScreen("login");
+        return;
+    }
+
+    hideAllScreens();
+    if (!feedbackWriteScreen) return;
+
+    resetFeedbackWriteForm();
+    feedbackWriteScreen.classList.add("visible");
+    activateFeedbackMenu();
+    scrollTop();
+}
+
+async function saveFeedback() {
+    if (!currentUser) {
+        alert("로그인이 필요합니다.");
+        openAuthScreen("login");
+        return;
+    }
+
+    const title = feedbackTitleInput?.value.trim() || "";
+    const content = feedbackContentInput?.value.trim() || "";
+    const files = Array.from(feedbackImageInput?.files || []);
+
+    if (!title) {
+        alert("제목을 입력해주세요.");
+        feedbackTitleInput?.focus();
+        return;
+    }
+
+    if (!content) {
+        alert("내용을 입력해주세요.");
+        feedbackContentInput?.focus();
+        return;
+    }
+
+    const validation = validateSelectedImages(files);
+    if (!validation.valid) {
+        alert(validation.message);
+        return;
+    }
+
+    feedbackSaveButton.disabled = true;
+    feedbackSaveButton.textContent = "등록 중...";
+
+    const uploadedPaths = [];
+
+    try {
+        for (let i = 0; i < files.length; i += 1) {
+            const file = files[i];
+            const path = `${currentUser.id}/${createSafeFileName(file.name)}`;
+
+            const { error: uploadError } = await supabaseClient.storage
+                .from(FEEDBACK_IMAGE_BUCKET)
+                .upload(path, file, {
+                    cacheControl: "3600",
+                    upsert: false,
+                    contentType: file.type
+                });
+
+            if (uploadError) throw uploadError;
+            uploadedPaths.push(path);
+            feedbackSaveButton.textContent = `사진 업로드 중... ${i + 1}/${files.length}`;
+        }
+
+        const { data, error } = await supabaseClient
+            .from("site_feedback")
+            .insert({
+                user_id: currentUser.id,
+                title,
+                content,
+                image_urls: uploadedPaths
+            })
+            .select("id")
+            .single();
+
+        if (error) throw error;
+
+        resetFeedbackWriteForm();
+        await openFeedbackDetail(data.id, false);
+    } catch (error) {
+        console.error("사이트 피드백 등록 오류:", error);
+
+        if (uploadedPaths.length > 0) {
+            await supabaseClient.storage
+                .from(FEEDBACK_IMAGE_BUCKET)
+                .remove(uploadedPaths);
+        }
+
+        alert("피드백 등록 오류:\n" + (error?.message || "알 수 없는 오류"));
+    } finally {
+        feedbackSaveButton.disabled = false;
+        feedbackSaveButton.textContent = "피드백 등록";
+    }
+}
+
+async function openFeedbackDetail(feedbackId, countView = true) {
+    const { data: row, error } = await supabaseClient
+        .from("site_feedback")
+        .select("id, user_id, author, title, content, image_urls, view_count, created_at")
+        .eq("id", feedbackId)
+        .single();
+
+    if (error) {
+        console.error("피드백 상세 조회 오류:", error);
+        alert("피드백을 불러오지 못했습니다.\n" + error.message);
+        return;
+    }
+
+    if (countView) {
+        const { error: viewError } = await supabaseClient.rpc(
+            "increment_feedback_view",
+            { p_feedback_id: row.id }
+        );
+
+        if (!viewError) {
+            row.view_count = Number(row.view_count || 0) + 1;
+        }
+    }
+
+    currentFeedbackId = row.id;
+    hideAllScreens();
+
+    if (!feedbackDetailScreen) return;
+    feedbackDetailScreen.classList.add("visible");
+    activateFeedbackMenu();
+
+    if (feedbackDetailContainer) {
+        feedbackDetailContainer.innerHTML = `
+            <div class="detail-author">(${escapeHTML(row.author || "회원")})</div>
+            <div class="detail-title-line">
+                <h1 class="detail-title">${escapeHTML(row.title || "제목 없음")}</h1>
+                <span class="detail-date">${escapeHTML(formatDate(row.created_at))}</span>
+            </div>
+            <div class="detail-content">${escapeHTML(row.content || "").replace(/\n/g, "<br>")}</div>
+            <div class="news-detail-viewcount">조회수 ${Number(row.view_count) || 0}</div>
+        `;
+    }
+
+    if (feedbackDetailImages) {
+        feedbackDetailImages.innerHTML = "";
+        const images = Array.isArray(row.image_urls) ? row.image_urls : [];
+
+        images.forEach(function(path) {
+            const url = getFeedbackPublicImageUrl(path);
+            if (!url) return;
+
+            const img = document.createElement("img");
+            img.className = "news-image";
+            img.src = url;
+            img.alt = "피드백 첨부 사진";
+            img.loading = "lazy";
+            feedbackDetailImages.appendChild(img);
+        });
+
+        feedbackDetailImages.classList.toggle("hidden", images.length === 0);
+    }
+
+    if (feedbackDeleteButton) {
+        feedbackDeleteButton.classList.toggle("hidden", !isAdmin);
+    }
+
+    if (feedbackCommentInput) {
+        feedbackCommentInput.value = "";
+    }
+    updateFeedbackCommentLength();
+    await renderFeedbackInteractions(row.id);
+
+    scrollTop();
+}
+
+
+function updateFeedbackCommentLength() {
+    if (!feedbackCommentInput || !feedbackCommentLength) return;
+    feedbackCommentLength.textContent = `${feedbackCommentInput.value.length} / 500`;
+}
+
+async function loadFeedbackLikeState(feedbackId) {
+    const result = { count: 0, liked: false };
+
+    if (!currentUser) return result;
+
+    const { count, error: countError } = await supabaseClient
+        .from("feedback_likes")
+        .select("id", { count: "exact", head: true })
+        .eq("feedback_id", feedbackId);
+
+    if (!countError) result.count = count || 0;
+
+    const { data, error } = await supabaseClient
+        .from("feedback_likes")
+        .select("id")
+        .eq("feedback_id", feedbackId)
+        .eq("user_id", currentUser.id)
+        .maybeSingle();
+
+    if (!error) result.liked = !!data;
+    return result;
+}
+
+function updateFeedbackLikeButton(state) {
+    if (!feedbackLikeButton) return;
+
+    feedbackLikeButton.classList.toggle("liked", !!state?.liked);
+    feedbackLikeButton.innerHTML = `
+        ${state?.liked ? "♥" : "♡"} 좋아요
+        <span id="feedback-like-count">${Number(state?.count) || 0}</span>
+    `;
+}
+
+async function toggleFeedbackLike() {
+    if (!currentUser) {
+        alert("좋아요를 누르려면 로그인해주세요.");
+        openAuthScreen("login");
+        return;
+    }
+
+    if (!currentFeedbackId || !feedbackLikeButton) return;
+    feedbackLikeButton.disabled = true;
+
+    try {
+        const state = await loadFeedbackLikeState(currentFeedbackId);
+
+        if (state.liked) {
+            const { error } = await supabaseClient
+                .from("feedback_likes")
+                .delete()
+                .eq("feedback_id", currentFeedbackId)
+                .eq("user_id", currentUser.id);
+            if (error) throw error;
+        } else {
+            const { error } = await supabaseClient
+                .from("feedback_likes")
+                .insert({
+                    feedback_id: currentFeedbackId,
+                    user_id: currentUser.id
+                });
+            if (error && error.code !== "23505") throw error;
+        }
+
+        updateFeedbackLikeButton(await loadFeedbackLikeState(currentFeedbackId));
+    } catch (error) {
+        console.error("피드백 좋아요 처리 오류:", error);
+        alert("좋아요 처리 오류:\n" + (error?.message || "알 수 없는 오류"));
+    } finally {
+        feedbackLikeButton.disabled = false;
+    }
+}
+
+async function loadFeedbackComments(feedbackId) {
+    if (!feedbackCommentsContainer || !feedbackCommentCount) return;
+
+    if (!currentUser) {
+        feedbackCommentsContainer.innerHTML = `
+            <div class="comments-login-box">댓글은 로그인한 회원에게만 표시됩니다.</div>
+        `;
+        feedbackCommentCount.textContent = "댓글";
+        return;
+    }
+
+    feedbackCommentsContainer.innerHTML = `<div class="comments-loading">댓글을 불러오는 중...</div>`;
+
+    const { data: comments, error } = await supabaseClient
+        .from("feedback_comments")
+        .select("id, feedback_id, user_id, content, created_at")
+        .eq("feedback_id", feedbackId)
+        .order("created_at", { ascending: true });
+
+    if (error) {
+        console.error("피드백 댓글 조회 오류:", error);
+        feedbackCommentsContainer.innerHTML = `<div class="comments-error">댓글을 불러오지 못했습니다.</div>`;
+        return;
+    }
+
+    const list = comments || [];
+    feedbackCommentCount.textContent = `댓글 ${list.length}개`;
+
+    if (list.length === 0) {
+        feedbackCommentsContainer.innerHTML = `<div class="comments-empty">아직 댓글이 없습니다.</div>`;
+        return;
+    }
+
+    const userIds = [...new Set(list.map(item => item.user_id).filter(Boolean))];
+    let profileMap = new Map();
+
+    if (userIds.length > 0) {
+        const { data: profiles, error: profileError } = await supabaseClient.rpc(
+            "get_user_roles",
+            { p_user_ids: userIds }
+        );
+
+        if (!profileError) {
+            profileMap = new Map((profiles || []).map(profile => [String(profile.id), profile]));
+        }
+    }
+
+    if (currentUser && currentProfile?.username) {
+        profileMap.set(String(currentUser.id), {
+            id: currentUser.id,
+            username: currentProfile.username,
+            role: isAdmin ? "admin" : isMembership ? "membership" : "user"
+        });
+    }
+
+    feedbackCommentsContainer.innerHTML = list.map(function(comment) {
+        const profile = profileMap.get(String(comment.user_id)) || {};
+        const username = profile.username || "회원";
+        const role = profile.role || "user";
+        const roleClass = role === "admin" ? "admin" : role === "membership" ? "membership" : "";
+        const canDelete = isAdmin || String(comment.user_id) === String(currentUser.id);
+
+        return `
+            <article class="comment-item">
+                <div class="comment-top">
+                    <strong class="comment-author ${roleClass}">${escapeHTML(username)}</strong>
+                    <span class="comment-date">${formatDateTime(comment.created_at)}</span>
+                </div>
+                <div class="comment-content">${escapeHTML(comment.content || "").replace(/\n/g, "<br>")}</div>
+                ${canDelete ? `
+                    <button class="comment-delete-button feedback-comment-delete-button" type="button" data-feedback-comment-id="${escapeAttribute(comment.id)}">삭제</button>
+                ` : ""}
+            </article>
+        `;
+    }).join("");
+
+    feedbackCommentsContainer
+        .querySelectorAll("[data-feedback-comment-id]")
+        .forEach(function(button) {
+            button.addEventListener("click", function() {
+                deleteFeedbackComment(button.dataset.feedbackCommentId);
+            });
+        });
+}
+
+async function submitFeedbackComment() {
+    if (!currentUser) {
+        alert("댓글을 작성하려면 로그인해주세요.");
+        openAuthScreen("login");
+        return;
+    }
+
+    if (!currentFeedbackId || !feedbackCommentInput || !feedbackCommentSubmit) return;
+
+    const content = feedbackCommentInput.value.trim();
+    if (!content) {
+        alert("댓글 내용을 입력해주세요.");
+        return;
+    }
+
+    feedbackCommentSubmit.disabled = true;
+    feedbackCommentSubmit.textContent = "등록 중...";
+
+    try {
+        const { error } = await supabaseClient
+            .from("feedback_comments")
+            .insert({
+                feedback_id: currentFeedbackId,
+                user_id: currentUser.id,
+                content
+            });
+
+        if (error) throw error;
+
+        feedbackCommentInput.value = "";
+        updateFeedbackCommentLength();
+        await loadFeedbackComments(currentFeedbackId);
+    } catch (error) {
+        console.error("피드백 댓글 등록 오류:", error);
+        alert("댓글 등록 오류:\n" + (error?.message || "알 수 없는 오류"));
+    } finally {
+        feedbackCommentSubmit.disabled = false;
+        feedbackCommentSubmit.textContent = "댓글 등록";
+    }
+}
+
+async function deleteFeedbackComment(commentId) {
+    if (!currentUser || !commentId) return;
+    if (!window.confirm("이 댓글을 삭제하시겠습니까?")) return;
+
+    let query = supabaseClient
+        .from("feedback_comments")
+        .delete()
+        .eq("id", commentId);
+
+    if (!isAdmin) {
+        query = query.eq("user_id", currentUser.id);
+    }
+
+    const { error } = await query;
+
+    if (error) {
+        console.error("피드백 댓글 삭제 오류:", error);
+        alert("댓글 삭제 오류:\n" + error.message);
+        return;
+    }
+
+    await loadFeedbackComments(currentFeedbackId);
+}
+
+async function renderFeedbackInteractions(feedbackId) {
+    if (!feedbackLikeButton || !feedbackCommentLoginNotice || !feedbackCommentForm) return;
+
+    if (!currentUser) {
+        feedbackLikeButton.disabled = false;
+        feedbackLikeButton.classList.remove("liked");
+        feedbackLikeButton.innerHTML = `♡ 좋아요 <span id="feedback-like-count">0</span>`;
+        feedbackCommentLoginNotice.classList.remove("hidden");
+        feedbackCommentForm.classList.add("hidden");
+        await loadFeedbackComments(feedbackId);
+        return;
+    }
+
+    feedbackCommentLoginNotice.classList.add("hidden");
+    feedbackCommentForm.classList.remove("hidden");
+    updateFeedbackLikeButton(await loadFeedbackLikeState(feedbackId));
+    await loadFeedbackComments(feedbackId);
+}
+
+async function deleteCurrentFeedback() {
+    if (!currentUser || !isAdmin || !currentFeedbackId) {
+        alert("관리자만 피드백을 삭제할 수 있습니다.");
+        return;
+    }
+
+    if (!window.confirm("이 피드백을 삭제하시겠습니까?")) return;
+
+    const { data: row, error: loadError } = await supabaseClient
+        .from("site_feedback")
+        .select("id, image_urls")
+        .eq("id", currentFeedbackId)
+        .single();
+
+    if (loadError) {
+        alert("삭제할 피드백을 확인하지 못했습니다.\n" + loadError.message);
+        return;
+    }
+
+    const { error: deleteError } = await supabaseClient
+        .from("site_feedback")
+        .delete()
+        .eq("id", currentFeedbackId);
+
+    if (deleteError) {
+        alert("피드백 삭제 오류:\n" + deleteError.message);
+        return;
+    }
+
+    const imagePaths = Array.isArray(row?.image_urls) ? row.image_urls : [];
+    if (imagePaths.length > 0) {
+        const { error: imageDeleteError } = await supabaseClient.storage
+            .from(FEEDBACK_IMAGE_BUCKET)
+            .remove(imagePaths);
+
+        if (imageDeleteError) {
+            console.error("피드백 이미지 삭제 오류:", imageDeleteError);
+        }
+    }
+
+    currentFeedbackId = null;
+    await openFeedbackList();
+}
+
 function escapeHTML(value) {
     return String(value)
         .replace(
@@ -5664,6 +6385,8 @@ if (sidebar) {
 
         if (route === "home") {
             openHome();
+        } else if (route === "feedback") {
+            openFeedbackList();
         } else if (route === "news") {
             openNewsIntro();
         } else if (route === "sports") {
@@ -5680,6 +6403,53 @@ if (sidebar) {
             openAdvancedNews();
         }
     });
+}
+
+
+if (feedbackWriteOpen) {
+    feedbackWriteOpen.addEventListener("click", openFeedbackWrite);
+}
+
+if (feedbackBackToList) {
+    feedbackBackToList.addEventListener("click", openFeedbackList);
+}
+
+if (feedbackBackFromWrite) {
+    feedbackBackFromWrite.addEventListener("click", openFeedbackList);
+}
+
+if (feedbackCancelWrite) {
+    feedbackCancelWrite.addEventListener("click", openFeedbackList);
+}
+
+if (feedbackImageInput) {
+    feedbackImageInput.addEventListener("change", handleFeedbackImageSelection);
+}
+
+if (feedbackSaveButton) {
+    feedbackSaveButton.addEventListener("click", saveFeedback);
+}
+
+if (feedbackDeleteButton) {
+    feedbackDeleteButton.addEventListener("click", deleteCurrentFeedback);
+}
+
+if (feedbackLikeButton) {
+    feedbackLikeButton.addEventListener("click", toggleFeedbackLike);
+}
+
+if (feedbackCommentInput) {
+    feedbackCommentInput.addEventListener("input", updateFeedbackCommentLength);
+    feedbackCommentInput.addEventListener("keydown", function(event) {
+        if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+            event.preventDefault();
+            submitFeedbackComment();
+        }
+    });
+}
+
+if (feedbackCommentSubmit) {
+    feedbackCommentSubmit.addEventListener("click", submitFeedbackComment);
 }
 
 accountButton.addEventListener(
@@ -6029,6 +6799,14 @@ supabaseClient.auth.onAuthStateChange(
                 }
 
                 if (
+                    currentFeedbackId !== null &&
+                    feedbackDetailScreen &&
+                    feedbackDetailScreen.classList.contains("visible")
+                ) {
+                    await renderFeedbackInteractions(currentFeedbackId);
+                }
+
+                if (
                     adminCommunityScreen &&
                     adminCommunityScreen.classList.contains("visible")
                 ) {
@@ -6069,6 +6847,14 @@ supabaseClient.auth.onAuthStateChange(
                 }
 
                 if (
+                    currentFeedbackId !== null &&
+                    feedbackDetailScreen &&
+                    feedbackDetailScreen.classList.contains("visible")
+                ) {
+                    await renderFeedbackInteractions(currentFeedbackId);
+                }
+
+                if (
                     adminCommunityScreen &&
                     adminCommunityScreen.classList.contains("visible")
                 ) {
@@ -6090,6 +6876,7 @@ supabaseClient.auth.onAuthStateChange(
 
 // Navigation functions are intentionally exposed for reliable button routing.
 window.openHome = openHome;
+window.openFeedbackList = openFeedbackList;
 window.openNewsIntro = openNewsIntro;
 window.openSportsNews = openSportsNews;
 window.openAdvancedNews = openAdvancedNews;
@@ -6110,7 +6897,9 @@ async function initialize() {
 
     renderImagePreview();
 
-    if (hash === "#news") {
+    if (hash === "#feedback") {
+        openFeedbackList();
+    } else if (hash === "#news") {
         openNewsIntro();
     } else if (hash === "#sports") {
         openSportsNews();
