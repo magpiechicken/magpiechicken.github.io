@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=112">
+    <link rel="stylesheet" href="./style.css?v=114">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
      crossorigin="anonymous"></script>
 </head>
@@ -80,6 +80,15 @@
             type="button"
         >
             홈
+        </button>
+
+        <button
+            id="menu-feedback"
+            class="menu-item"
+            data-route="feedback"
+            type="button"
+        >
+            사이트 피드백
         </button>
 
         <button
@@ -310,6 +319,159 @@
 
             </div>
 
+        </section>
+
+
+        <!-- 시청자 사이트 피드백 -->
+        <section
+            id="screen-feedback-list"
+            class="screen feedback-screen"
+        >
+            <div class="list-header">
+                <div>
+                    <h1 class="page-heading">사이트 피드백</h1>
+                    <p class="page-subtitle">사이트에 대한 의견이나 제안을 자유롭게 남겨주세요.</p>
+                </div>
+
+                <button
+                    id="feedback-write-open"
+                    class="orange-small-button"
+                    type="button"
+                >
+                    + 피드백 작성
+                </button>
+            </div>
+
+            <div id="feedback-list-container"></div>
+        </section>
+
+        <section
+            id="screen-feedback-detail"
+            class="screen feedback-screen"
+        >
+            <button
+                id="feedback-back-to-list"
+                class="white-button"
+                type="button"
+            >
+                ← 목록
+            </button>
+
+            <article
+                id="feedback-detail-container"
+                class="detail-box"
+            ></article>
+
+            <div
+                id="feedback-detail-images"
+                class="news-images hidden"
+            ></div>
+
+            <section id="feedback-interactions" class="news-interactions">
+                <div class="reaction-bar">
+                    <button id="feedback-like-button" class="like-button" type="button">
+                        ♡ 좋아요 <span id="feedback-like-count">0</span>
+                    </button>
+                    <span id="feedback-comment-count" class="comment-count">댓글 0개</span>
+                </div>
+
+                <div id="feedback-comments-container" class="comments-container"></div>
+
+                <div id="feedback-comment-login-notice" class="comment-login-notice hidden">
+                    로그인하면 좋아요와 댓글을 사용할 수 있습니다.
+                </div>
+
+                <div id="feedback-comment-form" class="comment-form hidden">
+                    <textarea
+                        id="feedback-comment-input"
+                        maxlength="500"
+                        placeholder="댓글을 입력하세요."
+                    ></textarea>
+                    <div class="comment-form-bottom">
+                        <span id="feedback-comment-length" class="comment-length">0 / 500</span>
+                        <button id="feedback-comment-submit" class="orange-small-button" type="button">
+                            댓글 등록
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <button
+                id="feedback-delete-button"
+                class="delete-button hidden"
+                type="button"
+            >
+                피드백 삭제
+            </button>
+        </section>
+
+        <section
+            id="screen-feedback-write"
+            class="screen feedback-screen"
+        >
+            <button
+                id="feedback-back-from-write"
+                class="white-button"
+                type="button"
+            >
+                ← 목록
+            </button>
+
+            <div class="write-box">
+                <h1>사이트 피드백 작성</h1>
+
+                <label for="feedback-title-input">제목</label>
+                <input
+                    id="feedback-title-input"
+                    type="text"
+                    maxlength="120"
+                    placeholder="피드백 제목"
+                    autocomplete="off"
+                >
+
+                <label for="feedback-content-input">내용</label>
+                <textarea
+                    id="feedback-content-input"
+                    maxlength="5000"
+                    placeholder="사이트에 대한 의견이나 제안을 작성해주세요."
+                ></textarea>
+
+                <label for="feedback-image-input">사진 첨부</label>
+                <input
+                    id="feedback-image-input"
+                    class="file-input"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                >
+
+                <p id="feedback-image-help" class="image-help">
+                    최대 5장 · 사진 1장당 최대 5MB
+                </p>
+
+                <div
+                    id="feedback-image-preview"
+                    class="image-preview"
+                ></div>
+
+                <div class="write-actions">
+                    <button
+                        id="feedback-cancel-write"
+                        class="white-button"
+                        type="button"
+                    >
+                        취소
+                    </button>
+
+                    <button
+                        id="feedback-save-button"
+                        class="orange-small-button"
+                        type="button"
+                    >
+                        피드백 등록
+                    </button>
+                </div>
+            </div>
         </section>
 
         <section
@@ -1290,7 +1452,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
-<script src="./script.js?v=109"></script>
+<script src="./script.js?v=111"></script>
 
 </body>
 </html>
