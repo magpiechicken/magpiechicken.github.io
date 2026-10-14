@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=118">
+    <link rel="stylesheet" href="./style.css?v=119">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
      crossorigin="anonymous"></script>
 </head>
@@ -539,6 +539,46 @@
 
             </div>
 
+
+            <div
+                id="news-tag-filters"
+                class="news-tag-filters hidden"
+                role="group"
+                aria-label="소식 태그 필터"
+            >
+                <button
+                    class="news-tag-filter active"
+                    type="button"
+                    data-news-tag-filter="all"
+                >
+                    전체
+                </button>
+
+                <button
+                    class="news-tag-filter"
+                    type="button"
+                    data-news-tag-filter="general"
+                >
+                    일반 소식
+                </button>
+
+                <button
+                    class="news-tag-filter"
+                    type="button"
+                    data-news-tag-filter="update"
+                >
+                    업데이트 목록
+                </button>
+
+                <button
+                    class="news-tag-filter"
+                    type="button"
+                    data-news-tag-filter="business"
+                >
+                    비즈니스 소식
+                </button>
+            </div>
+
             <div
                 id="news-list-container"
             ></div>
@@ -680,6 +720,35 @@
                     placeholder="소식 제목"
                     autocomplete="off"
                 >
+
+
+                <div
+                    id="news-tag-field"
+                    class="news-tag-field"
+                >
+                    <label for="input-news-tag">
+                        태그
+                    </label>
+
+                    <select id="input-news-tag">
+                        <option value="">
+                            태그를 선택하세요
+                        </option>
+                        <option value="general">
+                            일반 소식
+                        </option>
+                        <option value="update">
+                            업데이트 목록
+                        </option>
+                        <option value="business">
+                            비즈니스 소식
+                        </option>
+                    </select>
+
+                    <p class="news-tag-help">
+                        일반 소식과 고급소식은 태그를 반드시 선택해야 합니다.
+                    </p>
+                </div>
 
                 <label for="input-content">
                     내용
