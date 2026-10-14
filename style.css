@@ -10116,3 +10116,454 @@ body {
         font-size: 9px !important;
     }
 }
+
+/* ==========================================================
+   v117 - 상단 메뉴 안정화 + 관리자 점검 모드
+========================================================== */
+
+/* v116 이전의 sidebar 규칙과 완전히 분리된 새 상단 메뉴 */
+.top-navigation {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 1200 !important;
+
+    width: 100% !important;
+    height: 58px !important;
+    min-height: 58px !important;
+
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: stretch !important;
+
+    margin: 0 !important;
+    padding: 0 210px 0 8px !important;
+
+    background: #ff9400 !important;
+    border: 0 !important;
+    border-bottom: 1px solid rgba(0,0,0,.12) !important;
+    box-shadow: 0 2px 9px rgba(0,0,0,.08) !important;
+
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior-x: contain !important;
+}
+
+.top-navigation::-webkit-scrollbar {
+    display: none !important;
+}
+
+.top-navigation .menu-item {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: auto !important;
+    min-width: max-content !important;
+    height: 58px !important;
+    min-height: 58px !important;
+
+    margin: 0 !important;
+    padding: 0 17px !important;
+
+    background: transparent !important;
+    border: 0 !important;
+    border-bottom: 3px solid transparent !important;
+    border-radius: 0 !important;
+
+    color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    text-align: center !important;
+
+    box-shadow: none !important;
+}
+
+.top-navigation .menu-item:hover {
+    background: rgba(255,255,255,.12) !important;
+}
+
+.top-navigation .menu-item.active {
+    background: rgba(255,255,255,.16) !important;
+    border-bottom-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
+.top-navigation .menu-item.locked,
+.top-navigation .menu-item.upcoming {
+    color: rgba(255,255,255,.78) !important;
+    background: transparent !important;
+}
+
+.top-navigation .menu-membership-divider {
+    display: none !important;
+}
+
+/* 기존 sidebar는 더 이상 사용하지 않음 */
+.sidebar {
+    display: none !important;
+}
+
+.site-layout {
+    width: 100% !important;
+    height: calc(100dvh - 58px) !important;
+    margin: 58px 0 0 !important;
+    padding: 0 !important;
+}
+
+.main-content {
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    overflow-y: auto !important;
+}
+
+/* 오른쪽 계정 영역 */
+.account-bar {
+    width: auto !important;
+    max-width: 210px !important;
+    height: 58px !important;
+    min-height: 58px !important;
+    padding: 0 9px !important;
+    background: #ff9400 !important;
+    box-shadow: -14px 0 18px rgba(255,148,0,.98) !important;
+}
+
+.account-bar .header-actions {
+    gap: 6px !important;
+}
+
+.account-bar .admin-button,
+.account-bar .user-management-button,
+.account-bar .maintenance-button {
+    min-height: 36px !important;
+    padding: 7px 10px !important;
+    border: 1px solid rgba(255,255,255,.72) !important;
+    border-radius: 7px !important;
+    background: rgba(255,255,255,.13) !important;
+    color: #ffffff !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+    box-shadow: none !important;
+}
+
+.account-bar .admin-button.logged-in {
+    background: #242424 !important;
+    color: #ffffff !important;
+}
+
+.account-bar .maintenance-button {
+    background: rgba(255,255,255,.20) !important;
+}
+
+.account-bar .maintenance-button:hover,
+.account-bar .admin-button:hover,
+.account-bar .user-management-button:hover {
+    background: rgba(255,255,255,.28) !important;
+}
+
+/* 태블릿 */
+@media (max-width: 1000px) {
+    .top-navigation {
+        height: 54px !important;
+        min-height: 54px !important;
+        padding-right: 185px !important;
+    }
+
+    .top-navigation .menu-item {
+        height: 54px !important;
+        min-height: 54px !important;
+        padding: 0 13px !important;
+        font-size: 13px !important;
+    }
+
+    .account-bar {
+        max-width: 185px !important;
+        height: 54px !important;
+        min-height: 54px !important;
+    }
+
+    .site-layout {
+        height: calc(100dvh - 54px) !important;
+        margin-top: 54px !important;
+    }
+}
+
+/* 모바일: 탭은 가로 스크롤되므로 어떤 메뉴도 잘리지 않음 */
+@media (max-width: 700px) {
+    .top-navigation {
+        height: 50px !important;
+        min-height: 50px !important;
+        padding: 0 112px 0 2px !important;
+    }
+
+    .top-navigation .menu-item {
+        height: 50px !important;
+        min-height: 50px !important;
+        padding: 0 10px !important;
+        font-size: 11px !important;
+        border-bottom-width: 2px !important;
+    }
+
+    .account-bar {
+        max-width: 112px !important;
+        height: 50px !important;
+        min-height: 50px !important;
+        padding: 0 4px !important;
+    }
+
+    .account-bar .header-actions {
+        gap: 3px !important;
+    }
+
+    .account-bar .admin-button,
+    .account-bar .user-management-button,
+    .account-bar .maintenance-button {
+        min-height: 31px !important;
+        max-width: 72px !important;
+        padding: 5px 6px !important;
+        font-size: 9px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .site-layout {
+        height: calc(100dvh - 50px) !important;
+        margin-top: 50px !important;
+    }
+}
+
+/* ==========================
+   점검 화면
+========================== */
+.maintenance-gate {
+    position: fixed;
+    inset: 58px 0 0 0;
+    z-index: 1250;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    background: #ffd6a0;
+}
+
+.maintenance-gate-inner {
+    width: min(760px, 100%);
+    text-align: center;
+    color: #3f2a12;
+}
+
+.maintenance-gate-badge {
+    display: inline-flex;
+    padding: 7px 12px;
+    border: 1px solid rgba(78,45,8,.20);
+    border-radius: 999px;
+    background: rgba(255,255,255,.40);
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: .12em;
+}
+
+.maintenance-gate h1 {
+    margin: 18px 0 12px;
+    font-size: clamp(38px, 7vw, 74px);
+    line-height: 1.05;
+    letter-spacing: -.05em;
+}
+
+.maintenance-gate p {
+    margin: 0 auto;
+    max-width: 680px;
+    font-size: clamp(17px, 2.2vw, 25px);
+    font-weight: 700;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+}
+
+.maintenance-gate-note {
+    margin-top: 22px;
+    color: rgba(63,42,18,.68);
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* 점검 중 일반 사용자: 메뉴/본문은 접근 차단, 로그인 영역은 항상 유지 */
+body.maintenance-locked .top-navigation {
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+body.maintenance-locked .site-layout {
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+body.maintenance-locked.maintenance-auth-open .maintenance-gate {
+    display: none !important;
+}
+
+body.maintenance-locked.maintenance-auth-open .site-layout {
+    pointer-events: auto !important;
+}
+
+body.maintenance-locked.maintenance-auth-open #screen-auth {
+    display: block !important;
+}
+
+body.maintenance-locked.maintenance-auth-open .auth-tabs #signup-tab,
+body.maintenance-locked.maintenance-auth-open #signup-panel {
+    display: none !important;
+}
+
+body.maintenance-locked.maintenance-auth-open .auth-tabs #login-tab {
+    border-right: 0 !important;
+}
+
+/* 점검 관리자 창 */
+.maintenance-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 4000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.maintenance-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.46);
+}
+
+.maintenance-modal-panel {
+    position: relative;
+    z-index: 1;
+    width: min(560px, 100%);
+    overflow: hidden;
+    border: 1px solid #e4e4e4;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 24px 70px rgba(0,0,0,.22);
+}
+
+.maintenance-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 22px 16px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.maintenance-modal-header h2 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.maintenance-modal-header p {
+    margin: 5px 0 0;
+    color: #777777;
+    font-size: 13px;
+}
+
+.maintenance-modal-close {
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
+    border: 0;
+    border-radius: 8px;
+    background: #f1f1f1;
+    font-size: 24px;
+    line-height: 1;
+}
+
+.maintenance-modal-body {
+    padding: 20px 22px 22px;
+}
+
+.maintenance-modal-body label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.maintenance-modal-body textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 12px 13px;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    resize: vertical;
+    outline: none;
+    font: inherit;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.maintenance-modal-body textarea:focus {
+    border-color: #ff9400;
+    box-shadow: 0 0 0 3px rgba(255,148,0,.12);
+}
+
+.maintenance-modal-help {
+    margin: 10px 0 16px;
+    color: #777777;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.maintenance-toggle-button {
+    width: 100%;
+    padding: 12px 14px;
+    border: 0;
+    border-radius: 9px;
+    background: #ff9400;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 900;
+}
+
+.maintenance-toggle-button.is-ending {
+    background: #333333;
+}
+
+.maintenance-toggle-button:disabled {
+    opacity: .6;
+}
+
+@media (max-width: 1000px) {
+    .maintenance-gate {
+        inset: 54px 0 0 0;
+    }
+}
+
+@media (max-width: 700px) {
+    .maintenance-gate {
+        inset: 50px 0 0 0;
+        padding: 20px;
+    }
+
+    .maintenance-modal {
+        padding: 12px;
+    }
+
+    .maintenance-modal-header {
+        padding: 16px 16px 13px;
+    }
+
+    .maintenance-modal-body {
+        padding: 16px;
+    }
+}
