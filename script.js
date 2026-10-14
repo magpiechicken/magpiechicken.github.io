@@ -884,7 +884,33 @@ function getUserModerationState(user) {
     return "정상";
 }
 
+
+function updateAdminUserCounts() {
+    const allCount = adminUserRows.length;
+    const adminCount = adminUserRows.filter(user => user.can_manage_news === true).length;
+    const membershipCount = adminUserRows.filter(
+        user => user.can_manage_news !== true && user.membership_verified === true
+    ).length;
+    const normalCount = adminUserRows.filter(
+        user => user.can_manage_news !== true && user.membership_verified !== true
+    ).length;
+
+    const values = {
+        "user-count-all": allCount,
+        "user-count-normal": normalCount,
+        "user-count-membership": membershipCount,
+        "user-count-admin": adminCount
+    };
+
+    Object.entries(values).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) element.textContent = String(value);
+    });
+}
+
 function renderAdminUserList() {
+    updateAdminUserCounts();
+
     if (!userManagementList) {
         return;
     }
@@ -4488,7 +4514,7 @@ async function loadComments(newsId) {
         error
     } = await supabaseClient
         .from("news_comments")
-        .select("id, news_id, user_id, content, created_at")
+        .select("id, news_id, user_id, content, created_at, parent_id")
         .eq("news_id", newsId)
         .order("created_at", { ascending: true });
 
@@ -4559,9 +4585,19 @@ async function loadComments(newsId) {
         });
     }
 
-    list.forEach(function(comment) {
+    const commentById = new Map(
+        list.map(comment => [String(comment.id), comment])
+    );
+
+    function createNewsCommentElement(comment) {
         const item = document.createElement("article");
-        item.className = "comment-item";
+        const isReply =
+            Boolean(comment.parent_id) &&
+            commentById.has(String(comment.parent_id));
+
+        item.className = isReply
+            ? "comment-item comment-reply-item"
+            : "comment-item";
 
         const commentProfile =
             profileMap.get(String(comment.user_id)) || {};
@@ -4586,7 +4622,21 @@ async function loadComments(newsId) {
                 String(currentUser.id) === String(comment.user_id)
             );
 
+        const parentComment = isReply
+            ? commentById.get(String(comment.parent_id))
+            : null;
+
+        const parentProfile = parentComment
+            ? (profileMap.get(String(parentComment.user_id)) || {})
+            : {};
+
         item.innerHTML = `
+            ${
+                isReply
+                    ? `<div class="comment-reply-guide">↳ ${escapeHTML(parentProfile.username || "회원")}님에게 답글</div>`
+                    : ""
+            }
+
             <div class="comment-top">
                 <strong class="comment-author ${commentRoleClass}">
                     ${escapeHTML(username)}
@@ -4601,23 +4651,105 @@ async function loadComments(newsId) {
                 ${escapeHTML(comment.content).replace(/\n/g, "<br>")}
             </div>
 
-            ${
-                canDelete
-                    ? `
-                        <button
-                            class="comment-delete-button"
-                            type="button"
-                            data-comment-id="${comment.id}"
-                        >
-                            삭제
-                        </button>
-                      `
-                    : ""
-            }
+            <div class="comment-actions-row">
+                <button
+                    class="comment-reply-button"
+                    type="button"
+                    data-comment-reply-id="${escapeAttribute(comment.id)}"
+                    data-comment-reply-username="${escapeAttribute(username)}"
+                >
+                    답글
+                </button>
+
+                ${
+                    canDelete
+                        ? `
+                            <button
+                                class="comment-delete-button"
+                                type="button"
+                                data-comment-id="${escapeAttribute(comment.id)}"
+                            >
+                                삭제
+                            </button>
+                          `
+                        : ""
+                }
+            </div>
+
+            <div class="comment-inline-reply hidden" data-reply-form-for="${escapeAttribute(comment.id)}">
+                <textarea maxlength="500" placeholder="${escapeAttribute(username)}님에게 답글 작성"></textarea>
+                <div class="comment-inline-reply-actions">
+                    <button type="button" class="comment-inline-reply-cancel">취소</button>
+                    <button type="button" class="comment-inline-reply-submit orange-small-button">답글 등록</button>
+                </div>
+            </div>
         `;
 
-        commentsContainer.appendChild(item);
+        return item;
+    }
+
+    const rootComments = list.filter(comment => {
+        return !comment.parent_id || !commentById.has(String(comment.parent_id));
     });
+
+    rootComments.forEach(function(comment) {
+        commentsContainer.appendChild(createNewsCommentElement(comment));
+
+        list
+            .filter(reply => String(reply.parent_id || "") === String(comment.id))
+            .forEach(function(reply) {
+                commentsContainer.appendChild(createNewsCommentElement(reply));
+            });
+    });
+
+    commentsContainer
+        .querySelectorAll("[data-comment-reply-id]")
+        .forEach(function(button) {
+            button.addEventListener("click", function() {
+                const form = commentsContainer.querySelector(
+                    `[data-reply-form-for="${CSS.escape(String(button.dataset.commentReplyId))}"]`
+                );
+
+                if (!form) return;
+
+                commentsContainer
+                    .querySelectorAll(".comment-inline-reply")
+                    .forEach(other => {
+                        if (other !== form) other.classList.add("hidden");
+                    });
+
+                form.classList.toggle("hidden");
+                if (!form.classList.contains("hidden")) {
+                    form.querySelector("textarea")?.focus();
+                }
+            });
+        });
+
+    commentsContainer
+        .querySelectorAll(".comment-inline-reply-cancel")
+        .forEach(function(button) {
+            button.addEventListener("click", function() {
+                button.closest(".comment-inline-reply")?.classList.add("hidden");
+            });
+        });
+
+    commentsContainer
+        .querySelectorAll(".comment-inline-reply-submit")
+        .forEach(function(button) {
+            button.addEventListener("click", async function() {
+                const form = button.closest(".comment-inline-reply");
+                const textarea = form?.querySelector("textarea");
+                const parentId = form?.dataset.replyFormFor;
+                const content = textarea?.value.trim() || "";
+
+                if (!content || !parentId) {
+                    alert("답글 내용을 입력해주세요.");
+                    return;
+                }
+
+                await submitNewsReply(parentId, content, button);
+            });
+        });
 
     commentsContainer
         .querySelectorAll(".comment-delete-button")
@@ -4626,6 +4758,46 @@ async function loadComments(newsId) {
                 deleteComment(button.dataset.commentId);
             });
         });
+}
+
+
+async function submitNewsReply(parentId, content, button) {
+    if (isCurrentUserTimedOut() && !isAdmin) {
+        alert(getTimeoutMessage());
+        return;
+    }
+
+    if (!currentUser) {
+        alert("답글을 작성하려면 로그인해주세요.");
+        openAuthScreen("login");
+        return;
+    }
+
+    if (!currentNewsId) return;
+
+    button.disabled = true;
+    const originalText = button.textContent;
+    button.textContent = "등록 중...";
+
+    try {
+        const { error } = await supabaseClient
+            .from("news_comments")
+            .insert({
+                news_id: currentNewsId,
+                user_id: currentUser.id,
+                content,
+                parent_id: String(parentId)
+            });
+
+        if (error) throw error;
+        await loadComments(currentNewsId);
+    } catch (error) {
+        console.error("답글 등록 오류:", error);
+        alert("답글 등록 중 오류가 발생했습니다.\n" + error.message);
+    } finally {
+        button.disabled = false;
+        button.textContent = originalText;
+    }
 }
 
 async function submitComment() {
@@ -6003,7 +6175,7 @@ async function loadFeedbackComments(feedbackId) {
 
     const { data: comments, error } = await supabaseClient
         .from("feedback_comments")
-        .select("id, feedback_id, user_id, content, created_at")
+        .select("id, feedback_id, user_id, content, created_at, parent_id")
         .eq("feedback_id", feedbackId)
         .order("created_at", { ascending: true });
 
@@ -6043,26 +6215,114 @@ async function loadFeedbackComments(feedbackId) {
         });
     }
 
-    feedbackCommentsContainer.innerHTML = list.map(function(comment) {
+    const feedbackCommentById = new Map(
+        list.map(comment => [String(comment.id), comment])
+    );
+
+    function feedbackCommentHTML(comment) {
         const profile = profileMap.get(String(comment.user_id)) || {};
         const username = profile.username || "회원";
         const role = profile.role || "user";
         const roleClass = role === "admin" ? "admin" : role === "membership" ? "membership" : "";
         const canDelete = isAdmin || String(comment.user_id) === String(currentUser.id);
+        const isReply =
+            Boolean(comment.parent_id) &&
+            feedbackCommentById.has(String(comment.parent_id));
+
+        const parentComment = isReply
+            ? feedbackCommentById.get(String(comment.parent_id))
+            : null;
+        const parentProfile = parentComment
+            ? (profileMap.get(String(parentComment.user_id)) || {})
+            : {};
 
         return `
-            <article class="comment-item">
+            <article class="comment-item ${isReply ? "comment-reply-item" : ""}">
+                ${isReply ? `<div class="comment-reply-guide">↳ ${escapeHTML(parentProfile.username || "회원")}님에게 답글</div>` : ""}
                 <div class="comment-top">
                     <strong class="comment-author ${roleClass}">${escapeHTML(username)}</strong>
                     <span class="comment-date">${formatDateTime(comment.created_at)}</span>
                 </div>
                 <div class="comment-content">${escapeHTML(comment.content || "").replace(/\n/g, "<br>")}</div>
-                ${canDelete ? `
-                    <button class="comment-delete-button feedback-comment-delete-button" type="button" data-feedback-comment-id="${escapeAttribute(comment.id)}">삭제</button>
-                ` : ""}
+                <div class="comment-actions-row">
+                    <button
+                        class="comment-reply-button"
+                        type="button"
+                        data-feedback-reply-id="${escapeAttribute(comment.id)}"
+                    >답글</button>
+                    ${canDelete ? `
+                        <button class="comment-delete-button feedback-comment-delete-button" type="button" data-feedback-comment-id="${escapeAttribute(comment.id)}">삭제</button>
+                    ` : ""}
+                </div>
+                <div class="comment-inline-reply hidden" data-feedback-reply-form-for="${escapeAttribute(comment.id)}">
+                    <textarea maxlength="500" placeholder="${escapeAttribute(username)}님에게 답글 작성"></textarea>
+                    <div class="comment-inline-reply-actions">
+                        <button type="button" class="comment-inline-reply-cancel">취소</button>
+                        <button type="button" class="feedback-inline-reply-submit orange-small-button">답글 등록</button>
+                    </div>
+                </div>
             </article>
         `;
+    }
+
+    const feedbackRoots = list.filter(comment => {
+        return !comment.parent_id || !feedbackCommentById.has(String(comment.parent_id));
+    });
+
+    feedbackCommentsContainer.innerHTML = feedbackRoots.map(function(comment) {
+        const replies = list.filter(
+            reply => String(reply.parent_id || "") === String(comment.id)
+        );
+        return feedbackCommentHTML(comment) + replies.map(feedbackCommentHTML).join("");
     }).join("");
+
+    feedbackCommentsContainer
+        .querySelectorAll("[data-feedback-reply-id]")
+        .forEach(function(button) {
+            button.addEventListener("click", function() {
+                const form = feedbackCommentsContainer.querySelector(
+                    `[data-feedback-reply-form-for="${CSS.escape(String(button.dataset.feedbackReplyId))}"]`
+                );
+                if (!form) return;
+
+                feedbackCommentsContainer
+                    .querySelectorAll(".comment-inline-reply")
+                    .forEach(other => {
+                        if (other !== form) other.classList.add("hidden");
+                    });
+
+                form.classList.toggle("hidden");
+                if (!form.classList.contains("hidden")) {
+                    form.querySelector("textarea")?.focus();
+                }
+            });
+        });
+
+    feedbackCommentsContainer
+        .querySelectorAll(".comment-inline-reply-cancel")
+        .forEach(function(button) {
+            button.addEventListener("click", function() {
+                button.closest(".comment-inline-reply")?.classList.add("hidden");
+            });
+        });
+
+    feedbackCommentsContainer
+        .querySelectorAll(".feedback-inline-reply-submit")
+        .forEach(function(button) {
+            button.addEventListener("click", async function() {
+                const form = button.closest(".comment-inline-reply");
+                const textarea = form?.querySelector("textarea");
+                const parentId = form?.dataset.feedbackReplyFormFor;
+                const content = textarea?.value.trim() || "";
+
+                if (!content || !parentId) {
+                    alert("답글 내용을 입력해주세요.");
+                    return;
+                }
+
+                await submitFeedbackReply(parentId, content, button);
+            });
+        });
 
     feedbackCommentsContainer
         .querySelectorAll("[data-feedback-comment-id]")
@@ -6071,6 +6331,46 @@ async function loadFeedbackComments(feedbackId) {
                 deleteFeedbackComment(button.dataset.feedbackCommentId);
             });
         });
+}
+
+
+async function submitFeedbackReply(parentId, content, button) {
+    if (isCurrentUserTimedOut() && !isAdmin) {
+        alert(getTimeoutMessage());
+        return;
+    }
+
+    if (!currentUser) {
+        alert("답글을 작성하려면 로그인해주세요.");
+        openAuthScreen("login");
+        return;
+    }
+
+    if (!currentFeedbackId) return;
+
+    button.disabled = true;
+    const originalText = button.textContent;
+    button.textContent = "등록 중...";
+
+    try {
+        const { error } = await supabaseClient
+            .from("feedback_comments")
+            .insert({
+                feedback_id: currentFeedbackId,
+                user_id: currentUser.id,
+                content,
+                parent_id: String(parentId)
+            });
+
+        if (error) throw error;
+        await loadFeedbackComments(currentFeedbackId);
+    } catch (error) {
+        console.error("피드백 답글 등록 오류:", error);
+        alert("답글 등록 오류:\n" + (error?.message || "알 수 없는 오류"));
+    } finally {
+        button.disabled = false;
+        button.textContent = originalText;
+    }
 }
 
 async function submitFeedbackComment() {
