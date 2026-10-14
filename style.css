@@ -10818,3 +10818,163 @@ body.maintenance-locked.maintenance-auth-open .auth-tabs #login-tab {
         padding: 7px 9px !important;
     }
 }
+
+/* ==========================================================
+   v119 - 일반/고급 소식 태그 필터
+========================================================== */
+
+.news-tag-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: -12px 0 22px;
+}
+
+.news-tag-filter {
+    padding: 8px 14px;
+    border: 1px solid #dedede;
+    border-radius: 999px;
+    background: #ffffff;
+    color: #555555;
+    font-size: 13px;
+    font-weight: 800;
+    white-space: nowrap;
+    transition: .15s ease;
+}
+
+.news-tag-filter:hover {
+    border-color: #ffb451;
+    background: #fff8ef;
+    color: #d87500;
+}
+
+.news-tag-filter.active {
+    border-color: #ff9400;
+    background: #ff9400;
+    color: #ffffff;
+}
+
+.news-title {
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
+}
+
+.news-title-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.news-tag-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    padding: 4px 7px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 900;
+    line-height: 1.1;
+    white-space: nowrap;
+}
+
+.news-tag-general {
+    background: #f1f1f1;
+    color: #555555;
+}
+
+.news-tag-update {
+    background: #fff0d7;
+    color: #c66a00;
+}
+
+.news-tag-business {
+    background: #e9f3ff;
+    color: #1769aa;
+}
+
+.news-detail-tag-row {
+    margin-bottom: 10px;
+}
+
+.news-detail-tag-row .news-tag-badge {
+    padding: 6px 9px;
+    font-size: 12px;
+}
+
+.news-tag-field {
+    margin-bottom: 20px;
+}
+
+.news-tag-field label {
+    margin-bottom: 10px;
+}
+
+#input-news-tag {
+    width: 100%;
+    margin-bottom: 7px;
+    padding: 13px 14px;
+    border: 1px solid #cfcfcf;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #222222;
+    font: inherit;
+    font-size: 15px;
+    outline: none;
+}
+
+#input-news-tag:focus {
+    border-color: #ff9400;
+    box-shadow: 0 0 0 3px rgba(255, 148, 0, .12);
+}
+
+.news-tag-help {
+    margin: 0;
+    color: #888888;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+@media (max-width: 700px) {
+    .news-tag-filters {
+        flex-wrap: nowrap;
+        gap: 6px;
+        margin: -5px 0 16px;
+        padding-bottom: 2px;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .news-tag-filters::-webkit-scrollbar {
+        display: none;
+    }
+
+    .news-tag-filter {
+        flex: 0 0 auto;
+        padding: 7px 10px;
+        font-size: 11px;
+    }
+
+    .news-title {
+        gap: 5px;
+    }
+
+    .news-tag-badge {
+        padding: 3px 5px;
+        font-size: 8px;
+    }
+
+    .news-detail-tag-row .news-tag-badge {
+        padding: 5px 7px;
+        font-size: 10px;
+    }
+
+    #input-news-tag {
+        padding: 10px 11px;
+        font-size: 13px;
+    }
+}
