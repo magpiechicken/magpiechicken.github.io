@@ -44,6 +44,7 @@ let currentNewsId = null;
 let selectedImageFiles = [];
 let editingNewsId = null;
 let currentCategory = "general";
+let currentNewsTagFilter = "all";
 
 const homeScreen =
     document.getElementById("screen-home");
@@ -1554,6 +1555,65 @@ function resetDetailUI() {
     updateCommentLength();
 }
 
+
+function newsTagLabel(tag) {
+    if (tag === "update") return "업데이트 목록";
+    if (tag === "business") return "비즈니스 소식";
+    return "일반 소식";
+}
+
+function categorySupportsNewsTags(category) {
+    return category === "general" || category === "advanced";
+}
+
+function updateNewsTagFilterUI(category = currentCategory) {
+    const filterBox =
+        document.getElementById("news-tag-filters");
+
+    if (!filterBox) return;
+
+    const supported =
+        categorySupportsNewsTags(category);
+
+    filterBox.classList.toggle(
+        "hidden",
+        !supported
+    );
+
+    filterBox
+        .querySelectorAll("[data-news-tag-filter]")
+        .forEach(function(button) {
+            button.classList.toggle(
+                "active",
+                button.dataset.newsTagFilter === currentNewsTagFilter
+            );
+        });
+}
+
+function updateNewsTagWriteUI(category = currentCategory) {
+    const field =
+        document.getElementById("news-tag-field");
+
+    const select =
+        document.getElementById("input-news-tag");
+
+    if (!field || !select) return;
+
+    const supported =
+        categorySupportsNewsTags(category);
+
+    field.classList.toggle(
+        "hidden",
+        !supported
+    );
+
+    select.required = supported;
+
+    if (!supported) {
+        select.value = "";
+    }
+}
+
 function categoryName(category) {
     if (category === "sports") return "스포츠소식";
     if (category === "advanced") return "고급소식";
@@ -1909,6 +1969,7 @@ async function openCategoryIntro(category) {
 
 async function openCategoryList(category) {
     currentCategory = category;
+    currentNewsTagFilter = "all";
     hideAllScreens();
     listScreen.classList.add("visible");
     activateCategoryMenu(category);
@@ -1929,6 +1990,8 @@ async function openCategoryList(category) {
                     ? "멤버십 전용 고급소식입니다."
                     : "까치치킨사장님의 소식과 공지사항입니다.";
     }
+
+    updateNewsTagFilterUI(category);
 
     scrollTop();
     await renderNews(category);
@@ -2779,6 +2842,7 @@ function openWriteScreen() {
 
     resetWriteForm();
     editingNewsId = null;
+    updateNewsTagWriteUI(currentCategory);
 
     hideAllScreens();
     writeScreen.classList.add("visible");
@@ -3935,7 +3999,7 @@ async function getNews(category = "general") {
         } = await supabaseClient
             .from("news")
             .select(
-                "id, author, title, content, created_at, image_urls, view_count, category"
+                "id, author, title, content, created_at, image_urls, view_count, category, news_tag"
             )
             .eq("category", category)
             .order(
@@ -4238,6 +4302,8 @@ async function renderNews(category = currentCategory) {
             "news-list-container"
         );
 
+    updateNewsTagFilterUI(category);
+
     container.innerHTML = `
         <div class="empty-box">
             <div class="empty-title">
@@ -4249,17 +4315,39 @@ async function renderNews(category = currentCategory) {
     const newsList =
         await getNews(category);
 
+    const visibleNewsList =
+        categorySupportsNewsTags(category) &&
+        currentNewsTagFilter !== "all"
+            ? newsList.filter(function(news) {
+                return (news.news_tag || "general") === currentNewsTagFilter;
+            })
+            : newsList;
+
     if (
-        newsList.length === 0
+        visibleNewsList.length === 0
     ) {
+        const emptyTitle =
+            newsList.length > 0 &&
+            categorySupportsNewsTags(category) &&
+            currentNewsTagFilter !== "all"
+                ? `${newsTagLabel(currentNewsTagFilter)} 없음`
+                : `${categoryName(category)} 없음`;
+
+        const emptyDescription =
+            newsList.length > 0 &&
+            categorySupportsNewsTags(category) &&
+            currentNewsTagFilter !== "all"
+                ? `현재 등록된 ${newsTagLabel(currentNewsTagFilter)}이(가) 없습니다.`
+                : `현재 등록된 ${categoryName(category)}이(가) 없습니다.`;
+
         container.innerHTML = `
             <div class="empty-box">
                 <div class="empty-title">
-                    ${categoryName(category)} 없음
+                    ${escapeHTML(emptyTitle)}
                 </div>
 
                 <div class="empty-description">
-                    현재 등록된 ${categoryName(category)}이(가) 없습니다.
+                    ${escapeHTML(emptyDescription)}
                 </div>
             </div>
         `;
@@ -4269,7 +4357,7 @@ async function renderNews(category = currentCategory) {
 
     const readNewsIds =
         await getReadNewsIds(
-            newsList
+            visibleNewsList
         );
 
     container.innerHTML = "";
@@ -4282,7 +4370,7 @@ async function renderNews(category = currentCategory) {
     list.className =
         "news-list";
 
-    newsList.forEach(
+    visibleNewsList.forEach(
         function(news) {
 
             const newsKey =
@@ -4307,6 +4395,15 @@ async function renderNews(category = currentCategory) {
                     ? "news-row unread"
                     : "news-row";
 
+            const tagBadge =
+                categorySupportsNewsTags(category)
+                    ? `
+                        <span class="news-tag-badge news-tag-${escapeAttribute(news.news_tag || "general")}">
+                            ${escapeHTML(newsTagLabel(news.news_tag || "general"))}
+                        </span>
+                      `
+                    : "";
+
             row.innerHTML = `
                 <span class="news-author">
                     (${escapeHTML(
@@ -4315,9 +4412,13 @@ async function renderNews(category = currentCategory) {
                 </span>
 
                 <span class="news-title">
-                    ${escapeHTML(
-                        news.title
-                    )}
+                    ${tagBadge}
+
+                    <span class="news-title-text">
+                        ${escapeHTML(
+                            news.title
+                        )}
+                    </span>
 
                     ${
                         isUnread
@@ -4359,7 +4460,7 @@ async function openNewsDetail(
         await supabaseClient
             .from("news")
             .select(
-                "id, author, title, content, created_at, image_urls, view_count, category"
+                "id, author, title, content, created_at, image_urls, view_count, category, news_tag"
             )
             .eq(
                 "id",
@@ -4482,6 +4583,18 @@ async function openNewsDetail(
                 news.author
             )})
         </div>
+
+        ${
+            categorySupportsNewsTags(news.category || "general")
+                ? `
+                    <div class="news-detail-tag-row">
+                        <span class="news-tag-badge news-tag-${escapeAttribute(news.news_tag || "general")}">
+                            ${escapeHTML(newsTagLabel(news.news_tag || "general"))}
+                        </span>
+                    </div>
+                  `
+                : ""
+        }
 
         <div class="detail-title-line">
 
@@ -5259,6 +5372,14 @@ function formatDateTime(value) {
 }
 
 function resetWriteForm() {
+    const newsTagSelect =
+        document.getElementById("input-news-tag");
+
+    if (newsTagSelect) {
+        newsTagSelect.value = "";
+    }
+
+
     editingNewsId = null;
     const titleInput =
         document.getElementById(
@@ -5521,6 +5642,17 @@ function openEditScreen(
         news.id;
 
     currentCategory = news.category || "general";
+    updateNewsTagWriteUI(currentCategory);
+
+    const newsTagSelect =
+        document.getElementById("input-news-tag");
+
+    if (newsTagSelect) {
+        newsTagSelect.value =
+            categorySupportsNewsTags(currentCategory)
+                ? (news.news_tag || "general")
+                : "";
+    }
 
     document.getElementById(
         "input-title"
@@ -5629,6 +5761,14 @@ async function saveNews() {
             .value
             .trim();
 
+    const newsTagSelect =
+        document.getElementById("input-news-tag");
+
+    const selectedNewsTag =
+        categorySupportsNewsTags(currentCategory)
+            ? (newsTagSelect?.value || "")
+            : null;
+
     if (!title) {
         alert(
             "제목을 입력해주세요."
@@ -5642,6 +5782,18 @@ async function saveNews() {
             "내용을 입력해주세요."
         );
 
+        return;
+    }
+
+    if (
+        categorySupportsNewsTags(currentCategory) &&
+        !selectedNewsTag
+    ) {
+        alert(
+            "소식 태그를 선택해주세요."
+        );
+
+        newsTagSelect?.focus();
         return;
     }
 
@@ -5683,7 +5835,8 @@ async function saveNews() {
                     .from("news")
                     .update({
                         title: title,
-                        content: content
+                        content: content,
+                        news_tag: selectedNewsTag
                     })
                     .eq(
                         "id",
@@ -5870,7 +6023,10 @@ async function saveNews() {
                         uploadedPaths,
 
                     category:
-                        currentCategory
+                        currentCategory,
+
+                    news_tag:
+                        selectedNewsTag
                 });
 
         if (insertError) {
