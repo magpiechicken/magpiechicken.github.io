@@ -35,6 +35,10 @@ const supabaseClient =
 let currentUser = null;
 let currentProfile = null;
 let isAdmin = false;
+let siteMaintenanceEnabled = false;
+let siteMaintenanceMessage = "현재 사이트 점검 중입니다.";
+let maintenancePollTimer = null;
+
 let isMembership = false;
 let currentNewsId = null;
 let selectedImageFiles = [];
@@ -156,13 +160,37 @@ const menuToggle =
     document.getElementById("menu-toggle");
 
 const sidebar =
-    document.querySelector(".sidebar");
+    document.querySelector(".top-navigation");
 
 const sidebarOverlay =
     document.getElementById("sidebar-overlay");
 
 const accountButton =
     document.getElementById("accountButton");
+
+const maintenanceButton =
+    document.getElementById("maintenance-button");
+
+const maintenanceGate =
+    document.getElementById("maintenance-gate");
+
+const maintenanceGateMessage =
+    document.getElementById("maintenance-gate-message");
+
+const maintenanceModal =
+    document.getElementById("maintenance-modal");
+
+const maintenanceModalClose =
+    document.getElementById("maintenance-modal-close");
+
+const maintenanceStatusText =
+    document.getElementById("maintenance-current-status");
+
+const maintenanceMessageInput =
+    document.getElementById("maintenance-message-input");
+
+const maintenanceToggleButton =
+    document.getElementById("maintenance-toggle-button");
 
 const feedbackWriteOpen =
     document.getElementById("feedback-write-open");
@@ -610,7 +638,208 @@ function scrollTop() {
     }
 }
 
+
+function isMaintenanceLockedForCurrentUser() {
+    return siteMaintenanceEnabled === true && isAdmin !== true;
+}
+
+function updateMaintenanceUI() {
+    const locked = isMaintenanceLockedForCurrentUser();
+
+    if (maintenanceButton) {
+        maintenanceButton.classList.toggle("hidden", !isAdmin);
+    }
+
+    if (maintenanceGateMessage) {
+        maintenanceGateMessage.textContent =
+            siteMaintenanceMessage?.trim() ||
+            "현재 사이트 점검 중입니다.";
+    }
+
+    if (maintenanceGate) {
+        const authOpen =
+            document.body.classList.contains("maintenance-auth-open");
+
+        maintenanceGate.classList.toggle(
+            "hidden",
+            !locked || authOpen
+        );
+    }
+
+    document.body.classList.toggle(
+        "maintenance-locked",
+        locked
+    );
+
+    if (maintenanceStatusText) {
+        maintenanceStatusText.textContent =
+            siteMaintenanceEnabled
+                ? "현재 점검이 진행 중입니다."
+                : "현재 사이트가 정상 운영 중입니다.";
+    }
+
+    if (maintenanceMessageInput && document.activeElement !== maintenanceMessageInput) {
+        maintenanceMessageInput.value =
+            siteMaintenanceMessage || "";
+    }
+
+    if (maintenanceToggleButton) {
+        maintenanceToggleButton.textContent =
+            siteMaintenanceEnabled
+                ? "점검 해제"
+                : "점검 시작";
+
+        maintenanceToggleButton.classList.toggle(
+            "is-ending",
+            siteMaintenanceEnabled
+        );
+    }
+
+    if (!isAdmin && maintenanceModal) {
+        maintenanceModal.classList.add("hidden");
+    }
+}
+
+async function loadMaintenanceStatus(options = {}) {
+    const silent = options.silent === true;
+
+    try {
+        const { data, error } = await supabaseClient
+            .from("site_settings")
+            .select("maintenance_enabled, maintenance_message")
+            .eq("id", "main")
+            .maybeSingle();
+
+        if (error) {
+            if (!silent) {
+                console.error("점검 상태 조회 오류:", error);
+            }
+            return;
+        }
+
+        siteMaintenanceEnabled =
+            data?.maintenance_enabled === true;
+
+        siteMaintenanceMessage =
+            data?.maintenance_message?.trim() ||
+            "현재 사이트 점검 중입니다.";
+
+        updateMaintenanceUI();
+
+    } catch (error) {
+        if (!silent) {
+            console.error("점검 상태 조회 예외:", error);
+        }
+    }
+}
+
+function openMaintenanceModal() {
+    if (!isAdmin || !maintenanceModal) return;
+
+    if (maintenanceMessageInput) {
+        maintenanceMessageInput.value =
+            siteMaintenanceMessage || "";
+    }
+
+    updateMaintenanceUI();
+    maintenanceModal.classList.remove("hidden");
+}
+
+function closeMaintenanceModal() {
+    if (!maintenanceModal) return;
+    maintenanceModal.classList.add("hidden");
+}
+
+async function toggleMaintenanceMode() {
+    if (!currentUser || !isAdmin) {
+        alert("관리자만 점검 상태를 변경할 수 있습니다.");
+        return;
+    }
+
+    const nextEnabled = !siteMaintenanceEnabled;
+    const nextMessage =
+        maintenanceMessageInput?.value.trim() ||
+        "현재 사이트 점검 중입니다.";
+
+    if (
+        nextEnabled &&
+        !confirm("사이트 점검을 시작할까요?\n관리자를 제외한 방문자는 사이트를 이용할 수 없게 됩니다.")
+    ) {
+        return;
+    }
+
+    if (
+        !nextEnabled &&
+        !confirm("사이트 점검을 해제할까요?")
+    ) {
+        return;
+    }
+
+    const oldText = maintenanceToggleButton?.textContent || "";
+
+    if (maintenanceToggleButton) {
+        maintenanceToggleButton.disabled = true;
+        maintenanceToggleButton.textContent =
+            nextEnabled ? "점검 시작 중..." : "점검 해제 중...";
+    }
+
+    try {
+        const { error } = await supabaseClient
+            .from("site_settings")
+            .upsert(
+                {
+                    id: "main",
+                    maintenance_enabled: nextEnabled,
+                    maintenance_message: nextMessage,
+                    updated_at: new Date().toISOString(),
+                    updated_by: currentUser.id
+                },
+                {
+                    onConflict: "id"
+                }
+            );
+
+        if (error) throw error;
+
+        siteMaintenanceEnabled = nextEnabled;
+        siteMaintenanceMessage = nextMessage;
+
+        updateMaintenanceUI();
+
+        alert(
+            nextEnabled
+                ? "사이트 점검을 시작했습니다."
+                : "사이트 점검을 해제했습니다."
+        );
+
+    } catch (error) {
+        console.error("점검 상태 변경 오류:", error);
+        alert(
+            "점검 상태를 변경하지 못했습니다.\n" +
+            (error?.message || "알 수 없는 오류")
+        );
+
+    } finally {
+        if (maintenanceToggleButton) {
+            maintenanceToggleButton.disabled = false;
+            maintenanceToggleButton.textContent =
+                siteMaintenanceEnabled ? "점검 해제" : "점검 시작";
+        }
+    }
+}
+
+function startMaintenancePolling() {
+    if (maintenancePollTimer) {
+        clearInterval(maintenancePollTimer);
+    }
+
+    maintenancePollTimer = setInterval(function() {
+        loadMaintenanceStatus({ silent: true });
+    }, 5000);
+}
+
 function updateAuthUI() {
+    updateMaintenanceUI();
     updateAdminOnlyMenus();
     updateVideoUploadUI();
     updateCommunityComposer();
@@ -739,6 +968,9 @@ async function loadCurrentProfile() {
 
     isMembership =
         profile?.membership_verified === true;
+
+    document.body.classList.remove("maintenance-auth-open");
+    updateMaintenanceUI();
 
     if (profile?.banned === true && !isAdmin) {
         updateAuthUI();
@@ -3347,6 +3579,14 @@ async function openDonation() {
 function openAuthScreen(
     mode = "login"
 ) {
+    const maintenanceLoginOnly =
+        isMaintenanceLockedForCurrentUser();
+
+    if (maintenanceLoginOnly) {
+        document.body.classList.add("maintenance-auth-open");
+        mode = "login";
+    }
+
     hideAllScreens();
 
     authScreen.classList.add(
@@ -3359,6 +3599,7 @@ function openAuthScreen(
 
     authMessage.textContent = "";
 
+    updateMaintenanceUI();
     scrollTop();
 }
 
@@ -3469,7 +3710,12 @@ async function login() {
          */
         await loadCurrentProfile();
 
-        await openHome();
+        if (isMaintenanceLockedForCurrentUser()) {
+            document.body.classList.remove("maintenance-auth-open");
+            updateMaintenanceUI();
+        } else {
+            await openHome();
+        }
 
         authMessage.textContent =
             isAdmin
@@ -6752,6 +6998,36 @@ if (feedbackCommentSubmit) {
     feedbackCommentSubmit.addEventListener("click", submitFeedbackComment);
 }
 
+if (maintenanceButton) {
+    maintenanceButton.addEventListener(
+        "click",
+        openMaintenanceModal
+    );
+}
+
+if (maintenanceModalClose) {
+    maintenanceModalClose.addEventListener(
+        "click",
+        closeMaintenanceModal
+    );
+}
+
+document
+    .querySelectorAll("[data-maintenance-close]")
+    .forEach(function(element) {
+        element.addEventListener(
+            "click",
+            closeMaintenanceModal
+        );
+    });
+
+if (maintenanceToggleButton) {
+    maintenanceToggleButton.addEventListener(
+        "click",
+        toggleMaintenanceMode
+    );
+}
+
 accountButton.addEventListener(
     "click",
     handleAccountButton
@@ -6866,7 +7142,16 @@ document
     )
     .addEventListener(
         "click",
-        openNewsIntro
+        function() {
+            if (isMaintenanceLockedForCurrentUser()) {
+                document.body.classList.remove("maintenance-auth-open");
+                hideAllScreens();
+                updateMaintenanceUI();
+                return;
+            }
+
+            openNewsIntro();
+        }
     );
 
 document
@@ -7084,6 +7369,7 @@ supabaseClient.auth.onAuthStateChange(
             isAdmin = false;
             isMembership = false;
 
+            document.body.classList.remove("maintenance-auth-open");
             updateAuthUI();
 
             /*
@@ -7192,8 +7478,10 @@ async function initialize() {
     }
 
     await refreshAuthState();
+    await loadMaintenanceStatus();
 
     updateAuthUI();
+    startMaintenancePolling();
 
     renderImagePreview();
 
