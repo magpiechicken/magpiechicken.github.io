@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=116">
+    <link rel="stylesheet" href="./style.css?v=117">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
      crossorigin="anonymous"></script>
 </head>
@@ -13,6 +13,16 @@
 <!-- 계정 버튼: 상단 가로 메뉴 오른쪽 -->
 <div class="account-bar">
     <div class="header-actions">
+        <button
+            id="maintenance-button"
+            class="maintenance-button hidden"
+            type="button"
+            aria-haspopup="dialog"
+            aria-controls="maintenance-modal"
+        >
+            점검
+        </button>
+
         <button
             id="accountButton"
             class="admin-button"
@@ -32,9 +42,21 @@
         </button>
     </div>
 </div>
+
+<section id="maintenance-gate" class="maintenance-gate hidden" aria-live="polite">
+    <div class="maintenance-gate-inner">
+        <div class="maintenance-gate-badge">MAINTENANCE</div>
+        <h1>사이트 점검 중</h1>
+        <p id="maintenance-gate-message">현재 사이트 점검 중입니다.</p>
+        <div class="maintenance-gate-note">
+            관리자 계정은 오른쪽 위 로그인 버튼으로 로그인하면 사이트에 접속할 수 있습니다.
+        </div>
+    </div>
+</section>
+
 <div class="site-layout">
 
-    <aside class="sidebar">
+    <nav class="top-navigation" aria-label="주 메뉴">
 
         <button
             id="menu-home"
@@ -122,7 +144,7 @@
             고급소식
         </button>
 
-    </aside>
+    </nav>
 
     <main class="main-content">
 
@@ -1289,6 +1311,57 @@
 </div>
 
 <!-- 관리자 전용 유저 관리 모달 -->
+<div
+    id="maintenance-modal"
+    class="maintenance-modal hidden"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="maintenance-modal-title"
+>
+    <div class="maintenance-modal-backdrop" data-maintenance-close></div>
+
+    <div class="maintenance-modal-panel">
+        <div class="maintenance-modal-header">
+            <div>
+                <h2 id="maintenance-modal-title">사이트 점검 관리</h2>
+                <p id="maintenance-current-status">현재 상태를 확인하는 중...</p>
+            </div>
+
+            <button
+                id="maintenance-modal-close"
+                class="maintenance-modal-close"
+                type="button"
+                aria-label="점검 관리 닫기"
+            >
+                ×
+            </button>
+        </div>
+
+        <div class="maintenance-modal-body">
+            <label for="maintenance-message-input">점검 중 표시할 메시지</label>
+
+            <textarea
+                id="maintenance-message-input"
+                maxlength="500"
+                placeholder="예: 서버 업데이트를 진행하고 있습니다. 잠시 후 다시 방문해주세요."
+            ></textarea>
+
+            <p class="maintenance-modal-help">
+                점검을 시작하면 관리자 이외의 방문자는 이 메시지만 볼 수 있습니다.
+                로그인 버튼은 계속 사용할 수 있으며, 관리자 계정으로 로그인하면 정상 접속됩니다.
+            </p>
+
+            <button
+                id="maintenance-toggle-button"
+                class="maintenance-toggle-button"
+                type="button"
+            >
+                점검 시작
+            </button>
+        </div>
+    </div>
+</div>
+
 <div
     id="user-management-modal"
     class="user-management-modal hidden"
