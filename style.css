@@ -11018,3 +11018,26 @@ body.maintenance-locked.maintenance-auth-open .auth-tabs #login-tab {
 /* v121: category-specific news filters */
 #news-tag-filters .news-tag-filter { flex: 0 0 auto; }
 #news-tag-filters .news-tag-filter.active { background: #ff9400; color: white; border-color: #ff9400; }
+
+
+/* 모바일 상단 메뉴 양 끝 그라데이션 */
+@media (max-width: 700px) {
+    .top-navigation {
+        -webkit-mask-image: linear-gradient(
+            to right,
+            transparent 0%,
+            black 24px,
+            black calc(100% - 24px),
+            transparent 100%
+        ) !important;
+
+        mask-image: linear-gradient(
+            to right,
+            transparent 0%,
+            black 24px,
+            black calc(100% - 24px),
+            transparent 100%
+        ) !important;
+    }
+}
+
