@@ -10978,3 +10978,39 @@ body.maintenance-locked.maintenance-auth-open .auth-tabs #login-tab {
         font-size: 13px;
     }
 }
+
+/* ==========================================================
+   v120 - 태그 필터 수정 + 스포츠 태그
+========================================================== */
+
+.news-tag-filters,
+.news-tag-filter {
+    pointer-events: auto !important;
+}
+
+.news-tag-filter {
+    cursor: pointer !important;
+    user-select: none !important;
+}
+
+.news-tag-filter.hidden {
+    display: none !important;
+}
+
+.news-tag-football {
+    background: #e9f7ee;
+    color: #17783a;
+}
+
+.news-tag-baseball {
+    background: #fff0f0;
+    color: #bb3434;
+}
+
+.news-tag-filter.active {
+    box-shadow: 0 2px 8px rgba(255,148,0,.22);
+}
+
+#input-news-tag {
+    cursor: pointer;
+}
