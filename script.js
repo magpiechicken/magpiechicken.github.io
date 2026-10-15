@@ -1559,14 +1559,80 @@ function resetDetailUI() {
 function newsTagLabel(tag) {
     if (tag === "update") return "업데이트 목록";
     if (tag === "business") return "비즈니스 소식";
+    if (tag === "football") return "축구";
+    if (tag === "baseball") return "야구";
     return "일반 소식";
 }
 
 function categorySupportsNewsTags(category) {
-    return category === "general" || category === "advanced";
+    return (
+        category === "general" ||
+        category === "advanced" ||
+        category === "sports"
+    );
+}
+
+function allowedNewsTagsForCategory(category) {
+    if (category === "sports") {
+        return ["football", "baseball"];
+    }
+
+    if (category === "general" || category === "advanced") {
+        return ["general", "update", "business"];
+    }
+
+    return [];
+}
+
+function defaultNewsTagForCategory(category) {
+    return category === "sports"
+        ? "football"
+        : "general";
+}
+
+
+function bindNewsTagFilters() {
+    document
+        .querySelectorAll("[data-news-tag-filter]")
+        .forEach(function(button) {
+            if (button.dataset.newsTagBound === "true") {
+                return;
+            }
+
+            button.dataset.newsTagBound = "true";
+
+            button.addEventListener(
+                "click",
+                async function() {
+                    if (!categorySupportsNewsTags(currentCategory)) {
+                        return;
+                    }
+
+                    const requestedTag =
+                        button.dataset.newsTagFilter || "all";
+
+                    const allowedTags =
+                        allowedNewsTagsForCategory(currentCategory);
+
+                    if (
+                        requestedTag !== "all" &&
+                        !allowedTags.includes(requestedTag)
+                    ) {
+                        return;
+                    }
+
+                    currentNewsTagFilter = requestedTag;
+
+                    updateNewsTagFilterUI(currentCategory);
+                    await renderNews(currentCategory);
+                }
+            );
+        });
 }
 
 function updateNewsTagFilterUI(category = currentCategory) {
+    bindNewsTagFilters();
+
     const filterBox =
         document.getElementById("news-tag-filters");
 
@@ -1580,12 +1646,34 @@ function updateNewsTagFilterUI(category = currentCategory) {
         !supported
     );
 
+    const allowedTags =
+        allowedNewsTagsForCategory(category);
+
+    if (
+        currentNewsTagFilter !== "all" &&
+        !allowedTags.includes(currentNewsTagFilter)
+    ) {
+        currentNewsTagFilter = "all";
+    }
+
     filterBox
         .querySelectorAll("[data-news-tag-filter]")
         .forEach(function(button) {
+            const tag =
+                button.dataset.newsTagFilter || "all";
+
+            const shouldShow =
+                tag === "all" ||
+                allowedTags.includes(tag);
+
+            button.classList.toggle(
+                "hidden",
+                !shouldShow
+            );
+
             button.classList.toggle(
                 "active",
-                button.dataset.newsTagFilter === currentNewsTagFilter
+                tag === currentNewsTagFilter
             );
         });
 }
@@ -1610,8 +1698,30 @@ function updateNewsTagWriteUI(category = currentCategory) {
     select.required = supported;
 
     if (!supported) {
+        select.innerHTML = `
+            <option value="">
+                태그를 선택하세요
+            </option>
+        `;
         select.value = "";
+        return;
     }
+
+    const allowedTags =
+        allowedNewsTagsForCategory(category);
+
+    select.innerHTML = `
+        <option value="">
+            태그를 선택하세요
+        </option>
+        ${allowedTags.map(function(tag) {
+            return `
+                <option value="${escapeAttribute(tag)}">
+                    ${escapeHTML(newsTagLabel(tag))}
+                </option>
+            `;
+        }).join("")}
+    `;
 }
 
 function categoryName(category) {
@@ -4319,7 +4429,7 @@ async function renderNews(category = currentCategory) {
         categorySupportsNewsTags(category) &&
         currentNewsTagFilter !== "all"
             ? newsList.filter(function(news) {
-                return (news.news_tag || "general") === currentNewsTagFilter;
+                return (news.news_tag || defaultNewsTagForCategory(category)) === currentNewsTagFilter;
             })
             : newsList;
 
@@ -4398,8 +4508,8 @@ async function renderNews(category = currentCategory) {
             const tagBadge =
                 categorySupportsNewsTags(category)
                     ? `
-                        <span class="news-tag-badge news-tag-${escapeAttribute(news.news_tag || "general")}">
-                            ${escapeHTML(newsTagLabel(news.news_tag || "general"))}
+                        <span class="news-tag-badge news-tag-${escapeAttribute(news.news_tag || defaultNewsTagForCategory(category))}">
+                            ${escapeHTML(newsTagLabel(news.news_tag || defaultNewsTagForCategory(category)))}
                         </span>
                       `
                     : "";
@@ -4588,8 +4698,8 @@ async function openNewsDetail(
             categorySupportsNewsTags(news.category || "general")
                 ? `
                     <div class="news-detail-tag-row">
-                        <span class="news-tag-badge news-tag-${escapeAttribute(news.news_tag || "general")}">
-                            ${escapeHTML(newsTagLabel(news.news_tag || "general"))}
+                        <span class="news-tag-badge news-tag-${escapeAttribute(news.news_tag || defaultNewsTagForCategory(news.category || "general"))}">
+                            ${escapeHTML(newsTagLabel(news.news_tag || defaultNewsTagForCategory(news.category || "general")))}
                         </span>
                     </div>
                   `
@@ -5405,6 +5515,7 @@ function resetWriteForm() {
 
     selectedImageFiles = [];
 
+    bindNewsTagFilters();
     renderImagePreview();
 
     const heading =
@@ -5650,7 +5761,7 @@ function openEditScreen(
     if (newsTagSelect) {
         newsTagSelect.value =
             categorySupportsNewsTags(currentCategory)
-                ? (news.news_tag || "general")
+                ? (news.news_tag || defaultNewsTagForCategory(currentCategory))
                 : "";
     }
 
@@ -5829,29 +5940,46 @@ async function saveNews() {
 
         try {
             const {
+                data: updateResult,
                 error
             } =
                 await supabaseClient
-                    .from("news")
-                    .update({
-                        title: title,
-                        content: content,
-                        news_tag: selectedNewsTag
-                    })
-                    .eq(
-                        "id",
-                        editingNewsId
+                    .rpc(
+                        "admin_update_news",
+                        {
+                            p_news_id:
+                                String(editingNewsId),
+
+                            p_title:
+                                title,
+
+                            p_content:
+                                content,
+
+                            p_news_tag:
+                                selectedNewsTag
+                        }
                     );
 
             if (error) {
                 throw error;
             }
 
+            if (updateResult !== true) {
+                throw new Error(
+                    "소식을 수정하지 못했습니다."
+                );
+            }
+
             const editedId =
                 editingNewsId;
 
+            const editedCategory =
+                currentCategory;
+
             editingNewsId = null;
             resetWriteForm();
+            currentCategory = editedCategory;
 
             await openNewsDetail(
                 editedId,
