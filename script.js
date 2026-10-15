@@ -1591,91 +1591,55 @@ function defaultNewsTagForCategory(category) {
 }
 
 
+// 각 카테고리의 버튼만 DOM에 생성해 다른 태그가 섞이지 않게 합니다.
+let renderedNewsTagCategory = null;
+let newsListRequestSerial = 0;
+
 function bindNewsTagFilters() {
-    document
-        .querySelectorAll("[data-news-tag-filter]")
-        .forEach(function(button) {
-            if (button.dataset.newsTagBound === "true") {
-                return;
-            }
+    const filterBox = document.getElementById("news-tag-filters");
+    if (!filterBox || filterBox.dataset.bound === "true") return;
+    filterBox.dataset.bound = "true";
 
-            button.dataset.newsTagBound = "true";
-
-            button.addEventListener(
-                "click",
-                async function() {
-                    if (!categorySupportsNewsTags(currentCategory)) {
-                        return;
-                    }
-
-                    const requestedTag =
-                        button.dataset.newsTagFilter || "all";
-
-                    const allowedTags =
-                        allowedNewsTagsForCategory(currentCategory);
-
-                    if (
-                        requestedTag !== "all" &&
-                        !allowedTags.includes(requestedTag)
-                    ) {
-                        return;
-                    }
-
-                    currentNewsTagFilter = requestedTag;
-
-                    updateNewsTagFilterUI(currentCategory);
-                    await renderNews(currentCategory);
-                }
-            );
-        });
+    filterBox.addEventListener("click", async function(event) {
+        const button = event.target.closest("button[data-news-tag-filter]");
+        if (!button || !filterBox.contains(button)) return;
+        const category = currentCategory;
+        const selected = button.dataset.newsTagFilter;
+        if (selected !== "all" && !allowedNewsTagsForCategory(category).includes(selected)) return;
+        if (currentNewsTagFilter === selected) return;
+        currentNewsTagFilter = selected;
+        updateNewsTagFilterUI(category);
+        await renderNews(category);
+    });
 }
 
 function updateNewsTagFilterUI(category = currentCategory) {
-    bindNewsTagFilters();
-
-    const filterBox =
-        document.getElementById("news-tag-filters");
-
+    const filterBox = document.getElementById("news-tag-filters");
     if (!filterBox) return;
+    bindNewsTagFilters();
+    const supported = categorySupportsNewsTags(category);
+    filterBox.classList.toggle("hidden", !supported);
+    if (!supported) return;
 
-    const supported =
-        categorySupportsNewsTags(category);
-
-    filterBox.classList.toggle(
-        "hidden",
-        !supported
-    );
-
-    const allowedTags =
-        allowedNewsTagsForCategory(category);
-
-    if (
-        currentNewsTagFilter !== "all" &&
-        !allowedTags.includes(currentNewsTagFilter)
-    ) {
-        currentNewsTagFilter = "all";
+    const tags = ["all", ...allowedNewsTagsForCategory(category)];
+    if (!tags.includes(currentNewsTagFilter)) currentNewsTagFilter = "all";
+    if (renderedNewsTagCategory !== category || filterBox.children.length !== tags.length) {
+        filterBox.replaceChildren();
+        for (const tag of tags) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "news-tag-filter";
+            button.dataset.newsTagFilter = tag;
+            button.textContent = tag === "all" ? "전체" : newsTagLabel(tag);
+            filterBox.appendChild(button);
+        }
+        renderedNewsTagCategory = category;
     }
-
-    filterBox
-        .querySelectorAll("[data-news-tag-filter]")
-        .forEach(function(button) {
-            const tag =
-                button.dataset.newsTagFilter || "all";
-
-            const shouldShow =
-                tag === "all" ||
-                allowedTags.includes(tag);
-
-            button.classList.toggle(
-                "hidden",
-                !shouldShow
-            );
-
-            button.classList.toggle(
-                "active",
-                tag === currentNewsTagFilter
-            );
-        });
+    for (const button of filterBox.querySelectorAll("button[data-news-tag-filter]")) {
+        const active = button.dataset.newsTagFilter === currentNewsTagFilter;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+    }
 }
 
 function updateNewsTagWriteUI(category = currentCategory) {
@@ -2080,6 +2044,7 @@ async function openCategoryIntro(category) {
 async function openCategoryList(category) {
     currentCategory = category;
     currentNewsTagFilter = "all";
+    newsListRequestSerial++;
     hideAllScreens();
     listScreen.classList.add("visible");
     activateCategoryMenu(category);
@@ -4101,23 +4066,20 @@ async function logout() {
     openNewsIntro();
 }
 
-async function getNews(category = "general") {
+async function getNews(category = "general", tag = "all") {
     try {
-        const {
-            data,
-            error
-        } = await supabaseClient
+        let query = supabaseClient
             .from("news")
-            .select(
-                "id, author, title, content, created_at, image_urls, view_count, category, news_tag"
-            )
-            .eq("category", category)
-            .order(
-                "created_at",
-                {
-                    ascending: false
-                }
-            );
+            .select("id, author, title, content, created_at, image_urls, view_count, category, news_tag")
+            .eq("category", category);
+
+        if (tag !== "all" && allowedNewsTagsForCategory(category).includes(tag)) {
+            // 기존 태그가 없는 글도 기본 태그에서 찾을 수 있게 합니다.
+            query = tag === defaultNewsTagForCategory(category)
+                ? query.or(`news_tag.eq.${tag},news_tag.is.null`)
+                : query.eq("news_tag", tag);
+        }
+        const { data, error } = await query.order("created_at", { ascending: false });
 
         if (error) {
             throw error;
@@ -4407,6 +4369,8 @@ function getPublicImageUrl(
 }
 
 async function renderNews(category = currentCategory) {
+    const requestSerial = ++newsListRequestSerial;
+    const selectedTag = currentNewsTagFilter;
     const container =
         document.getElementById(
             "news-list-container"
@@ -4422,31 +4386,22 @@ async function renderNews(category = currentCategory) {
         </div>
     `;
 
-    const newsList =
-        await getNews(category);
-
-    const visibleNewsList =
-        categorySupportsNewsTags(category) &&
-        currentNewsTagFilter !== "all"
-            ? newsList.filter(function(news) {
-                return (news.news_tag || defaultNewsTagForCategory(category)) === currentNewsTagFilter;
-            })
-            : newsList;
+    const newsList = await getNews(category, selectedTag);
+    if (requestSerial !== newsListRequestSerial || category !== currentCategory || selectedTag !== currentNewsTagFilter) return;
+    const visibleNewsList = newsList;
 
     if (
         visibleNewsList.length === 0
     ) {
         const emptyTitle =
-            newsList.length > 0 &&
             categorySupportsNewsTags(category) &&
-            currentNewsTagFilter !== "all"
+            selectedTag !== "all"
                 ? `${newsTagLabel(currentNewsTagFilter)} 없음`
                 : `${categoryName(category)} 없음`;
 
         const emptyDescription =
-            newsList.length > 0 &&
             categorySupportsNewsTags(category) &&
-            currentNewsTagFilter !== "all"
+            selectedTag !== "all"
                 ? `현재 등록된 ${newsTagLabel(currentNewsTagFilter)}이(가) 없습니다.`
                 : `현재 등록된 ${categoryName(category)}이(가) 없습니다.`;
 
@@ -4465,11 +4420,8 @@ async function renderNews(category = currentCategory) {
         return;
     }
 
-    const readNewsIds =
-        await getReadNewsIds(
-            visibleNewsList
-        );
-
+    const readNewsIds = await getReadNewsIds(visibleNewsList);
+    if (requestSerial !== newsListRequestSerial || category !== currentCategory || selectedTag !== currentNewsTagFilter) return;
     container.innerHTML = "";
 
     const list =
