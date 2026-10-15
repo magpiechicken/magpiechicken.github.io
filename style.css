@@ -11014,3 +11014,7 @@ body.maintenance-locked.maintenance-auth-open .auth-tabs #login-tab {
 #input-news-tag {
     cursor: pointer;
 }
+
+/* v121: category-specific news filters */
+#news-tag-filters .news-tag-filter { flex: 0 0 auto; }
+#news-tag-filters .news-tag-filter.active { background: #ff9400; color: white; border-color: #ff9400; }
