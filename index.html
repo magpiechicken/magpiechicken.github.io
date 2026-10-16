@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=121">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6011307138240876"
+    <link rel="stylesheet" href="./style.css?v=123">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2333278742905467"
      crossorigin="anonymous"></script>
 </head>
 
@@ -30,6 +30,8 @@
         >
             로그인
         </button>
+
+        <button id="admin-dashboard-button" class="admin-dashboard-entry hidden" type="button" aria-label="관리자 대시보드 열기">▦ 대시보드</button>
 
         <button
             id="user-management-button"
@@ -147,6 +149,46 @@
     </nav>
 
     <main class="main-content">
+
+        <!-- 관리자 전용 운영 대시보드 -->
+        <section id="screen-admin-dashboard" class="screen admin-dashboard-screen" aria-label="관리자 대시보드">
+            <div class="adm-shell">
+                <header class="adm-header">
+                    <div><div class="adm-eyebrow"><span class="adm-live-dot"></span> MAGPIE CHICKEN · CONTROL CENTER</div>
+                    <h1>운영 대시보드</h1><p>사이트 운영 현황을 한눈에 확인하고 빠르게 관리하세요.</p></div>
+                    <div class="adm-header-actions"><span id="adm-updated" class="adm-updated">데이터를 불러오는 중</span><button id="adm-refresh" type="button" class="adm-refresh">↻ 새로고침</button></div>
+                </header>
+                <div id="adm-alert" class="adm-alert hidden" role="status"></div>
+                <div class="adm-stats">
+                    <article class="adm-stat"><div class="adm-stat-top"><span>전체 회원</span><span class="adm-stat-icon">♙</span></div><strong id="adm-users">—</strong><small id="adm-users-note">가입된 계정 수</small></article>
+                    <article class="adm-stat"><div class="adm-stat-top"><span>전체 소식</span><span class="adm-stat-icon">▤</span></div><strong id="adm-news">—</strong><small>일반 · 스포츠 · 고급소식</small></article>
+                    <article class="adm-stat"><div class="adm-stat-top"><span>멤버십 심사 대기</span><span class="adm-stat-icon">◷</span></div><strong id="adm-pending">—</strong><small>확인이 필요한 신청</small></article>
+                    <article class="adm-stat"><div class="adm-stat-top"><span>사이트 피드백</span><span class="adm-stat-icon">◇</span></div><strong id="adm-feedback">—</strong><small>접수된 피드백</small></article>
+                </div>
+                <div class="adm-content-grid">
+                    <section class="adm-panel"><div class="adm-panel-heading"><div><span class="adm-section-kicker">CONTENT OVERVIEW</span><h2>소식 현황</h2></div><span class="adm-panel-sub">카테고리별 게시물</span></div>
+                        <div id="adm-category-chart" class="adm-chart"><div class="adm-placeholder">불러오는 중...</div></div>
+                    </section>
+                    <section class="adm-panel"><div class="adm-panel-heading"><div><span class="adm-section-kicker">QUICK ACTIONS</span><h2>빠른 관리</h2></div></div>
+                        <div class="adm-actions">
+                            <button type="button" data-adm-action="users"><span class="adm-action-symbol">♙</span><span><strong>회원 관리</strong><small>유저 검색 · 밴 · 타임아웃</small></span><span class="adm-action-arrow">↗</span></button>
+                            <button type="button" data-adm-action="membership"><span class="adm-action-symbol">✓</span><span><strong>멤버십 심사</strong><small>인증 신청 확인 및 승인</small></span><span class="adm-action-arrow">↗</span></button>
+                            <button type="button" data-adm-action="news"><span class="adm-action-symbol">▤</span><span><strong>소식 관리</strong><small>게시물 작성 및 수정</small></span><span class="adm-action-arrow">↗</span></button>
+                            <button type="button" data-adm-action="maintenance"><span class="adm-action-symbol">⚙</span><span><strong>사이트 점검</strong><small>점검 상태 및 안내 메시지</small></span><span class="adm-action-arrow">↗</span></button>
+                        </div>
+                    </section>
+                    <section class="adm-panel adm-recent"><div class="adm-panel-heading"><div><span class="adm-section-kicker">RECENT ACTIVITY</span><h2>최근 등록된 소식</h2></div><button type="button" data-adm-action="news" class="adm-view-all">전체 보기 →</button></div>
+                        <div id="adm-recent-news" class="adm-recent-list"><div class="adm-placeholder">불러오는 중...</div></div>
+                    </section>
+                    <section class="adm-panel adm-status-panel"><div class="adm-panel-heading"><div><span class="adm-section-kicker">SYSTEM STATUS</span><h2>사이트 상태</h2></div></div>
+                        <div class="adm-system-status"><div class="adm-system-symbol">●</div><div><strong id="adm-system-title">상태 확인 중</strong><p id="adm-system-description">사이트 점검 상태를 확인하고 있습니다.</p></div></div>
+                        <div class="adm-status-footer"><span>데이터 제공</span><strong>Supabase</strong></div>
+                        <div class="adm-status-footer"><span>관리자 접근</span><strong>권한 확인됨</strong></div>
+                        <p class="adm-status-disclaimer">표시되는 통계는 현재 계정의 데이터 조회 권한을 기준으로 합니다. 실시간 방문자 수는 포함되지 않습니다.</p>
+                    </section>
+                </div>
+            </div>
+        </section>
 
         <section
             id="screen-home"
@@ -1552,7 +1594,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
-<script src="./script.js?v=121"></script>
+<script src="./script.js?v=123"></script>
 
 </body>
 </html>
