@@ -461,6 +461,7 @@ function toggleSidebarDrawer() {
 }
 
 function hideAllScreens() {
+    document.getElementById("screen-admin-dashboard")?.classList.remove("visible");
     closeSidebarDrawer();
 
     stopCommunityPolling();
@@ -840,6 +841,7 @@ function startMaintenancePolling() {
 }
 
 function updateAuthUI() {
+    document.getElementById("admin-dashboard-button")?.classList.toggle("hidden", !isAdmin);
     updateMaintenanceUI();
     updateAdminOnlyMenus();
     updateVideoUploadUI();
@@ -7704,6 +7706,126 @@ window.openSportsNews = openSportsNews;
 window.openAdvancedNews = openAdvancedNews;
 window.openAdminCommunity = openAdminCommunity;
 
+// 관리자 운영 대시보드: 실제 데이터만 사용하며 조회 실패를 0으로 표시하지 않습니다.
+let admLoadSerial = 0;
+function admSetText(id, value) {
+    const element = document.getElementById(id);
+    if (element) element.textContent = value;
+}
+function admFormatNumber(value) {
+    return typeof value === "number" ? value.toLocaleString("ko-KR") : "—";
+}
+function admDate(value) {
+    if (!value) return "날짜 없음";
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "날짜 없음" : date.toLocaleDateString("ko-KR", { year: "numeric", month: "short", day: "numeric" });
+}
+function admSafeLabel(category) {
+    return ({ general: "일반 소식", sports: "스포츠소식", advanced: "고급소식" })[category] || "기타";
+}
+async function openAdminDashboard() {
+    if (!isAdmin || !currentUser) {
+        alert("관리자 계정으로 로그인해야 이용할 수 있습니다.");
+        return;
+    }
+    setRouteHash("dashboard");
+    hideAllScreens();
+    clearMenuActive();
+    document.getElementById("screen-admin-dashboard")?.classList.add("visible");
+    scrollTop();
+    await loadAdminDashboard();
+}
+async function loadAdminDashboard() {
+    if (!isAdmin || !currentUser) return;
+    const serial = ++admLoadSerial;
+    const refreshButton = document.getElementById("adm-refresh");
+    if (refreshButton) { refreshButton.disabled = true; refreshButton.textContent = "불러오는 중…"; }
+    ["adm-users", "adm-news", "adm-pending", "adm-feedback"].forEach(id => admSetText(id, "—"));
+    const alertBox = document.getElementById("adm-alert");
+    if (alertBox) { alertBox.textContent = ""; alertBox.classList.add("hidden"); }
+    const requests = await Promise.allSettled([
+        supabaseClient.rpc("admin_list_users"),
+        supabaseClient.from("news").select("id, title, category, news_tag, created_at", { count: "exact" }).order("created_at", { ascending: false }).limit(8),
+        supabaseClient.from("membership_requests").select("id, status"),
+        supabaseClient.from("feedback").select("id", { count: "exact", head: true }),
+        supabaseClient.from("news").select("id", { count: "exact", head: true }).eq("category", "general"),
+        supabaseClient.from("news").select("id", { count: "exact", head: true }).eq("category", "sports"),
+        supabaseClient.from("news").select("id", { count: "exact", head: true }).eq("category", "advanced")
+    ]);
+    if (serial !== admLoadSerial || !isAdmin) return;
+    const errors = [];
+    function getResult(index, label) {
+        const entry = requests[index];
+        if (entry.status === "rejected" || entry.value?.error) {
+            errors.push(label);
+            return null;
+        }
+        return entry.value;
+    }
+    const users = getResult(0, "회원");
+    const news = getResult(1, "소식");
+    const membership = getResult(2, "멤버십");
+    const feedback = getResult(3, "피드백");
+    const categories = [getResult(4, "일반 소식 분포"), getResult(5, "스포츠소식 분포"), getResult(6, "고급소식 분포")];
+    admSetText("adm-users", admFormatNumber(Array.isArray(users?.data) ? users.data.length : null));
+    admSetText("adm-news", admFormatNumber(typeof news?.count === "number" ? news.count : null));
+    const pending = membership?.data?.filter(item => ["pending", "unchecked"].includes(String(item.status).toLowerCase()));
+    admSetText("adm-pending", admFormatNumber(Array.isArray(pending) ? pending.length : null));
+    admSetText("adm-feedback", admFormatNumber(typeof feedback?.count === "number" ? feedback.count : null));
+    const chart = document.getElementById("adm-category-chart");
+    if (chart) {
+        if (categories.some(result => !result || typeof result.count !== "number")) {
+            chart.innerHTML = '<div class="adm-placeholder">소식 분포를 불러오지 못했습니다.</div>';
+        } else {
+            const labels = ["general", "sports", "advanced"];
+            const counts = categories.map(result => result.count);
+            const total = Math.max(1, ...counts);
+            chart.innerHTML = labels.map((category, i) => `
+                <div class="adm-chart-row"><div class="adm-chart-caption"><span>${admSafeLabel(category)}</span><strong>${counts[i].toLocaleString("ko-KR")}개</strong></div>
+                <div class="adm-track"><div class="adm-bar adm-bar-${category}" style="width:${Math.round(counts[i] / total * 100)}%"></div></div></div>`).join("");
+        }
+    }
+    const recent = document.getElementById("adm-recent-news");
+    if (recent) {
+        if (!Array.isArray(news?.data)) recent.innerHTML = '<div class="adm-placeholder">최근 소식을 불러오지 못했습니다.</div>';
+        else if (!news.data.length) recent.innerHTML = '<div class="adm-placeholder">등록된 소식이 없습니다.</div>';
+        else {
+            recent.innerHTML = news.data.map(item => `
+                <button type="button" class="adm-recent-item" data-adm-news-id="${escapeAttribute(String(item.id))}">
+                    <span class="adm-recent-category">${escapeHTML(admSafeLabel(item.category))}</span>
+                    <span class="adm-recent-name">${escapeHTML(item.title || "제목 없음")}</span>
+                    <span class="adm-recent-date">${admDate(item.created_at)}</span><span class="adm-recent-arrow">↗</span>
+                </button>`).join("");
+            recent.querySelectorAll("[data-adm-news-id]").forEach(button => button.addEventListener("click", () => openNewsDetail(button.dataset.admNewsId)));
+        }
+    }
+    const active = !siteMaintenanceEnabled;
+    admSetText("adm-system-title", active ? "사이트 정상 운영 중" : "사이트 점검 진행 중");
+    admSetText("adm-system-description", active ? "현재 점검 모드가 비활성화되어 있습니다." : (siteMaintenanceMessage || "점검 모드가 활성화되어 있습니다."));
+    const statusSymbol = document.querySelector(".adm-system-symbol");
+    statusSymbol?.classList.toggle("adm-system-warning", !active);
+    admSetText("adm-updated", "업데이트 " + new Date().toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit" }));
+    if (errors.length && alertBox) {
+        alertBox.textContent = errors.join(" · ") + " 데이터를 불러오지 못했습니다. Supabase 조회 권한을 확인해 주세요.";
+        alertBox.classList.remove("hidden");
+    }
+    if (refreshButton) { refreshButton.disabled = false; refreshButton.textContent = "↻ 새로고침"; }
+}
+function setupAdminDashboard() {
+    document.getElementById("admin-dashboard-button")?.addEventListener("click", openAdminDashboard);
+    document.getElementById("adm-refresh")?.addEventListener("click", loadAdminDashboard);
+    document.querySelectorAll("[data-adm-action]").forEach(button => button.addEventListener("click", async () => {
+        if (!isAdmin) return;
+        switch (button.dataset.admAction) {
+            case "users": await openUserManagementModal(); break;
+            case "membership": await openMembership(); break;
+            case "news": await openNewsIntro(); break;
+            case "maintenance": document.getElementById("maintenance-button")?.click(); break;
+        }
+    }));
+}
+setupAdminDashboard();
+
 async function initialize() {
 
     /* 홈은 Supabase 응답을 기다리지 않고 즉시 표시 */
@@ -7721,7 +7843,9 @@ async function initialize() {
 
     renderImagePreview();
 
-    if (hash === "#feedback") {
+    if (hash === "#dashboard" && isAdmin) {
+        await openAdminDashboard();
+    } else if (hash === "#feedback") {
         openFeedbackList();
     } else if (hash === "#news") {
         openNewsIntro();
