@@ -11207,3 +11207,20 @@ textarea:focus, select:focus { border-color: var(--simple-accent); }
 @media (prefers-reduced-motion: reduce) {
     .top-navigation, .top-navigation .menu-item, .adm-actions button { scroll-behavior: auto !important; transition: none !important; }
 }
+
+/* v125: 모바일 상단 탭의 좌우 흐림 효과 완전 제거 */
+@media (max-width: 700px) {
+    nav.top-navigation {
+        -webkit-mask: none !important;
+        mask: none !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        background-image: none !important;
+        overflow-x: auto !important;
+    }
+    nav.top-navigation::before,
+    nav.top-navigation::after {
+        content: none !important;
+        display: none !important;
+    }
+}
