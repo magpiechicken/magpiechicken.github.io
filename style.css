@@ -11191,11 +11191,11 @@ textarea:focus, select:focus { border-color: var(--simple-accent); }
 .adm-actions button { background: #fff !important; border-color: var(--simple-line) !important; }
 .adm-actions button:hover { background: #fffaf5 !important; transform: none !important; }
 
-/* 모바일: 가로 스크롤 안내용 양 끝 흐림 효과 */
+/* 모바일: 상단 탭의 양 끝 흐림 효과 제거, 가로 스크롤 유지 */
 @media (max-width: 700px) {
     .top-navigation {
-        -webkit-mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 130px), transparent calc(100% - 112px)) !important;
-        mask-image: linear-gradient(to right, transparent 0, #000 12px, #000 calc(100% - 130px), transparent calc(100% - 112px)) !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
         scroll-behavior: smooth;
     }
     #screen-home .home-news-item { min-height: 66px; gap: 8px !important; }
