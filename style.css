@@ -11243,3 +11243,140 @@ body { background:#fff !important; color:#172238; }
 .home-panel, .home-section-grid > section { box-shadow:none !important; }
 button:focus-visible, a:focus-visible { outline:2px solid #0067b8 !important; outline-offset:2px; }
 @media(max-width:700px) { .top-navigation { padding-left:12px !important; padding-right:100px !important; } .top-navigation .magpie-brand { font-size:15px; gap:7px; margin-right:7px; padding-right:8px; } .magpie-brand img { width:26px; height:26px; } .top-navigation .menu-item { font-size:12px !important; padding:0 10px !important; } .home-screen .home-hero { min-height:0 !important; padding:34px 20px !important; } .home-screen .home-hero h1 { font-size:clamp(27px,7vw,39px) !important; } }
+
+
+/* ==========================================================
+   v127 - Microsoft-style header contrast / admin actions fix
+   - White text on white button issue resolved
+   - Right-side action width reserved automatically
+   - Separate second mobile action row preserved
+========================================================== */
+:root { --magpie-actions-width: 240px; }
+
+/* PC: the white action bar sits at the far-right of the navigation */
+.account-bar {
+    background: #ffffff !important;
+    border: 0 !important;
+    border-bottom: 1px solid #e4e7eb !important;
+    box-shadow: none !important;
+    width: max-content !important;
+    max-width: calc(100vw - 16px) !important;
+    overflow: visible !important;
+    padding: 0 14px !important;
+    box-sizing: border-box !important;
+}
+.account-bar .header-actions {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: max-content !important;
+    max-width: none !important;
+}
+
+/* Restore strong text/background contrast on every action button */
+.account-bar #accountButton,
+.account-bar #user-management-button,
+.account-bar #maintenance-button,
+.account-bar #admin-dashboard-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 36px !important;
+    padding: 8px 13px !important;
+    border: 1px solid #cdd5df !important;
+    border-radius: 5px !important;
+    background: #ffffff !important;
+    color: #172238 !important;
+    box-shadow: none !important;
+    font-size: 13px !important;
+    font-weight: 650 !important;
+    line-height: 1.3 !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    cursor: pointer;
+}
+.account-bar #accountButton:hover,
+.account-bar #user-management-button:hover,
+.account-bar #maintenance-button:hover {
+    background: #f2f6fa !important;
+    border-color: #aebdcc !important;
+}
+.account-bar #maintenance-button {
+    background: #eef6fd !important;
+    border-color: #b5d3e9 !important;
+    color: #005a9e !important;
+}
+.account-bar #admin-dashboard-button {
+    background: #0067b8 !important;
+    border-color: #0067b8 !important;
+    color: #ffffff !important;
+    font-weight: 750 !important;
+}
+.account-bar #admin-dashboard-button:hover {
+    background: #005a9e !important;
+    border-color: #005a9e !important;
+}
+.account-bar #accountButton.logged-in {
+    background: #172238 !important;
+    color: #ffffff !important;
+    border-color: #172238 !important;
+}
+/* JS must keep exclusive control of visibility / admin authorization. */
+.account-bar #maintenance-button.hidden,
+.account-bar #user-management-button.hidden,
+.account-bar #admin-dashboard-button.hidden { display: none !important; }
+
+/* Reserve exactly as much room as current visible action buttons require. */
+nav.top-navigation {
+    padding-right: calc(var(--magpie-actions-width) + 12px) !important;
+}
+
+@media (max-width: 700px) {
+    /* Navigation scrolls by itself; account actions live underneath it. */
+    nav.top-navigation {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+    .account-bar {
+        top: 50px !important;
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        height: 50px !important;
+        min-height: 50px !important;
+        padding: 5px 8px !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        justify-content: flex-start !important;
+        scrollbar-width: none !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    .account-bar::-webkit-scrollbar { display:none !important; }
+    .account-bar .header-actions {
+        min-width: 100% !important;
+        width: max-content !important;
+        justify-content: flex-end !important;
+        flex-shrink: 0 !important;
+        gap: 6px !important;
+    }
+    .account-bar #accountButton,
+    .account-bar #user-management-button,
+    .account-bar #maintenance-button,
+    .account-bar #admin-dashboard-button {
+        min-height: 35px !important;
+        padding: 7px 10px !important;
+        font-size: 11px !important;
+    }
+}
+@media (max-width: 430px) {
+    /* On smaller phones, scroll the action row to reveal all admin buttons. */
+    .account-bar .header-actions { min-width: max-content !important; }
+}
