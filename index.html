@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=126">
+    <link rel="stylesheet" href="./style.css?v=127">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2333278742905467"
      crossorigin="anonymous"></script>
 </head>
@@ -1597,5 +1597,31 @@ document.addEventListener("DOMContentLoaded", function () {
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
 <script src="./script.js?v=123"></script>
 
+<script>
+/* v127: reserve the real width of the right-side account/admin buttons. */
+(function () {
+    function syncMagpieActionWidth() {
+        var bar = document.querySelector('.account-bar');
+        if (!bar) return;
+        var width = Math.ceil(bar.getBoundingClientRect().width);
+        document.documentElement.style.setProperty('--magpie-actions-width', width + 'px');
+    }
+    function startMagpieActionWidthSync() {
+        var bar = document.querySelector('.account-bar');
+        if (!bar) return;
+        syncMagpieActionWidth();
+        if (typeof ResizeObserver !== 'undefined') {
+            var observer = new ResizeObserver(syncMagpieActionWidth);
+            observer.observe(bar);
+        }
+        window.addEventListener('resize', syncMagpieActionWidth, {passive: true});
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startMagpieActionWidthSync);
+    } else {
+        startMagpieActionWidthSync();
+    }
+})();
+</script>
 </body>
 </html>
