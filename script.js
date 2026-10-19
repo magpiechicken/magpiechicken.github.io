@@ -2044,6 +2044,10 @@ async function openCategoryIntro(category) {
 }
 
 async function openCategoryList(category) {
+    const newsSearch = document.getElementById("news-search-input");
+    if (newsSearch) newsSearch.value = "";
+    const newsSort = document.getElementById("news-sort-select");
+    if (newsSort) newsSort.value = "latest";
     currentCategory = category;
     currentNewsTagFilter = "all";
     newsListRequestSerial++;
@@ -4370,70 +4374,64 @@ function getPublicImageUrl(
     return data?.publicUrl || null;
 }
 
-async function renderNews(category = currentCategory) {
-    const requestSerial = ++newsListRequestSerial;
-    const selectedTag = currentNewsTagFilter;
-    const container =
-        document.getElementById(
-            "news-list-container"
-        );
+// v128: 검색은 서버 조회 결과를 재사용하므로 필터 입력 중 중복 요청하지 않습니다.
+let newsBrowserItems = [];
+let newsBrowserCategory = null;
+let newsBrowserTag = null;
+let newsBrowserReadIds = new Set();
+let newsBrowserLimit = 15;
+const NEWS_PAGE_SIZE = 15;
 
-    updateNewsTagFilterUI(category);
+function newsSearchText(value) {
+    return String(value ?? "").normalize("NFKC").toLocaleLowerCase("ko-KR");
+}
 
-    container.innerHTML = `
-        <div class="empty-box">
-            <div class="empty-title">
-                불러오는 중...
-            </div>
-        </div>
-    `;
-
-    const newsList = await getNews(category, selectedTag);
-    if (requestSerial !== newsListRequestSerial || category !== currentCategory || selectedTag !== currentNewsTagFilter) return;
-    const visibleNewsList = newsList;
-
-    if (
-        visibleNewsList.length === 0
-    ) {
-        const emptyTitle =
-            categorySupportsNewsTags(category) &&
-            selectedTag !== "all"
-                ? `${newsTagLabel(currentNewsTagFilter)} 없음`
-                : `${categoryName(category)} 없음`;
-
-        const emptyDescription =
-            categorySupportsNewsTags(category) &&
-            selectedTag !== "all"
-                ? `현재 등록된 ${newsTagLabel(currentNewsTagFilter)}이(가) 없습니다.`
-                : `현재 등록된 ${categoryName(category)}이(가) 없습니다.`;
-
-        container.innerHTML = `
-            <div class="empty-box">
-                <div class="empty-title">
-                    ${escapeHTML(emptyTitle)}
-                </div>
-
-                <div class="empty-description">
-                    ${escapeHTML(emptyDescription)}
-                </div>
-            </div>
-        `;
-
+function renderNewsBrowser() {
+    const container = document.getElementById("news-list-container");
+    if (!container) return;
+    const category = newsBrowserCategory;
+    const searchInput = document.getElementById("news-search-input");
+    const sortSelect = document.getElementById("news-sort-select");
+    const moreButton = document.getElementById("news-load-more");
+    const count = document.getElementById("news-result-count");
+    const reset = document.getElementById("news-search-reset");
+    const keywords = newsSearchText(searchInput?.value).trim().split(/\s+/).filter(Boolean);
+    const sort = sortSelect?.value || "latest";
+    const filtered = newsBrowserItems.filter(news => {
+        if (!keywords.length) return true;
+        const corpus = newsSearchText([news.title, news.author, String(news.content ?? "").replace(/<[^>]+>/g, " ")].join(" "));
+        return keywords.every(word => corpus.includes(word));
+    }).sort((a,b) => {
+        if (sort === "popular") return (Number(b.view_count)||0) - (Number(a.view_count)||0) || Date.parse(b.created_at)-Date.parse(a.created_at);
+        if (sort === "oldest") return Date.parse(a.created_at)-Date.parse(b.created_at);
+        if (sort === "title") return String(a.title||"").localeCompare(String(b.title||""), "ko");
+        return Date.parse(b.created_at)-Date.parse(a.created_at);
+    });
+    if (count) count.textContent = `총 ${filtered.length.toLocaleString("ko-KR")}개 소식${keywords.length ? " 검색됨" : ""}`;
+    if (reset) reset.hidden = !keywords.length && sort === "latest";
+    if (moreButton) {
+        const left = Math.max(0, filtered.length - newsBrowserLimit);
+        moreButton.hidden = left === 0;
+        if (left) moreButton.textContent = `소식 더 보기 (남은 ${left.toLocaleString("ko-KR")}개)`;
+    }
+    container.replaceChildren();
+    if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-box";
+        const heading = document.createElement("div");
+        heading.className = "empty-title";
+        heading.textContent = keywords.length ? "검색 결과가 없습니다" : `${categoryName(category)} 없음`;
+        const desc = document.createElement("div");
+        desc.className = "empty-description";
+        desc.textContent = keywords.length ? "다른 검색어를 입력하거나 초기화를 눌러보세요." : "아직 등록된 소식이 없습니다.";
+        empty.append(heading, desc);
+        container.appendChild(empty);
         return;
     }
-
-    const readNewsIds = await getReadNewsIds(visibleNewsList);
-    if (requestSerial !== newsListRequestSerial || category !== currentCategory || selectedTag !== currentNewsTagFilter) return;
-    container.innerHTML = "";
-
-    const list =
-        document.createElement(
-            "div"
-        );
-
-    list.className =
-        "news-list";
-
+    const visibleNewsList = filtered.slice(0, newsBrowserLimit);
+    const readNewsIds = newsBrowserReadIds;
+    const list = document.createElement("div");
+    list.className = "news-list";
     visibleNewsList.forEach(
         function(news) {
 
@@ -4511,6 +4509,55 @@ async function renderNews(category = currentCategory) {
     );
 
     container.appendChild(list);
+}
+
+function bindNewsBrowser() {
+    const input = document.getElementById("news-search-input");
+    if (!input || input.dataset.bound === "true") return;
+    input.dataset.bound = "true";
+    const redraw = () => { newsBrowserLimit = NEWS_PAGE_SIZE; if (newsBrowserCategory) renderNewsBrowser(); };
+    input.addEventListener("input", redraw);
+    document.getElementById("news-sort-select")?.addEventListener("change", redraw);
+    document.getElementById("news-search-reset")?.addEventListener("click", () => {
+        input.value = "";
+        const sort = document.getElementById("news-sort-select");
+        if (sort) sort.value = "latest";
+        redraw();
+        input.focus();
+    });
+    document.getElementById("news-load-more")?.addEventListener("click", () => {
+        newsBrowserLimit += NEWS_PAGE_SIZE;
+        renderNewsBrowser();
+    });
+    document.addEventListener("keydown", event => {
+        if (event.key !== "/" || event.ctrlKey || event.altKey || event.metaKey || event.isComposing) return;
+        const tag = document.activeElement?.tagName;
+        if (["INPUT", "TEXTAREA", "SELECT"].includes(tag) || document.activeElement?.isContentEditable) return;
+        if (!document.getElementById("screen-news-list")?.classList.contains("visible")) return;
+        event.preventDefault();
+        input.focus();
+    });
+}
+
+async function renderNews(category = currentCategory) {
+    const requestSerial = ++newsListRequestSerial;
+    const selectedTag = currentNewsTagFilter;
+    const container = document.getElementById("news-list-container");
+    if (!container) return;
+    bindNewsBrowser();
+    updateNewsTagFilterUI(category);
+    container.innerHTML = '<div class="empty-box"><div class="empty-title">소식을 불러오는 중...</div></div>';
+    document.getElementById("news-load-more")?.setAttribute("hidden", "");
+    const newsList = await getNews(category, selectedTag);
+    if (requestSerial !== newsListRequestSerial || category !== currentCategory || selectedTag !== currentNewsTagFilter) return;
+    const readNewsIds = await getReadNewsIds(newsList);
+    if (requestSerial !== newsListRequestSerial || category !== currentCategory || selectedTag !== currentNewsTagFilter) return;
+    newsBrowserItems = newsList;
+    newsBrowserCategory = category;
+    newsBrowserTag = selectedTag;
+    newsBrowserReadIds = readNewsIds;
+    newsBrowserLimit = NEWS_PAGE_SIZE;
+    renderNewsBrowser();
 }
 
 async function openNewsDetail(
