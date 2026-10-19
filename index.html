@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>까치치킨사장님 공식 홈페이지</title>
-    <link rel="stylesheet" href="./style.css?v=127">
+    <link rel="stylesheet" href="./style.css?v=128">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2333278742905467"
      crossorigin="anonymous"></script>
 </head>
@@ -592,9 +592,30 @@
                 <!-- 태그 버튼은 현재 소식 카테고리에 따라 생성됩니다. -->
             </div>
 
+            <section class="news-tools" aria-label="소식 검색과 정렬">
+                <div class="news-tools-main">
+                    <label class="news-search-label" for="news-search-input">
+                        <span aria-hidden="true">⌕</span>
+                        <input id="news-search-input" type="search" maxlength="120" autocomplete="off" placeholder="소식 제목, 작성자, 내용 검색" aria-label="소식 검색">
+                    </label>
+                    <label class="news-sort-label" for="news-sort-select">
+                        <span>정렬</span>
+                        <select id="news-sort-select" aria-label="소식 정렬">
+                            <option value="latest">최신순</option>
+                            <option value="oldest">오래된순</option>
+                            <option value="popular">조회순</option>
+                            <option value="title">제목순</option>
+                        </select>
+                    </label>
+                    <button type="button" class="news-search-reset" id="news-search-reset" hidden>초기화</button>
+                </div>
+                <div class="news-search-help"><span id="news-result-count" role="status" aria-live="polite"></span><span>제목을 누르면 소식을 볼 수 있어요.</span></div>
+            </section>
+
             <div
                 id="news-list-container"
             ></div>
+            <div class="news-more-wrap"><button id="news-load-more" class="news-load-more" type="button" hidden>소식 더 보기</button></div>
 
         </section>
 
@@ -1595,7 +1616,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/tus-js-client@4/dist/tus.min.js"></script>
-<script src="./script.js?v=123"></script>
+<script src="./script.js?v=128"></script>
 
 <script>
 /* v127: reserve the real width of the right-side account/admin buttons. */
