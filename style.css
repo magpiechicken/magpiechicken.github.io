@@ -11380,3 +11380,30 @@ nav.top-navigation {
     /* On smaller phones, scroll the action row to reveal all admin buttons. */
     .account-bar .header-actions { min-width: max-content !important; }
 }
+
+/* v128: 소식 검색 · 정렬 · 더보기, 데스크톱과 모바일 공통 */
+.news-tools { margin:18px 0 14px; padding:16px; border:1px solid #e5e7eb; background:#fff; border-radius:12px; }
+.news-tools-main { display:flex; align-items:stretch; gap:10px; flex-wrap:wrap; }
+.news-search-label { display:flex; align-items:center; flex:1 1 300px; min-width:0; gap:10px; border:1px solid #cbd5e1; background:#fff; color:#64748b; border-radius:8px; padding:0 13px; }
+.news-search-label:focus-within { border-color:#0067b8; outline:2px solid rgba(0,103,184,.16); }
+.news-search-label > span { font-size:25px; line-height:1; }
+#news-search-input { display:block; width:100%; min-width:0; min-height:44px; border:0!important; outline:0!important; background:transparent!important; color:#172238!important; box-shadow:none!important; font-size:14px; }
+.news-sort-label { display:flex; align-items:center; gap:9px; color:#475569; font-size:13px; white-space:nowrap; }
+#news-sort-select { min-height:44px; min-width:105px; border:1px solid #cbd5e1; color:#172238; background:#fff; border-radius:8px; padding:0 10px; cursor:pointer; }
+.news-search-reset, .news-load-more { padding:10px 16px; min-height:44px; border:1px solid #cbd5e1; color:#005a9e; border-radius:8px; background:#fff; cursor:pointer; font-weight:600; }
+.news-search-reset:hover, .news-load-more:hover { background:#eef6fc; }
+.news-search-help { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:7px; color:#64748b; font-size:12px; margin-top:10px; }
+.news-search-help #news-result-count { color:#334155; font-weight:700; }
+.news-more-wrap { display:flex; justify-content:center; margin:22px 0 38px; }
+[hidden] { display:none!important; }
+@media (max-width:700px) {
+ .news-tools { padding:12px; margin:12px 0; border-radius:10px; }
+ .news-tools-main { gap:8px; }
+ .news-search-label { flex-basis:100%; }
+ .news-sort-label { flex:1; justify-content:space-between; }
+ #news-sort-select { flex:1; max-width:200px; }
+ .news-search-reset { flex:0 0 auto; }
+ .news-search-help span:last-child { display:none; }
+ .news-load-more { width:100%; }
+}
+
